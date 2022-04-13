@@ -12,7 +12,7 @@ import debounce from "lodash.debounce";
 import { doc, writeBatch, getDoc } from "firebase/firestore";
 
 export default function Admin() {
-  const { user, username } = useContext(UserContext);
+  const { user, username, email } = useContext(UserContext);
 
   return (
     <Container
@@ -25,8 +25,28 @@ export default function Admin() {
         alignItems: "center",
       }}
     >
-      {user ? !username ? <SignUp /> : <SignOutButton /> : <SignInButton />}
+      {email ? (
+        user ? (
+          !username ? (
+            <SignUp />
+          ) : (
+            <SignOutButton />
+          )
+        ) : (
+          <SignInButton />
+        )
+      ) : (
+        <PermissionDenied />
+      )}
     </Container>
+  );
+}
+
+function PermissionDenied() {
+  return (
+    <>
+      <Typography>You do not have permission to view this page.</Typography>
+    </>
   );
 }
 
