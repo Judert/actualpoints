@@ -1,0 +1,22 @@
+[
+    {
+        "id": "arts",
+        "name": "Arts"
+    },
+    {
+        "id": "business",
+        "name": "Business"
+    },
+    {
+        "id": "entertainment",
+        "name": "Entertainment"
+    },
+    {
+        "id": "sport",
+        "name": "Sport"
+    },
+    {
+        "id": "tech",
+        "name": "Tech"
+    }
+]

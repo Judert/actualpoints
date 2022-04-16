@@ -5,11 +5,12 @@ import Container from "@mui/material/Container";
 import GoogleIcon from "@mui/icons-material/Google";
 import Image from "next/image";
 import { auth, db, googleAuthProvider } from "../../lib/firebase";
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup, signOut } from "firebase/auth";
 import { Typography } from "@mui/material";
 import { UserContext } from "../../lib/context";
 import debounce from "lodash.debounce";
 import { doc, writeBatch, getDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
 
 export default function Admin() {
   const { user, username, email } = useContext(UserContext);
@@ -25,20 +26,44 @@ export default function Admin() {
         alignItems: "center",
       }}
     >
-      {email ? (
-        user ? (
+      {user ? (
+        email ? (
           !username ? (
             <SignUp />
           ) : (
-            <SignOutButton />
+            <>
+              <EditProfile />
+              <ManageArticles />
+              <SignOutButton />
+            </>
           )
         ) : (
-          <SignInButton />
+          <PermissionDenied />
         )
       ) : (
-        <PermissionDenied />
+        <SignInButton />
       )}
     </Container>
+  );
+}
+
+function EditProfile() {
+  return <Button variant="contained">Edit Profile</Button>;
+}
+
+function ManageArticles() {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push("/admin/article");
+  };
+
+  return (
+    <>
+      <Button variant="outlined" onClick={handleClick}>
+        Manage Articles
+      </Button>
+    </>
   );
 }
 
@@ -56,7 +81,6 @@ function SignInButton() {
       return <Typography>{e.message}</Typography>;
     });
   };
-
   return (
     <Button
       startIcon={<GoogleIcon />}
@@ -69,13 +93,13 @@ function SignInButton() {
 }
 
 function SignOutButton() {
-  const signOut = async () => {
+  const signOutButton = async () => {
     await signOut(auth).catch((e) => {
       return <Typography>{e.message}</Typography>;
     });
   };
   return (
-    <Button variant="outlined" onClick={signOut}>
+    <Button variant="outlined" onClick={signOutButton}>
       Sign Out
     </Button>
   );
