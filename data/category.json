@@ -1,22 +1,27 @@
 [
     {
         "id": "arts",
-        "name": "Arts"
+        "name": "Arts",
+        "image": "https://firebasestorage.googleapis.com/v0/b/blog-veselcode.appspot.com/o/Category%2Farts-1.png?alt=media&token=40a15265-2056-407e-99d0-831c91754431"
     },
     {
         "id": "business",
-        "name": "Business"
+        "name": "Business",
+        "image": "https://firebasestorage.googleapis.com/v0/b/blog-veselcode.appspot.com/o/Category%2Fbusiness-1.jpeg?alt=media&token=5f9f212e-69f8-4f38-b233-e84d3593a15e"
     },
     {
         "id": "entertainment",
-        "name": "Entertainment"
+        "name": "Entertainment",
+        "image": "https://firebasestorage.googleapis.com/v0/b/blog-veselcode.appspot.com/o/Category%2Fentertainment-1.jpeg?alt=media&token=fd299c65-3546-4703-ba14-c840264178d4"
     },
     {
         "id": "sport",
-        "name": "Sport"
+        "name": "Sport",
+        "image": "https://firebasestorage.googleapis.com/v0/b/blog-veselcode.appspot.com/o/Category%2Fsports-1.jpeg?alt=media&token=50b824f0-24eb-470c-ac7c-9d52922c6691"
     },
     {
         "id": "tech",
-        "name": "Tech"
+        "name": "Tech",
+        "image": "https://firebasestorage.googleapis.com/v0/b/blog-veselcode.appspot.com/o/Category%2Ftech-2.jpeg?alt=media&token=012d1082-fb2a-409f-9219-20af7cca4126"
     }
 ]

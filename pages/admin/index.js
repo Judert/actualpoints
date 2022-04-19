@@ -11,21 +11,13 @@ import { UserContext } from "../../lib/context";
 import debounce from "lodash.debounce";
 import { doc, writeBatch, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
+import Content from "../../components/Content";
 
 export default function Admin() {
   const { user, username, email } = useContext(UserContext);
 
   return (
-    <Container
-      component="main"
-      maxWidth="md"
-      sx={{
-        mt: 4,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <Content>
       {user ? (
         email ? (
           !username ? (
@@ -43,7 +35,7 @@ export default function Admin() {
       ) : (
         <SignInButton />
       )}
-    </Container>
+    </Content>
   );
 }
 

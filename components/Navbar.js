@@ -48,7 +48,7 @@ export default function Navbar(props) {
                 color="inherit"
                 component={Link}
                 noLinkStyle
-                href="/article"
+                href="/category"
               >
                 Articles
               </Button>
