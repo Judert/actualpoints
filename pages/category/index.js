@@ -3,41 +3,41 @@ import Content from "../../components/Content";
 import { Box, Card, CardMedia, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function CategoryAll() {
-  const router = useRouter();
-
   return (
     <Content>
       <Typography variant="h4">Categories</Typography>
       <Grid container spacing={2}>
         {Category.map((category) => (
-          <Grid
-            md={4}
-            item
-            key={category.id}
-            style={{ position: "relative" }}
-            onClick={() => router.push("/category/" + category.id)}
-          >
-            <Image
-              alt={category.name}
-              src={category.image}
-              width={300}
-              height={300}
-              layout="intrinsic"
-            />
-            <Typography
-              variant="h5"
-              style={{
-                position: "absolute",
-                color: "white",
-                top: "12.5%",
-                left: "12.5%",
-              }}
+          <Link href={`/category/${category.id}`} passHref key={category.id}>
+            <Grid
+              md={4}
+              item
+              // key={category.id}
+              style={{ position: "relative" }}
             >
-              {category.name}
-            </Typography>
-          </Grid>
+              <Image
+                alt={category.name}
+                src={category.image}
+                width={300}
+                height={300}
+                layout="intrinsic"
+              />
+              <Typography
+                variant="h5"
+                style={{
+                  position: "absolute",
+                  color: "white",
+                  top: "12.5%",
+                  left: "12.5%",
+                }}
+              >
+                {category.name}
+              </Typography>
+            </Grid>
+          </Link>
         ))}
       </Grid>
     </Content>

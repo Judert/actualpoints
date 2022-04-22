@@ -38,6 +38,7 @@ import category from "../../data/category.json";
 import find from "lodash.find";
 import Image from "next/image";
 import styles from "../../styles/CategorySlug.module.css";
+import Link from "next/link";
 
 const LIMIT = 5;
 
@@ -56,6 +57,7 @@ export async function getServerSideProps({ query }) {
       firestoreQuery(
         collection(db, "Article"),
         where("category", "==", cat.id),
+        where("published", "==", true),
         orderBy("date", "desc"),
         limit(LIMIT)
       )
@@ -85,6 +87,7 @@ export default function Category(props) {
           firestoreQuery(
             collection(db, "Article"),
             where("category", "==", props.cat.id),
+            where("published", "==", true),
             orderBy("date", "desc"),
             startAfter(start),
             limit(LIMIT)
@@ -107,33 +110,35 @@ export default function Category(props) {
       <Typography variant="h4">{props.cat.name}</Typography>
       <Stack spacing={2} sx={{ py: 2 }}>
         {articles.map((article) => (
-          <Card key={article.id} sx={{ display: "flex" }}>
-            <CardContent sx={{ flex: 3, py: 3, pl: 3 }}>
-              <Typography variant="subtitle1">
-                @{article.username + " " + article.date}
-              </Typography>
-              <Typography gutterBottom variant="h5">
-                {article.title}
-              </Typography>
-              <Typography
-                sx={{ textOverflow: "ellipsis" }}
-                variant="body1"
-                color="text.secondary"
-              >
-                {article.subtitle}
-              </Typography>
-            </CardContent>
-            <Box sx={{ flex: 1 }}>
-              <Image
-                alt={article.tags[0]?.id}
-                src={article.image}
-                width={150}
-                height={150}
-                layout="responsive"
-                // className={styles.card}
-              />
-            </Box>
-          </Card>
+          <Link href={"/article/" + article.id} passHref key={article.id}>
+            <Card sx={{ display: "flex" }}>
+              <CardContent sx={{ flex: 3, py: 3, pl: 3 }}>
+                <Typography variant="subtitle1">
+                  @{article.username + " " + article.date}
+                </Typography>
+                <Typography gutterBottom variant="h5">
+                  {article.title}
+                </Typography>
+                <Typography
+                  sx={{ textOverflow: "ellipsis" }}
+                  variant="body1"
+                  color="text.secondary"
+                >
+                  {article.subtitle}
+                </Typography>
+              </CardContent>
+              <Box sx={{ flex: 1 }}>
+                <Image
+                  alt={article.tags[0]?.id}
+                  src={article.image}
+                  width={150}
+                  height={150}
+                  layout="responsive"
+                  // className={styles.card}
+                />
+              </Box>
+            </Card>
+          </Link>
         ))}
       </Stack>
       {!end && !loading && (

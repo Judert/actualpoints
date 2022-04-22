@@ -12,6 +12,7 @@ export default function Content(props) {
         alignItems: "center",
         flexDirection: "column",
         rowGap: 2,
+        // textAlign: "left",
       }}
     >
       {props.children}
