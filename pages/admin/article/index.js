@@ -16,7 +16,7 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import { useCollection } from "react-firebase-hooks/firestore";
+import { useCollection, useDocumentOnce } from "react-firebase-hooks/firestore";
 import { db } from "../../../lib/firebase";
 import {
   collection,
@@ -71,6 +71,12 @@ function Articles() {
       alert("Article already exists");
       return;
     }
+    const snapshotUser = await getDoc(doc(db, "User", user.uid)).catch(
+      (error) => {
+        // TODO: show error toast
+        console.log(error);
+      }
+    );
     await setDoc(doc(db, "Article", id), {
       title: title,
       subtitle: "",
@@ -87,6 +93,8 @@ function Articles() {
       tags: [],
       slug: slug,
       uid: user.uid,
+      displayName: snapshotUser.data().displayName,
+      photoURL: snapshotUser.data().photoURL,
     }).catch((error) => {
       // TODO: error toast
       console.log(error);

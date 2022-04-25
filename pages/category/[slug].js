@@ -27,6 +27,7 @@ import {
   Grid,
   Divider,
   Button,
+  Chip,
 } from "@mui/material";
 import { WithContext as ReactTags } from "react-tag-input";
 import InputLabel from "@mui/material/InputLabel";
@@ -113,9 +114,18 @@ export default function Category(props) {
           <Link href={"/article/" + article.id} passHref key={article.id}>
             <Card sx={{ display: "flex" }}>
               <CardContent sx={{ flex: 3, py: 3, pl: 3 }}>
-                <Typography variant="subtitle1">
-                  @{article.username + " " + article.date}
-                </Typography>
+                <Stack direction="row">
+                  <Avatar
+                    sx={{ width: 28, height: 28 }}
+                    src={article.photoURL}
+                  />
+                  <Typography variant="subtitle1">
+                    {article.displayName}
+                  </Typography>
+                  <Typography variant="subtitle1" color="text.secondary">
+                    {new Date(article.date).toDateString()}
+                  </Typography>
+                </Stack>
                 <Typography gutterBottom variant="h5">
                   {article.title}
                 </Typography>
@@ -126,6 +136,7 @@ export default function Category(props) {
                 >
                   {article.subtitle}
                 </Typography>
+                <Chip label={article.tags[0]?.id} variant="outlined" />
               </CardContent>
               <Box sx={{ flex: 1 }}>
                 <Image
@@ -134,7 +145,6 @@ export default function Category(props) {
                   width={150}
                   height={150}
                   layout="responsive"
-                  // className={styles.card}
                 />
               </Box>
             </Card>

@@ -9,9 +9,10 @@ export default function Content(props) {
         mt: 4,
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
+        alignItems: "left",
         flexDirection: "column",
         rowGap: 2,
+        backgroundColor: "secondary.main",
         // textAlign: "left",
       }}
     >

@@ -17,10 +17,10 @@ import * as Yup from "yup";
 import { db } from "../../../lib/firebase";
 import {
   doc,
-  Timestamp,
   updateDoc,
   collection,
   writeBatch,
+  serverTimestamp,
 } from "firebase/firestore";
 import { WithContext as ReactTags } from "react-tag-input";
 import { useCollection, useDocumentData } from "react-firebase-hooks/firestore";
@@ -89,7 +89,7 @@ function ArticleEdit() {
       category: category,
       tags: tags,
       published: checked,
-      date: Timestamp.now(),
+      date: serverTimestamp(),
       content: JSON.parse(
         JSON.stringify(convertToRaw(editorState.getCurrentContent()))
       ),
