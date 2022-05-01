@@ -40,6 +40,7 @@ import find from "lodash.find";
 import Image from "next/image";
 import styles from "../../styles/CategorySlug.module.css";
 import Link from "next/link";
+import Articles from "../../components/Articles";
 
 const LIMIT = 5;
 
@@ -109,48 +110,7 @@ export default function Category(props) {
   return (
     <Content>
       <Typography variant="h4">{props.cat.name}</Typography>
-      <Stack spacing={2} sx={{ py: 2 }}>
-        {articles.map((article) => (
-          <Link href={"/article/" + article.id} passHref key={article.id}>
-            <Card sx={{ display: "flex" }}>
-              <CardContent sx={{ flex: 3, py: 3, pl: 3 }}>
-                <Stack direction="row">
-                  <Avatar
-                    sx={{ width: 28, height: 28 }}
-                    src={article.photoURL}
-                  />
-                  <Typography variant="subtitle1">
-                    {article.displayName}
-                  </Typography>
-                  <Typography variant="subtitle1" color="text.secondary">
-                    {new Date(article.date).toDateString()}
-                  </Typography>
-                </Stack>
-                <Typography gutterBottom variant="h5">
-                  {article.title}
-                </Typography>
-                <Typography
-                  sx={{ textOverflow: "ellipsis" }}
-                  variant="body1"
-                  color="text.secondary"
-                >
-                  {article.subtitle}
-                </Typography>
-                <Chip label={article.tags[0]?.id} variant="outlined" />
-              </CardContent>
-              <Box sx={{ flex: 1 }}>
-                <Image
-                  alt={article.tags[0]?.id}
-                  src={article.image}
-                  width={150}
-                  height={150}
-                  layout="responsive"
-                />
-              </Box>
-            </Card>
-          </Link>
-        ))}
-      </Stack>
+      <Articles articles={articles} />
       {!end && !loading && (
         <Button variant="contained" onClick={loadMore}>
           Load More

@@ -12,7 +12,7 @@ export default function Content(props) {
         alignItems: "left",
         flexDirection: "column",
         rowGap: 2,
-        backgroundColor: "secondary.main",
+        // backgroundColor: "secondary.main",
         // textAlign: "left",
       }}
     >

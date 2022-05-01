@@ -18,18 +18,16 @@ import { db } from "../../../lib/firebase";
 import {
   doc,
   updateDoc,
-  collection,
   writeBatch,
   serverTimestamp,
 } from "firebase/firestore";
-import { WithContext as ReactTags } from "react-tag-input";
-import { useCollection, useDocumentData } from "react-firebase-hooks/firestore";
-// import "../../styles/Tag.css";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
 import Category from "../../../data/category.json";
 import Content from "../../../components/Content";
 import Authorize from "../../../components/Authorize";
 import dynamic from "next/dynamic";
+import Tags from "../../../components/Tags";
 
 const Editor = dynamic(
   () => {
@@ -158,7 +156,7 @@ function ArticleEdit() {
             category={category}
             setCategory={setCategory}
           />
-          <Tags valueArticle={valueArticle} tags={tags} setTags={setTags} />
+          <Tags initial={valueArticle.tags} tags={tags} setTags={setTags} />
           <Published
             valueArticle={valueArticle}
             checked={checked}
@@ -250,61 +248,5 @@ function CategorySelect({ valueArticle, category, setCategory }) {
         </NativeSelect>
       </FormControl>
     </Box>
-  );
-}
-
-function Tags({ valueArticle, tags, setTags }) {
-  const [valueTag, loadingTag, errorTag] = useCollection(collection(db, "Tag"));
-  const KeyCodes = {
-    tab: 9,
-    comma: 188,
-    enter: 13,
-  };
-  const delimiters = [KeyCodes.comma, KeyCodes.enter, KeyCodes.tab];
-  useEffect(() => {
-    setTags(valueArticle.tags);
-  }, []);
-  const handleDelete = (i) => {
-    setTags(tags.filter((tag, index) => index !== i));
-  };
-  const handleAddition = (tag) => {
-    setTags([...tags, tag]);
-  };
-  const handleDrag = (tag, currPos, newPos) => {
-    const newTags = tags.slice();
-    newTags.splice(currPos, 1);
-    newTags.splice(newPos, 0, tag);
-    // re-render
-    setTags(newTags);
-  };
-  const handleTagClick = (index) => {
-    console.log("The tag at index " + index + " was clicked");
-  };
-
-  return (
-    <>
-      {errorTag && <Typography>Error: {JSON.stringify(errorTag)}</Typography>}
-      {loadingTag && <Typography>Collection: Loading...</Typography>}
-      {valueTag && (
-        <div className="app">
-          <ReactTags
-            tags={tags}
-            suggestions={valueTag.docs.map((row) => {
-              return {
-                id: row.id,
-                text: row.id,
-              };
-            })}
-            delimiters={delimiters}
-            handleDelete={handleDelete}
-            handleAddition={handleAddition}
-            handleDrag={handleDrag}
-            handleTagClick={handleTagClick}
-            inputFieldPosition="bottom"
-            autocomplete
-          />
-        </div>
-      )}
-    </>
   );
 }

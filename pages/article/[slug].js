@@ -1,4 +1,12 @@
-import { Grid, Typography } from "@mui/material";
+import {
+  Avatar,
+  Grid,
+  Paper,
+  Stack,
+  Typography,
+  Chip,
+  Box,
+} from "@mui/material";
 import Content from "../../components/Content";
 import { db, postToJSON } from "../../lib/firebase";
 import {
@@ -50,22 +58,51 @@ export default function Article(props) {
 
   return (
     <Content>
-      <Grid container spacing={3}>
-        <Grid item md={12} sx={{ backgroundColor: "error.main" }}>
-          <Typography variant="h4">{article.title}</Typography>
-          <Typography variant="h6" color="text.secondary">
-            {article.subtitle}
+      <Paper sx={{ p: 3 }}>
+        <Typography variant="h4">{article.title}</Typography>
+        <Typography variant="h6" color="text.secondary">
+          {article.subtitle}
+        </Typography>
+        <Typography variant="subtitle1" color="text.secondary">
+          Last Updated: {new Date(article.date).toDateString()}
+        </Typography>
+        <Image
+          alt={article.tags[0]?.id}
+          src={article.image}
+          width={900}
+          height={600}
+          layout="responsive"
+        />
+        {html}
+      </Paper>
+      <Typography variant="h6" color="text.secondary">
+        Article contributed by:
+      </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs="auto">
+          <Avatar sx={{ width: 56, height: 56 }} src={article.photoURL} />
+        </Grid>
+        <Grid item container xs="auto">
+          <Grid item xs={12}>
+            <Typography variant="body1">{article.displayName}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="body1">{"@" + article.username}</Typography>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} sm={8}>
+          <Typography variant="body1">
+            A super long or not super long writer description goes here, im not
+            actually sure how long theyll usually be
           </Typography>
-          <Image
-            alt={article.tags[0]?.id}
-            src={article.image}
-            width={900}
-            height={600}
-            layout="responsive"
-          />
-          {html}
         </Grid>
       </Grid>
+      <Box>
+        {article.tags.map((tag) => (
+          <Chip variant="outlined" key={tag.id} label={tag.id} />
+          // TODO: add links to search with tag
+        ))}
+      </Box>
     </Content>
   );
 }

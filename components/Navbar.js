@@ -84,9 +84,11 @@ export default function Navbar(props) {
           </IconButton> */}
           <Brightness7Icon sx={{ mx: 1 }} />
 
-          <IconButton color="inherit">
-            <SearchIcon />
-          </IconButton>
+          <NextLink href="/search" passHref>
+            <IconButton color="inherit">
+              <SearchIcon />
+            </IconButton>
+          </NextLink>
         </Toolbar>
       </AppBar>
     </Box>
