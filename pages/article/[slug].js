@@ -21,6 +21,7 @@ import { useDocumentData } from "react-firebase-hooks/firestore";
 import Image from "next/image";
 import draftToHtml from "draftjs-to-html";
 import parse from "html-react-parser";
+import Link from "next/link";
 
 export async function getStaticPaths() {
   const snapshot = await getDocs(
@@ -99,8 +100,9 @@ export default function Article(props) {
       </Grid>
       <Box>
         {article.tags.map((tag) => (
-          <Chip variant="outlined" key={tag.id} label={tag.id} />
-          // TODO: add links to search with tag
+          <Link href={"/search?tags=" + tag.id} passHref key={tag.id}>
+            <Chip sx={{ m: 0.5 }} variant="outlined" label={tag.id} />
+          </Link>
         ))}
       </Box>
     </Content>

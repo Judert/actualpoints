@@ -26,23 +26,32 @@ import Articles from "../../components/Articles";
 import { db, postToJSON } from "../../lib/firebase";
 
 const LIMIT = 5;
+let initialized = false;
+let mounted = false;
 
 export default function Search() {
   const router = useRouter();
-  const [tags, setTags] = useState(null);
+  const [tags, setTags] = useState([]);
   const [articles, setArticles] = useState(null);
   const [loading, setLoading] = useState(false);
   const [end, setEnd] = useState(false);
 
   useEffect(() => {
-    setTags(
-      router.query.tags?.split(" ").map((tag) => ({ id: tag, text: tag }))
-    );
+    if (!mounted) {
+      if (router.query.tags) {
+        setTags(
+          router.query.tags?.split(" ").map((tag) => ({ id: tag, text: tag }))
+        );
+        mounted = true;
+      }
+    }
   }, [router.query.tags]);
 
   const fetchArticles = useCallback(async () => {
-    if (tags) {
-      console.log(tags);
+    console.log("call");
+    if (tags[0]) {
+      initialized = true;
+      console.log("set");
       let snapshot = await getDocs(
         query(
           collection(db, "Article"),
@@ -52,8 +61,21 @@ export default function Search() {
           limit(LIMIT)
         )
       ).catch((e) => console.error(e));
-      console.log(snapshot);
-      setArticles(snapshot.docs.map(postToJSON));
+      if (!snapshot.empty) {
+        setArticles(snapshot.docs.map(postToJSON));
+      }
+    } else {
+      setArticles(null);
+      setLoading(false);
+      setEnd(false);
+    }
+    if (initialized) {
+      console.log("consumed");
+      router.push(
+        "/search?tags=" + tags.map((tag) => tag.id).join("+"),
+        undefined,
+        { shallow: true }
+      );
     }
   }, [tags]);
 
@@ -94,9 +116,9 @@ export default function Search() {
 
   return (
     <Content>
-      {tags && <Tags tags={tags} setTags={setTags} />}
+      <Tags tags={tags} setTags={setTags} />
       {articles && <Articles articles={articles} />}
-      {!end && !loading && (
+      {articles && !end && !loading && (
         <Button variant="contained" onClick={loadMore}>
           Load More
         </Button>
