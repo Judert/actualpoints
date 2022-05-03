@@ -13,6 +13,27 @@ import Image from "next/image";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 
+const renderers = {
+  p: (paragraph) => {
+    const { node } = paragraph;
+    if (node.children[0].tagName === "img") {
+      const image = node.children[0];
+      // console.log(image);
+      return (
+        <Image
+          src={image.properties.src}
+          alt={image.properties.alt}
+          height="200"
+          width="300"
+          layout="responsive"
+        />
+      );
+    }
+
+    return <p>{paragraph.children}</p>;
+  },
+};
+
 export async function getStaticPaths() {
   const snapshot = await getDocs(
     query(collection(db, "Article"), where("published", "==", true))
@@ -59,11 +80,11 @@ export default function Article(props) {
         <Image
           alt={article.tags[0]?.id}
           src={article.image}
-          width={900}
-          height={600}
+          width={300}
+          height={200}
           layout="responsive"
         />
-        <ReactMarkdown>{article.content}</ReactMarkdown>
+        <ReactMarkdown components={renderers}>{article.content}</ReactMarkdown>
       </Paper>
       <Typography variant="h6" color="text.secondary">
         Article contributed by:
