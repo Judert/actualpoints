@@ -1,12 +1,4 @@
-import {
-  Avatar,
-  Grid,
-  Paper,
-  Stack,
-  Typography,
-  Chip,
-  Box,
-} from "@mui/material";
+import { Avatar, Grid, Paper, Typography, Chip, Box } from "@mui/material";
 import Content from "../../components/Content";
 import { db, postToJSON } from "../../lib/firebase";
 import {
@@ -17,11 +9,10 @@ import {
   where,
   doc,
 } from "firebase/firestore";
-import { useDocumentData } from "react-firebase-hooks/firestore";
 import Image from "next/image";
-import draftToHtml from "draftjs-to-html";
-import parse from "html-react-parser";
 import Link from "next/link";
+// import ReactMarkdown from "react-markdown";
+import MarkdownPreview from "@uiw/react-markdown-preview";
 
 export async function getStaticPaths() {
   const snapshot = await getDocs(
@@ -55,11 +46,10 @@ export default function Article(props) {
   // const [realtimePost] = useDocumentData(doc(db, props.path));
   // const post = realtimePost || props.post;
   const article = props.post;
-  const html = parse(draftToHtml(article.content));
 
   return (
     <Content>
-      <Paper sx={{ p: 3 }}>
+      <Paper sx={{ p: 3, display: "flex", flexDirection: "column" }}>
         <Typography variant="h4">{article.title}</Typography>
         <Typography variant="h6" color="text.secondary">
           {article.subtitle}
@@ -74,7 +64,8 @@ export default function Article(props) {
           height={600}
           layout="responsive"
         />
-        {html}
+        {/* <ReactMarkdown>{article.content}</ReactMarkdown> */}
+        <MarkdownPreview source={article.content} />
       </Paper>
       <Typography variant="h6" color="text.secondary">
         Article contributed by:

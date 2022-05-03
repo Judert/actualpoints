@@ -16,7 +16,7 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import { useCollection, useDocumentOnce } from "react-firebase-hooks/firestore";
+import { useCollection } from "react-firebase-hooks/firestore";
 import { db } from "../../../lib/firebase";
 import {
   collection,
@@ -33,7 +33,6 @@ import {
 import { Checkbox, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { EditorState, convertToRaw } from "draft-js";
 import Authorize from "../../../components/Authorize";
 import { useContext } from "react";
 import { UserContext } from "../../../lib/context";
@@ -81,11 +80,7 @@ function Articles() {
       title: title,
       subtitle: "",
       image: "",
-      content: JSON.parse(
-        JSON.stringify(
-          convertToRaw(EditorState.createEmpty().getCurrentContent())
-        )
-      ),
+      content: "",
       date: serverTimestamp(),
       username: username,
       published: false,

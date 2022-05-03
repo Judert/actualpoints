@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
-// import { Editor } from "react-draft-wysiwyg";
-import draftToHtml from "draftjs-to-html";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import NativeSelect from "@mui/material/NativeSelect";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import SaveIcon from "@mui/icons-material/Save";
 import { ButtonGroup, Divider, Typography, Checkbox } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
@@ -26,15 +22,15 @@ import { useRouter } from "next/router";
 import Category from "../../../data/category.json";
 import Content from "../../../components/Content";
 import Authorize from "../../../components/Authorize";
-import dynamic from "next/dynamic";
 import Tags from "../../../components/Tags";
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
+import dynamic from "next/dynamic";
+import rehypeSanitize from "rehype-sanitize";
 
-const Editor = dynamic(
-  () => {
-    return import("react-draft-wysiwyg").then((mod) => mod.Editor);
-  },
-  { ssr: false }
-);
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+
+let mounted = false;
 
 export default function AdminArticleEdit() {
   return (
@@ -88,9 +84,7 @@ function ArticleEdit() {
       tags: tags,
       published: checked,
       date: serverTimestamp(),
-      content: JSON.parse(
-        JSON.stringify(convertToRaw(editorState.getCurrentContent()))
-      ),
+      content: content,
     });
     const batch = writeBatch(db);
     for (let i = 0; i < tags.length; i++) {
@@ -100,12 +94,21 @@ function ArticleEdit() {
   };
 
   // Initialize to pass
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createWithContent(EditorState.createEmpty().getCurrentContent())
-  );
   const [checked, setChecked] = React.useState(false);
   const [category, setCategory] = React.useState(Category[0].id);
+  const [content, setContent] = React.useState("");
+
+  // wait for article then set for components
   const [tags, setTags] = React.useState([]);
+  useEffect(() => {
+    if (!mounted) {
+      if (valueArticle) {
+        setTags(valueArticle.tags);
+        setContent(valueArticle.content);
+        mounted = true;
+      }
+    }
+  }, [valueArticle]);
 
   return (
     <Content>
@@ -156,18 +159,14 @@ function ArticleEdit() {
             category={category}
             setCategory={setCategory}
           />
-          <Tags initial={valueArticle.tags} tags={tags} setTags={setTags} />
+          <Tags tags={tags} setTags={setTags} />
           <Published
             valueArticle={valueArticle}
             checked={checked}
             setChecked={setChecked}
           />
           <Divider />
-          <TextEditor
-            valueArticle={valueArticle}
-            editorState={editorState}
-            setEditorState={setEditorState}
-          />
+          <TextEditor value={content} onChange={setContent} />
           <Divider />
           <ButtonGroup sx={{ my: 4 }}>
             <Button variant="contained" onClick={handleSubmit(handleDone)}>
@@ -186,19 +185,19 @@ function ArticleEdit() {
   );
 }
 
-function TextEditor({ valueArticle, editorState, setEditorState }) {
-  useEffect(() => {
-    setEditorState(
-      EditorState.createWithContent(convertFromRaw(valueArticle.content))
-    );
-  }, []);
-
+function TextEditor({ value, onChange }) {
   return (
-    <Editor
-      editorState={editorState}
-      onEditorStateChange={(editorState) => setEditorState(editorState)}
-      defaultValue={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-    />
+    <>
+      <MDEditor
+        value={value}
+        onChange={onChange}
+        height={500}
+        previewOptions={{
+          rehypePlugins: [[rehypeSanitize]],
+        }}
+      />
+      {/* <MDEditor.Markdown source={value} rehypePlugins={[[rehypeSanitize]]} /> */}
+    </>
   );
 }
 
