@@ -48,10 +48,8 @@ export default function Search() {
   }, [router.query.tags]);
 
   const fetchArticles = useCallback(async () => {
-    console.log("call");
     if (tags[0]) {
       initialized = true;
-      console.log("set");
       let snapshot = await getDocs(
         query(
           collection(db, "Article"),
@@ -70,7 +68,6 @@ export default function Search() {
       setEnd(false);
     }
     if (initialized) {
-      console.log("consumed");
       router.push(
         "/search?tags=" + tags.map((tag) => tag.id).join("+"),
         undefined,

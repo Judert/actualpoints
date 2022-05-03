@@ -23,13 +23,16 @@ import Category from "../../../data/category.json";
 import Content from "../../../components/Content";
 import Authorize from "../../../components/Authorize";
 import Tags from "../../../components/Tags";
-import "@uiw/react-md-editor/markdown-editor.css";
-import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
-import rehypeSanitize from "rehype-sanitize";
+import "react-markdown-editor-lite/lib/index.css";
+import ReactMarkdown from "react-markdown";
+import Editor, { Plugins } from "react-markdown-editor-lite";
 
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
+  ssr: false,
+});
 
+Editor.unuse(Plugins.Image);
 let mounted = false;
 
 export default function AdminArticleEdit() {
@@ -188,15 +191,15 @@ function ArticleEdit() {
 function TextEditor({ value, onChange }) {
   return (
     <>
-      <MDEditor
+      <MdEditor
+        style={{ height: "500px" }}
         value={value}
-        onChange={onChange}
-        height={500}
-        previewOptions={{
-          rehypePlugins: [[rehypeSanitize]],
+        // eslint-disable-next-line react/no-children-prop
+        renderHTML={(value) => <ReactMarkdown children={value} />}
+        onChange={({ html, text }, event) => {
+          onChange(text);
         }}
       />
-      {/* <MDEditor.Markdown source={value} rehypePlugins={[[rehypeSanitize]]} /> */}
     </>
   );
 }

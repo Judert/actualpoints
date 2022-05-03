@@ -11,8 +11,7 @@ import {
 } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
-// import ReactMarkdown from "react-markdown";
-import MarkdownPreview from "@uiw/react-markdown-preview";
+import ReactMarkdown from "react-markdown";
 
 export async function getStaticPaths() {
   const snapshot = await getDocs(
@@ -64,8 +63,7 @@ export default function Article(props) {
           height={600}
           layout="responsive"
         />
-        {/* <ReactMarkdown>{article.content}</ReactMarkdown> */}
-        <MarkdownPreview source={article.content} />
+        <ReactMarkdown>{article.content}</ReactMarkdown>
       </Paper>
       <Typography variant="h6" color="text.secondary">
         Article contributed by:

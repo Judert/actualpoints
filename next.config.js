@@ -1,11 +1,10 @@
 /** @type {import('next').NextConfig} */
-const removeImports = require("next-remove-imports")();
 
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["firebasestorage.googleapis.com", "picsum.photos"],
+    domains: ["firebasestorage.googleapis.com"],
   },
 };
 
-module.exports = removeImports(nextConfig);
+module.exports = nextConfig;
