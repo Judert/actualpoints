@@ -27,6 +27,7 @@ import dynamic from "next/dynamic";
 import "react-markdown-editor-lite/lib/index.css";
 import ReactMarkdown from "react-markdown";
 import Editor, { Plugins } from "react-markdown-editor-lite";
+import { components } from "../../../components/Markdown";
 
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false,
@@ -195,7 +196,9 @@ function TextEditor({ value, onChange }) {
         style={{ height: "500px" }}
         value={value}
         // eslint-disable-next-line react/no-children-prop
-        renderHTML={(value) => <ReactMarkdown children={value} />}
+        renderHTML={(value) => (
+          <ReactMarkdown components={components}>{value}</ReactMarkdown>
+        )}
         onChange={({ html, text }, event) => {
           onChange(text);
         }}

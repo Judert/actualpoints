@@ -12,27 +12,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
-
-const renderers = {
-  p: (paragraph) => {
-    const { node } = paragraph;
-    if (node.children[0].tagName === "img") {
-      const image = node.children[0];
-      // console.log(image);
-      return (
-        <Image
-          src={image.properties.src}
-          alt={image.properties.alt}
-          height="200"
-          width="300"
-          layout="responsive"
-        />
-      );
-    }
-
-    return <p>{paragraph.children}</p>;
-  },
-};
+import "react-markdown-editor-lite/lib/index.css";
+import { components } from "../../components/Markdown";
 
 export async function getStaticPaths() {
   const snapshot = await getDocs(
@@ -84,7 +65,9 @@ export default function Article(props) {
           height={200}
           layout="responsive"
         />
-        <ReactMarkdown components={renderers}>{article.content}</ReactMarkdown>
+        <ReactMarkdown className="custom-html-style" components={components}>
+          {article.content}
+        </ReactMarkdown>
       </Paper>
       <Typography variant="h6" color="text.secondary">
         Article contributed by:
