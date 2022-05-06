@@ -12,8 +12,9 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
-import "react-markdown-editor-lite/lib/index.css";
+// import "react-markdown-editor-lite/lib/index.css";
 import { components } from "../../components/Markdown";
+import remarkGfm from "remark-gfm";
 
 export async function getStaticPaths() {
   const snapshot = await getDocs(
@@ -65,7 +66,11 @@ export default function Article(props) {
           height={200}
           layout="responsive"
         />
-        <ReactMarkdown className="custom-html-style" components={components}>
+        <ReactMarkdown
+          className="custom-html-style"
+          components={components}
+          remarkPlugins={[remarkGfm]}
+        >
           {article.content}
         </ReactMarkdown>
       </Paper>

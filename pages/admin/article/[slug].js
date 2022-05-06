@@ -34,6 +34,7 @@ const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
 });
 
 Editor.unuse(Plugins.Image);
+Editor.unuse(Plugins.FontUnderline);
 let mounted = false;
 
 export default function AdminArticleEdit() {
