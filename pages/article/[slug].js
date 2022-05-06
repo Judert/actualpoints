@@ -15,6 +15,7 @@ import ReactMarkdown from "react-markdown";
 // import "react-markdown-editor-lite/lib/index.css";
 import { components } from "../../components/Markdown";
 import remarkGfm from "remark-gfm";
+// import "../../styles/markdown.module.css";
 
 export async function getStaticPaths() {
   const snapshot = await getDocs(
@@ -52,7 +53,7 @@ export default function Article(props) {
   return (
     <Content>
       <Paper sx={{ p: 3, display: "flex", flexDirection: "column" }}>
-        <Typography variant="h4">{article.title}</Typography>
+        <Typography variant="h3">{article.title}</Typography>
         <Typography variant="h6" color="text.secondary">
           {article.subtitle}
         </Typography>
@@ -67,7 +68,7 @@ export default function Article(props) {
           layout="responsive"
         />
         <ReactMarkdown
-          className="custom-html-style"
+          // className="custom-html-style"
           components={components}
           remarkPlugins={[remarkGfm]}
         >

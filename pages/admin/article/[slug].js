@@ -194,6 +194,7 @@ function TextEditor({ value, onChange }) {
   return (
     <>
       <MdEditor
+        htmlClass={null}
         style={{ height: "500px" }}
         value={value}
         // eslint-disable-next-line react/no-children-prop

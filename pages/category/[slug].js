@@ -38,7 +38,6 @@ import { useRouter } from "next/router";
 import category from "../../data/category.json";
 import find from "lodash.find";
 import Image from "next/image";
-import styles from "../../styles/CategorySlug.module.css";
 import Link from "next/link";
 import Articles from "../../components/Articles";
 
