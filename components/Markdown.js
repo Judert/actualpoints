@@ -1,6 +1,15 @@
 import Image from "next/image";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { dark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import ReactMarkdown from "react-markdown";
+// import "react-markdown-editor-lite/lib/index.css";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
+// import "../../styles/markdown.module.css";
 
-export const components = {
+const components = {
   p: (paragraph) => {
     const { node } = paragraph;
 
@@ -32,4 +41,35 @@ export const components = {
     }
     return <p>{paragraph.children}</p>;
   },
+  code: (code) => {
+    const { node, inline, className, children, ...props } = code;
+    const match = /language-(\w+)/.exec(className || "");
+    return !inline && match ? (
+      <SyntaxHighlighter
+        style={dark}
+        language={match[1]}
+        PreTag="div"
+        {...props}
+      >
+        {String(children).replace(/\n$/, "")}
+      </SyntaxHighlighter>
+    ) : (
+      <code className={className} {...props}>
+        {children}
+      </code>
+    );
+  },
 };
+
+export default function Markdown({ children }) {
+  return (
+    <ReactMarkdown
+      // className="custom-html-style"
+      components={components}
+      remarkPlugins={[remarkGfm, remarkMath]}
+      rehypePlugins={[rehypeKatex]}
+    >
+      {children}
+    </ReactMarkdown>
+  );
+}
