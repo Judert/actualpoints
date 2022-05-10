@@ -7,12 +7,40 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
+import {
+  Divider,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import Link from "../src/Link";
 // import "../../styles/markdown.module.css";
 
 const components = {
-  p: (paragraph) => {
-    const { node } = paragraph;
-
+  h1: ({ children }) => {
+    return <Typography variant="h4">{children}</Typography>;
+  },
+  h2: ({ children }) => {
+    return <Typography variant="h5">{children}</Typography>;
+  },
+  h3: ({ children }) => {
+    return <Typography variant="h6">{children}</Typography>;
+  },
+  h4: ({ children }) => {
+    return <></>;
+  },
+  h5: ({ children }) => {
+    return <></>;
+  },
+  h6: ({ children }) => {
+    return <></>;
+  },
+  p: ({ node, children }) => {
     if (node.children[0].tagName === "img") {
       const image = node.children[0];
       const metastring = image.properties.alt;
@@ -39,10 +67,9 @@ const components = {
         </div>
       );
     }
-    return <p>{paragraph.children}</p>;
+    return <p>{children}</p>;
   },
-  code: (code) => {
-    const { node, inline, className, children, ...props } = code;
+  code: ({ node, inline, className, children, ...props }) => {
     const match = /language-(\w+)/.exec(className || "");
     return !inline && match ? (
       <SyntaxHighlighter
@@ -58,6 +85,39 @@ const components = {
         {children}
       </code>
     );
+  },
+  input: ({ node, children, ...props }) => {
+    return <></>;
+  },
+  hr: () => {
+    return <Divider />;
+  },
+  a: ({ node, children, ...props }) => {
+    return <Link href={props.href}>{children}</Link>;
+  },
+  table: ({ children }) => {
+    return (
+      <TableContainer component={Paper}>
+        <Table size="small" aria-label="a dense table">
+          {children}
+        </Table>
+      </TableContainer>
+    );
+  },
+  thead: ({ children }) => {
+    return <TableHead>{children}</TableHead>;
+  },
+  tbody: ({ children }) => {
+    return <TableBody>{children}</TableBody>;
+  },
+  th: ({ children }) => {
+    return <TableCell>{children}</TableCell>;
+  },
+  td: ({ children }) => {
+    return <TableCell>{children}</TableCell>;
+  },
+  tr: ({ children }) => {
+    return <TableRow>{children}</TableRow>;
   },
 };
 
