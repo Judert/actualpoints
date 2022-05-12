@@ -57,7 +57,7 @@ export default function Article(props) {
           Last Updated: {new Date(article.date).toDateString()}
         </Typography>
         <Image
-          alt={article.tags[0]?.id}
+          alt={article.alt}
           src={article.image}
           width={300}
           height={200}

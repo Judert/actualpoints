@@ -80,6 +80,7 @@ function Articles() {
       title: title,
       subtitle: "",
       image: "",
+      alt: "",
       content: "",
       date: serverTimestamp(),
       username: username,

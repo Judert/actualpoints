@@ -65,6 +65,7 @@ function ArticleEdit() {
     title: Yup.string().required("Please give a title"),
     subtitle: Yup.string().required("Please give a subtitle"),
     image: Yup.string().required("Please give a url"),
+    alt: Yup.string().required("Please give alt text for the front image"),
     // published: Yup.boolean(),
   });
   const {
@@ -92,6 +93,7 @@ function ArticleEdit() {
       title: data.title,
       subtitle: data.subtitle,
       image: data.image,
+      alt: data.alt,
       category: category,
       tags: tags,
       published: checked,
@@ -167,6 +169,18 @@ function ArticleEdit() {
             {...register("image")}
             error={errors.image ? true : false}
             helperText={errors.image?.message}
+          />
+          <TextField
+            fullWidth
+            multiline
+            variant="standard"
+            label={"Front Image Alt Text"}
+            defaultValue={valueArticle.alt}
+            id="alt"
+            name="alt"
+            {...register("alt")}
+            error={errors.alt ? true : false}
+            helperText={errors.alt?.message}
           />
           <CategorySelect
             valueArticle={valueArticle}

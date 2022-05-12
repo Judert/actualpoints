@@ -40,7 +40,7 @@ export default function Articles({ articles }) {
             </CardContent>
             <Box sx={{ flex: 1 }}>
               <Image
-                alt={article.tags[0]?.id}
+                alt={article.alt}
                 src={article.image}
                 width={150}
                 height={150}
