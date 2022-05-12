@@ -6,11 +6,17 @@ import NativeSelect from "@mui/material/NativeSelect";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import SaveIcon from "@mui/icons-material/Save";
-import { ButtonGroup, Divider, Typography, Checkbox } from "@mui/material";
+import {
+  ButtonGroup,
+  Divider,
+  Typography,
+  Checkbox,
+  CircularProgress,
+} from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { db } from "../../../lib/firebase";
+import { auth, db } from "../../../lib/firebase";
 import {
   doc,
   updateDoc,
@@ -27,6 +33,8 @@ import dynamic from "next/dynamic";
 import "react-markdown-editor-lite/lib/index.css";
 import Editor, { Plugins } from "react-markdown-editor-lite";
 import Markdown from "../../../components/Markdown";
+import { storage } from "../../../lib/firebase";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false,
@@ -109,6 +117,8 @@ function ArticleEdit() {
       if (valueArticle) {
         setTags(valueArticle.tags);
         setContent(valueArticle.content);
+        setChecked(valueArticle.published);
+        setCategory(valueArticle.category);
         mounted = true;
       }
     }
@@ -164,12 +174,9 @@ function ArticleEdit() {
             setCategory={setCategory}
           />
           <Tags tags={tags} setTags={setTags} />
-          <Published
-            valueArticle={valueArticle}
-            checked={checked}
-            setChecked={setChecked}
-          />
+          <Published checked={checked} setChecked={setChecked} />
           <Divider />
+          <ImageUploader />
           <TextEditor value={content} onChange={setContent} />
           <Divider />
           <ButtonGroup sx={{ my: 4 }}>
@@ -191,25 +198,20 @@ function ArticleEdit() {
 
 function TextEditor({ value, onChange }) {
   return (
-    <>
-      <MdEditor
-        htmlClass={null}
-        style={{ height: "500px" }}
-        value={value}
-        // eslint-disable-next-line react/no-children-prop
-        renderHTML={(value) => <Markdown>{value}</Markdown>}
-        onChange={({ html, text }, event) => {
-          onChange(text);
-        }}
-      />
-    </>
+    <MdEditor
+      htmlClass={null}
+      style={{ height: "500px" }}
+      value={value}
+      // eslint-disable-next-line react/no-children-prop
+      renderHTML={(value) => <Markdown>{value}</Markdown>}
+      onChange={({ html, text }, event) => {
+        onChange(text);
+      }}
+    />
   );
 }
 
-function Published({ valueArticle, checked, setChecked }) {
-  useEffect(() => {
-    setChecked(valueArticle.published);
-  }, []);
+function Published({ checked, setChecked }) {
   const handleChange = (event) => {
     setChecked(event.target.checked);
   };
@@ -222,11 +224,8 @@ function Published({ valueArticle, checked, setChecked }) {
   );
 }
 
-function CategorySelect({ valueArticle, category, setCategory }) {
-  useEffect(() => {
-    setCategory(valueArticle.category);
-  }, []);
-  const handleChangeCategory = (event) => {
+function CategorySelect({ category, setCategory }) {
+  const handleChange = (event) => {
     setCategory(event.target.value);
   };
 
@@ -238,7 +237,7 @@ function CategorySelect({ valueArticle, category, setCategory }) {
         </InputLabel>
         <NativeSelect
           value={category}
-          onChange={handleChangeCategory}
+          onChange={handleChange}
           inputProps={{
             name: "category",
             id: "uncontrolled-native",
@@ -251,6 +250,109 @@ function CategorySelect({ valueArticle, category, setCategory }) {
           ))}
         </NativeSelect>
       </FormControl>
+    </Box>
+  );
+}
+
+function ImageUploader() {
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [downloadURL, setDownloadURL] = useState(null);
+
+  // Creates a Firebase Upload Task
+  const uploadFile = async (e) => {
+    // Get the file
+    const file = Array.from(e.target.files)[0];
+    const extension = file.type.split("/")[1];
+
+    // Makes reference to the storage bucket location
+    const storageRef = ref(
+      storage,
+      `uploads/${auth.currentUser.uid}/${Date.now()}.${extension}`
+    );
+    setUploading(true);
+
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    // Register three observers:
+    // 1. 'state_changed' observer, called any time the state changes
+    // 2. Error observer, called on failure
+    // 3. Completion observer, called on successful completion
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        // switch (snapshot.state) {
+        //   case "paused":
+        //     console.log("Upload is paused");
+        //     break;
+        //   case "running":
+        //     console.log("Upload is running");
+        //     break;
+        // }
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+      },
+      () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setDownloadURL(downloadURL);
+          setUploading(false);
+        });
+      }
+    );
+  };
+
+  return (
+    <Box>
+      <CircularProgressWithLabel
+        show={uploading ? "inline-flex" : "none"}
+        value={progress}
+      />
+
+      {!uploading && (
+        <>
+          <Button variant="contained" component="label">
+            📸 Upload Img
+            <input
+              type="file"
+              hidden
+              onChange={uploadFile}
+              accept="image/x-png,image/gif,image/jpeg"
+            />
+          </Button>
+        </>
+      )}
+
+      {downloadURL && <Typography>{`![alt](${downloadURL})`}</Typography>}
+    </Box>
+  );
+}
+
+function CircularProgressWithLabel(props) {
+  return (
+    <Box sx={{ position: "relative", display: props.show }}>
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Typography variant="caption" component="div" color="text.secondary">
+          {`${Math.round(props.value)}%`}
+        </Typography>
+      </Box>
     </Box>
   );
 }

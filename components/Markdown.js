@@ -53,6 +53,18 @@ const components = {
       const hasCaption = metastring?.toLowerCase().includes("{caption:");
       const caption = metastring?.match(/{caption: (.*?)}/)?.pop();
 
+      if (
+        !image.properties.src.startsWith(
+          "https://firebasestorage.googleapis.com"
+        )
+      ) {
+        return (
+          <Typography color="error.main" variant="body1">
+            Invalid image: please use uploaded images only for optimization
+          </Typography>
+        );
+      }
+
       return (
         <div>
           <Image
@@ -97,7 +109,7 @@ const components = {
   },
   table: ({ children }) => {
     return (
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table size="small" aria-label="a dense table">
           {children}
         </Table>
