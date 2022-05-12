@@ -22,7 +22,7 @@ import { UserContext } from "../lib/context";
 export default function Navbar(props) {
   const theme = useTheme();
 
-  const { user, username } = useContext(UserContext);
+  const { photoURL } = useContext(UserContext);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -72,7 +72,7 @@ export default function Navbar(props) {
           </Box>
 
           <IconButton component={Link} noLinkStyle href="/admin" sx={{ py: 0 }}>
-            <Avatar sx={{ width: 28, height: 28 }} src={user?.photoURL} />
+            <Avatar sx={{ width: 28, height: 28 }} src={photoURL} />
           </IconButton>
 
           {/* <IconButton onClick={props.colorMode.toggleColorMode} color="inherit">

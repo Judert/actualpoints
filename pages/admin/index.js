@@ -12,6 +12,7 @@ import debounce from "lodash.debounce";
 import { doc, writeBatch, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import Content from "../../components/Content";
+import Link from "../../src/Link";
 
 export default function Admin() {
   const { user, username, email } = useContext(UserContext);
@@ -40,31 +41,33 @@ export default function Admin() {
 }
 
 function EditProfile() {
-  return <Button variant="contained">Edit Profile</Button>;
+  return (
+    <Button
+      variant="contained"
+      component={Link}
+      noLinkStyle
+      href="/admin/profile"
+    >
+      Edit Profile
+    </Button>
+  );
 }
 
 function ManageArticles() {
-  const router = useRouter();
-
-  const handleClick = () => {
-    router.push("/admin/article");
-  };
-
   return (
-    <>
-      <Button variant="outlined" onClick={handleClick}>
-        Manage Articles
-      </Button>
-    </>
+    <Button
+      variant="outlined"
+      component={Link}
+      noLinkStyle
+      href="/admin/article"
+    >
+      Manage Articles
+    </Button>
   );
 }
 
 function PermissionDenied() {
-  return (
-    <>
-      <Typography>You do not have permission to view this page.</Typography>
-    </>
-  );
+  return <Typography>You do not have permission to view this page.</Typography>;
 }
 
 function SignInButton() {
@@ -117,6 +120,7 @@ function SignUp() {
       username: formValue,
       photoURL: user.photoURL,
       displayName: user.displayName,
+      desc: "",
     });
     batch.set(usernameDoc, { uid: user.uid });
 
