@@ -51,7 +51,8 @@ export default function AdminArticle() {
 
 function Articles() {
   // Auth
-  const { username, user } = useContext(UserContext);
+  const { username, user, displayName, photoURL, desc } =
+    useContext(UserContext);
 
   // Firebase
   const [rows, loading, error] = useCollection(
@@ -70,12 +71,6 @@ function Articles() {
       alert("Article already exists");
       return;
     }
-    const snapshotUser = await getDoc(doc(db, "User", user.uid)).catch(
-      (error) => {
-        // TODO: show error toast
-        console.log(error);
-      }
-    );
     await setDoc(doc(db, "Article", id), {
       title: title,
       subtitle: "",
@@ -89,8 +84,9 @@ function Articles() {
       tags: [],
       slug: slug,
       uid: user.uid,
-      displayName: snapshotUser.data().displayName,
-      photoURL: snapshotUser.data().photoURL,
+      displayName: displayName,
+      photoURL: photoURL,
+      desc: desc,
     }).catch((error) => {
       // TODO: error toast
       console.log(error);
