@@ -12,12 +12,7 @@ export default function CategoryAll() {
       <Grid container spacing={2}>
         {Category.map((category) => (
           <Link href={`/category/${category.id}`} passHref key={category.id}>
-            <Grid
-              md={4}
-              item
-              // key={category.id}
-              style={{ position: "relative" }}
-            >
+            <Grid md={4} item style={{ position: "relative" }}>
               <Image
                 alt={category.name}
                 src={category.image}
