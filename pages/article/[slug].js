@@ -81,10 +81,7 @@ export default function Article(props) {
           </Grid>
         </Grid>
         <Grid item xs={12} sm={8}>
-          <Typography variant="body1">
-            A super long or not super long writer description goes here, im not
-            actually sure how long theyll usually be
-          </Typography>
+          <Typography variant="body1">{article.desc}</Typography>
         </Grid>
       </Grid>
       <Box>

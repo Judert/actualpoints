@@ -3,15 +3,12 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 const db = admin.firestore();
 
-exports.articleUserUpdate = functions.database
-  .ref("/User/{userId}")
+exports.articleUserUpdate = functions.firestore
+  .document("User/{userId}")
   .onUpdate((change, context) => {
-    // Retrieve the current and previous value
     const data = change.after.data();
     const previousData = change.before.data();
 
-    // We'll only update if the name has changed.
-    // This is crucial to prevent infinite loops.
     if (
       data.displayName == previousData.displayName &&
       data.photoURL == previousData.photoURL &&
@@ -21,7 +18,7 @@ exports.articleUserUpdate = functions.database
     }
 
     db.collection("Article")
-      .where("userId", "==", context.params.userId)
+      .where("uid", "==", context.params.userId)
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
