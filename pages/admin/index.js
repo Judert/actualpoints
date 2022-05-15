@@ -6,7 +6,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import Image from "next/image";
 import { auth, db, googleAuthProvider } from "../../lib/firebase";
 import { signInWithPopup, signOut } from "firebase/auth";
-import { Typography } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 import { UserContext } from "../../lib/context";
 import debounce from "lodash.debounce";
 import { doc, writeBatch, getDoc } from "firebase/firestore";
@@ -101,8 +101,9 @@ function SignOutButton() {
 }
 
 function SignUp() {
+  const router = useRouter();
   const [formValue, setFormValue] = useState("");
-  const [isValid, setIsValid] = useState(false);
+  const [valid, setValid] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const { user, username } = useContext(UserContext);
@@ -125,6 +126,8 @@ function SignUp() {
     batch.set(usernameDoc, { uid: user.uid });
 
     await batch.commit();
+
+    router.push("/admin/profile");
   };
 
   const onChange = (e) => {
@@ -136,13 +139,13 @@ function SignUp() {
     if (val.length < 3) {
       setFormValue(val);
       setLoading(false);
-      setIsValid(false);
+      setValid(false);
     }
 
     if (re.test(val)) {
       setFormValue(val);
       setLoading(true);
-      setIsValid(false);
+      setValid(false);
     }
   };
 
@@ -156,7 +159,7 @@ function SignUp() {
     debounce(async (username) => {
       if (username.length >= 3) {
         const exists = (await getDoc(doc(db, "Username", username))).exists();
-        setIsValid(!exists);
+        setValid(!exists);
         setLoading(false);
       }
     }, 500),
@@ -165,44 +168,49 @@ function SignUp() {
 
   return (
     !username && (
-      <section>
-        <h3>Choose Username</h3>
+      <>
+        <Typography variant="h4">Choose Username</Typography>
         <form onSubmit={onSubmit}>
-          <input
+          <TextField
             name="username"
-            placeholder="username"
+            label="username"
             value={formValue}
             onChange={onChange}
           />
           <UsernameMessage
             username={formValue}
-            isValid={isValid}
+            valid={valid}
             loading={loading}
           />
-          <button type="submit" className="btn-green" disabled={!isValid}>
+          <Button
+            variant="contained"
+            type="submit"
+            className="btn-green"
+            disabled={!valid}
+          >
             Choose
-          </button>
+          </Button>
 
-          <h3>Debug State</h3>
+          {/* <h3>Debug State</h3>
           <div>
             Username: {formValue}
             <br />
             Loading: {loading.toString()}
             <br />
-            Username Valid: {isValid.toString()}
-          </div>
+            Username Valid: {valid.toString()}
+          </div> */}
         </form>
-      </section>
+      </>
     )
   );
 }
 
-function UsernameMessage({ username, isValid, loading }) {
+function UsernameMessage({ username, valid, loading }) {
   if (loading) {
     return <p>Checking...</p>;
-  } else if (isValid) {
+  } else if (valid) {
     return <p className="text-success">{username} is available!</p>;
-  } else if (username && !isValid) {
+  } else if (username && !valid) {
     return <p className="text-danger">That username is taken!</p>;
   } else {
     return <p></p>;
