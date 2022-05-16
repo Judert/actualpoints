@@ -30,7 +30,7 @@ import {
   orderBy,
   serverTimestamp,
 } from "firebase/firestore";
-import { Checkbox, Typography } from "@mui/material";
+import { Checkbox, TextField, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Authorize from "../../../components/Authorize";
@@ -107,7 +107,7 @@ function Articles() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const slug = encodeURI(kebabCase(title));
-  const isValid = title.length > 3 && title.length < 100;
+  const isValid = title.length > 3 && title.length < 60;
 
   // Page handling
   const [page, setPage] = React.useState(0);
@@ -201,19 +201,23 @@ function Articles() {
               </TableFooter>
             </Table>
           </TableContainer>
-          <form onSubmit={handleAdd}>
-            <input
+          <Box
+            component="form"
+            onSubmit={handleAdd}
+            sx={{ display: "flex", flexDirection: "column" }}
+          >
+            <TextField
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Article Title"
+              name="Article Title"
+              label="Article Title"
+              variant="standard"
             />
-            <p>
-              <strong>Slug:</strong> {slug}
-            </p>
-            <button type="submit" disabled={!isValid}>
+            {/* <Typography>{slug}</Typography> */}
+            <Button variant="contained" type="submit" disabled={!isValid}>
               Create New Article
-            </button>
-          </form>
+            </Button>
+          </Box>
         </>
       )}
     </Content>

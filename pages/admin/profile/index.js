@@ -25,9 +25,19 @@ function ProfileEdit() {
 
   // React hook form
   const validationSchema = Yup.object().shape({
-    displayName: Yup.string().required("Please give a display name"),
-    desc: Yup.string().required("Please give a description"),
-    photoURL: Yup.string().required("Please give a url"),
+    displayName: Yup.string()
+      .required("Please give a display name")
+      .max(50, "Display name is too long"),
+    desc: Yup.string()
+      .required("Please give a description")
+      .max(255, "Description is too long"),
+    photoURL: Yup.string()
+      .url("Url is not valid")
+      .required("Please give a url")
+      .matches(
+        /^https:\/\/firebasestorage.googleapis.com/,
+        "firebasestorage.googleapis.com url required"
+      ),
   });
   const {
     register,
@@ -69,6 +79,7 @@ function ProfileEdit() {
       />
       <TextField
         fullWidth
+        multiline
         variant="standard"
         label={"Description"}
         defaultValue={desc}
@@ -80,6 +91,7 @@ function ProfileEdit() {
       />
       <TextField
         fullWidth
+        multiline
         variant="standard"
         label={"Profile Photo"}
         defaultValue={photoURL}

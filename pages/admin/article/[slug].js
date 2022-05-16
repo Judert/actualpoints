@@ -61,10 +61,25 @@ function ArticleEdit() {
 
   // React hook form
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required("Please give a title"),
-    subtitle: Yup.string().required("Please give a subtitle"),
-    image: Yup.string().required("Please give a url"),
-    alt: Yup.string().required("Please give alt text for the front image"),
+    title: Yup.string()
+      .required("Title required")
+      .min(3, "Too short")
+      .max(60, "Too long"),
+    subtitle: Yup.string()
+      .required("Subtitle required")
+      .min(3, "Too short")
+      .max(255, "Too long"),
+    image: Yup.string()
+      .url("Url not valid")
+      .required("Image url required")
+      .matches(
+        /^https:\/\/firebasestorage.googleapis.com/,
+        "firebasestorage.googleapis.com url required"
+      ),
+    alt: Yup.string()
+      .required("Alt text required")
+      .min(3, "Too short")
+      .max(100, "Too long"),
   });
   const {
     register,
