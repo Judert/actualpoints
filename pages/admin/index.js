@@ -43,7 +43,7 @@ export default function Admin() {
 function EditProfile() {
   return (
     <Button
-      variant="contained"
+      variant="outlined"
       component={Link}
       noLinkStyle
       href="/admin/profile"

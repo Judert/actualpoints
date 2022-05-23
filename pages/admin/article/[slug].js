@@ -41,7 +41,6 @@ const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
 
 Editor.unuse(Plugins.Image);
 Editor.unuse(Plugins.FontUnderline);
-let mounted = false;
 
 export default function AdminArticleEdit() {
   return (
@@ -59,6 +58,20 @@ function ArticleEdit() {
     doc(db, "Article", slug)
   );
 
+  return (
+    <Content>
+      {errorArticle && (
+        <Typography>Error: {JSON.stringify(errorArticle)}</Typography>
+      )}
+      {loadingArticle && <Typography>Collection: Loading...</Typography>}
+      {valueArticle && (
+        <Edit router={router} slug={slug} valueArticle={valueArticle} />
+      )}
+    </Content>
+  );
+}
+
+function Edit({ router, slug, valueArticle }) {
   // React hook form
   const validationSchema = Yup.object().shape({
     title: Yup.string()
@@ -80,6 +93,11 @@ function ArticleEdit() {
       .required("Alt text required")
       .min(3, "Too short")
       .max(100, "Too long"),
+    category: Yup.string(),
+    tags: Yup.array(),
+    published: Yup.boolean(),
+    content: Yup.string().required("Content required"),
+    // .default(valueArticle.content),
   });
   const {
     register,
@@ -87,6 +105,7 @@ function ArticleEdit() {
     handleSubmit,
     formState: { errors },
   } = useForm({
+    // defaultValues: validationSchema.cast(),
     resolver: yupResolver(validationSchema),
   });
 
@@ -107,176 +126,133 @@ function ArticleEdit() {
       subtitle: data.subtitle,
       image: data.image,
       alt: data.alt,
-      category: category,
-      tags: tags,
-      published: checked,
+      category: data.category,
+      tags: data.tags,
+      published: data.published,
+      content: data.content,
       date: serverTimestamp(),
-      content: content,
     });
     const batch = writeBatch(db);
-    for (let i = 0; i < tags.length; i++) {
-      batch.set(doc(db, "Tag", tags[i].id), {});
+    for (let i = 0; i < data.tags.length; i++) {
+      batch.set(doc(db, "Tag", data.tags[i].id), {});
     }
     await batch.commit();
   };
 
-  // Initialize to pass
-  const [checked, setChecked] = React.useState(false);
-  const [category, setCategory] = React.useState(Category[0].id);
-  const [content, setContent] = React.useState("");
-
-  // wait for article then set for components
-  const [tags, setTags] = React.useState([]);
-  useEffect(() => {
-    if (!mounted) {
-      if (valueArticle) {
-        setTags(valueArticle.tags);
-        setContent(valueArticle.content);
-        setChecked(valueArticle.published);
-        setCategory(valueArticle.category);
-        mounted = true;
-      }
-    }
-  }, [valueArticle]);
-
   return (
-    <Content>
-      {errorArticle && (
-        <Typography>Error: {JSON.stringify(errorArticle)}</Typography>
-      )}
-      {loadingArticle && <Typography>Collection: Loading...</Typography>}
-      {valueArticle && (
-        <>
-          <TextField
-            fullWidth
-            multiline
-            variant="standard"
-            label={"Title"}
-            defaultValue={valueArticle.title}
-            id="title"
-            name="title"
-            {...register("title")}
-            error={errors.title ? true : false}
-            helperText={errors.title?.message}
-          />
-          <TextField
-            fullWidth
-            multiline
-            variant="standard"
-            label={"Subtitle"}
-            defaultValue={valueArticle.subtitle}
-            id="subtitle"
-            name="subtitle"
-            {...register("subtitle")}
-            error={errors.subtitle ? true : false}
-            helperText={errors.subtitle?.message}
-          />
-          <TextField
-            fullWidth
-            multiline
-            variant="standard"
-            label={"Front Image"}
-            defaultValue={valueArticle.image}
-            id="image"
-            name="image"
-            {...register("image")}
-            error={errors.image ? true : false}
-            helperText={errors.image?.message}
-          />
-          <TextField
-            fullWidth
-            multiline
-            variant="standard"
-            label={"Front Image Alt Text"}
-            defaultValue={valueArticle.alt}
-            id="alt"
-            name="alt"
-            {...register("alt")}
-            error={errors.alt ? true : false}
-            helperText={errors.alt?.message}
-          />
-          <CategorySelect
-            valueArticle={valueArticle}
-            category={category}
-            setCategory={setCategory}
-          />
-          <Tags tags={tags} setTags={setTags} />
-          <Published checked={checked} setChecked={setChecked} />
-          <Divider />
-          <ImageUploader markdown={true} />
-          <TextEditor value={content} onChange={setContent} />
-          <Divider />
-          <ButtonGroup sx={{ my: 4 }}>
-            <Button variant="contained" onClick={handleSubmit(handleDone)}>
-              Save and complete
-            </Button>
-            <Button variant="outlined" onClick={() => handleCancel()}>
-              Cancel
-            </Button>
-            <Button startIcon={<SaveIcon />} onClick={handleSubmit(handleSave)}>
-              Save
-            </Button>
-          </ButtonGroup>
-        </>
-      )}
-    </Content>
-  );
-}
+    <>
+      <TextField
+        fullWidth
+        multiline
+        variant="standard"
+        label={"Title"}
+        defaultValue={valueArticle.title}
+        {...register("title")}
+        error={errors.title ? true : false}
+        helperText={errors.title?.message}
+      />
+      <TextField
+        fullWidth
+        multiline
+        variant="standard"
+        label={"Subtitle"}
+        defaultValue={valueArticle.subtitle}
+        {...register("subtitle")}
+        error={errors.subtitle ? true : false}
+        helperText={errors.subtitle?.message}
+      />
+      <TextField
+        fullWidth
+        multiline
+        variant="standard"
+        label={"Front Image"}
+        defaultValue={valueArticle.image}
+        {...register("image")}
+        error={errors.image ? true : false}
+        helperText={errors.image?.message}
+      />
+      <TextField
+        fullWidth
+        multiline
+        variant="standard"
+        label={"Front Image Alt Text"}
+        defaultValue={valueArticle.alt}
+        {...register("alt")}
+        error={errors.alt ? true : false}
+        helperText={errors.alt?.message}
+      />
+      <Box sx={{ minWidth: 120 }}>
+        <FormControl>
+          <InputLabel variant="standard" htmlFor="uncontrolled-native">
+            Category
+          </InputLabel>
+          <NativeSelect
+            defaultValue={valueArticle.category}
+            inputProps={{
+              name: "category",
+              id: "uncontrolled-native",
+            }}
+            {...register("category")}
+          >
+            {Category.map((row) => (
+              <option key={row.id} value={row.id}>
+                {row.name}
+              </option>
+            ))}
+          </NativeSelect>
+        </FormControl>
+      </Box>
+      <Controller
+        control={control}
+        name="tags"
+        defaultValue={valueArticle.tags}
+        render={({ field: { onChange, onBlur, value, ref } }) => (
+          <Tags tags={value} setTags={onChange} />
+        )}
+      />
+      <Controller
+        control={control}
+        name="published"
+        defaultValue={valueArticle.published}
+        render={({ field: { onChange, onBlur, value, ref } }) => (
+          <Typography>
+            Published
+            <Checkbox value={value} onChange={onChange} />
+          </Typography>
+        )}
+      />
 
-function TextEditor({ value, onChange }) {
-  return (
-    <MdEditor
-      htmlClass={null}
-      style={{ height: "500px" }}
-      value={value}
-      // eslint-disable-next-line react/no-children-prop
-      renderHTML={(value) => <Markdown>{value}</Markdown>}
-      onChange={({ html, text }, event) => {
-        onChange(text);
-      }}
-    />
-  );
-}
-
-function Published({ checked, setChecked }) {
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
-  };
-
-  return (
-    <Typography>
-      Published
-      <Checkbox value={checked} onChange={handleChange} />
-    </Typography>
-  );
-}
-
-function CategorySelect({ category, setCategory }) {
-  const handleChange = (event) => {
-    setCategory(event.target.value);
-  };
-
-  return (
-    <Box sx={{ minWidth: 120 }}>
-      <FormControl>
-        <InputLabel variant="standard" htmlFor="uncontrolled-native">
-          Category
-        </InputLabel>
-        <NativeSelect
-          value={category}
-          onChange={handleChange}
-          inputProps={{
-            name: "category",
-            id: "uncontrolled-native",
-          }}
-        >
-          {Category.map((row) => (
-            <option key={row.id} value={row.id}>
-              {row.name}
-            </option>
-          ))}
-        </NativeSelect>
-      </FormControl>
-    </Box>
+      <Divider />
+      <ImageUploader markdown={true} />
+      <Controller
+        control={control}
+        name="content"
+        defaultValue={valueArticle.content}
+        render={({ field: { onChange, onBlur, value, ref } }) => (
+          <MdEditor
+            htmlClass={null}
+            style={{ height: "500px" }}
+            value={value}
+            // eslint-disable-next-line react/no-children-prop
+            renderHTML={(value) => <Markdown>{value}</Markdown>}
+            onChange={({ html, text }, event) => {
+              onChange(text);
+            }}
+          />
+        )}
+      />
+      <Divider />
+      <ButtonGroup sx={{ my: 4 }}>
+        <Button variant="contained" onClick={handleSubmit(handleDone)}>
+          Save and complete
+        </Button>
+        <Button variant="outlined" onClick={() => handleCancel()}>
+          Cancel
+        </Button>
+        <Button startIcon={<SaveIcon />} onClick={handleSubmit(handleSave)}>
+          Save
+        </Button>
+      </ButtonGroup>
+    </>
   );
 }

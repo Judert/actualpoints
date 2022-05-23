@@ -36,7 +36,14 @@ export default function Articles({ articles }) {
               >
                 {article.subtitle}
               </Typography>
-              <Chip label={article.tags[0]?.id} variant="outlined" />
+              {article.tags.map((tag) => (
+                <Chip
+                  key={tag.id}
+                  sx={{ mr: 0.5 }}
+                  variant="outlined"
+                  label={tag.id}
+                />
+              ))}
             </CardContent>
             <Box sx={{ flex: 1 }}>
               <Image
