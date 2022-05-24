@@ -54,16 +54,8 @@ const components = {
     if (
       !node.properties.src.startsWith("https://firebasestorage.googleapis.com")
     ) {
-      // br and strong cause no errors nested in a p tag
-      return (
-        <>
-          <br />
-          <br />
-          <strong>INVALID IMAGE: PLEASE USE UPLOADED IMAGES ONLY</strong>
-          <br />
-          <br />
-        </>
-      );
+      //// br and strong cause no errors nested in a p tag
+      return <></>;
     }
 
     return (

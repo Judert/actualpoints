@@ -72,6 +72,12 @@ function ArticleEdit() {
 }
 
 function Edit({ router, slug, valueArticle }) {
+  Yup.addMethod(Yup.string, "wordCount", function () {
+    return this.test("wordCount", function (value) {
+      return wordCount >= value;
+    });
+  });
+
   // React hook form
   const validationSchema = Yup.object().shape({
     title: Yup.string()
@@ -109,8 +115,11 @@ function Edit({ router, slug, valueArticle }) {
     published: Yup.boolean(),
     content: Yup.string()
       .required("Content required")
-      .matches(/^[\s\S]{1,}$/, "Content required"),
-    // .default(valueArticle.content),
+      .matches(
+        /!\[.*\]\(.*(?<!https:\/\/firebasestorage\.googleapis\.com.*)\)/,
+        "Invalid Image(s): Please only use uploaded images"
+      )
+      .wordCount(wordCount, "Need atleast 2000 words"),
   });
   const {
     register,
@@ -151,6 +160,8 @@ function Edit({ router, slug, valueArticle }) {
     }
     await batch.commit();
   };
+
+  const [wordCount, setWordCount] = useState(null);
 
   return (
     <>
@@ -250,10 +261,12 @@ function Edit({ router, slug, valueArticle }) {
             renderHTML={(value) => <Markdown>{value}</Markdown>}
             onChange={({ html, text }, event) => {
               onChange(text);
+              setWordCount(html.replace(/<[^>]+>/g, "").split(" ").length);
             }}
           />
         )}
       />
+      {wordCount && <Typography>Word Count: {wordCount}</Typography>}
       <Divider />
       <ButtonGroup sx={{ my: 4 }}>
         <Button variant="contained" onClick={handleSubmit(handleDone)}>
