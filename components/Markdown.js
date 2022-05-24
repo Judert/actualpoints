@@ -40,46 +40,45 @@ const components = {
   h6: ({ children }) => {
     return <></>;
   },
-  p: ({ node, children }) => {
-    if (node.children[0].tagName === "img") {
-      const image = node.children[0];
-      const metastring = image.properties.alt;
-      const alt = metastring?.replace(/ *\{[^)]*\} */g, "");
-      const metaWidth = metastring.match(/{([^}]+)x/);
-      const metaHeight = metastring.match(/x([^}]+)}/);
-      const width = metaWidth ? metaWidth[1] : "768";
-      const height = metaHeight ? metaHeight[1] : "432";
-      const isPriority = metastring?.toLowerCase().match("{priority}");
-      const hasCaption = metastring?.toLowerCase().includes("{caption:");
-      const caption = metastring?.match(/{caption: (.*?)}/)?.pop();
+  img: ({ node, children }) => {
+    const metastring = node.properties.alt;
+    const alt = metastring?.replace(/ *\{[^)]*\} */g, "");
+    const metaWidth = metastring.match(/{([^}]+)x/);
+    const metaHeight = metastring.match(/x([^}]+)}/);
+    const width = metaWidth ? metaWidth[1] : "768";
+    const height = metaHeight ? metaHeight[1] : "432";
+    const isPriority = metastring?.toLowerCase().match("{priority}");
+    const hasCaption = metastring?.toLowerCase().includes("{caption:");
+    const caption = metastring?.match(/{caption: (.*?)}/)?.pop();
 
-      if (
-        !image.properties.src.startsWith(
-          "https://firebasestorage.googleapis.com"
-        )
-      ) {
-        return (
-          <Typography color="error.main" variant="body1">
-            Invalid image: please use uploaded images only for optimization
-          </Typography>
-        );
-      }
-
+    if (
+      !node.properties.src.startsWith("https://firebasestorage.googleapis.com")
+    ) {
+      // br and strong cause no errors nested in a p tag
       return (
-        <div>
-          <Image
-            src={image.properties.src}
-            width={width}
-            height={height}
-            alt={alt}
-            priority={isPriority}
-            layout="responsive"
-          />
-          {hasCaption ? <div aria-label={caption}>{caption}</div> : null}
-        </div>
+        <>
+          <br />
+          <br />
+          <strong>INVALID IMAGE: PLEASE USE UPLOADED IMAGES ONLY</strong>
+          <br />
+          <br />
+        </>
       );
     }
-    return <p>{children}</p>;
+
+    return (
+      <div>
+        <Image
+          src={node.properties.src}
+          width={width}
+          height={height}
+          alt={alt}
+          priority={isPriority}
+          layout="responsive"
+        />
+        {hasCaption ? <div aria-label={caption}>{caption}</div> : null}
+      </div>
+    );
   },
   code: ({ node, inline, className, children, ...props }) => {
     const match = /language-(\w+)/.exec(className || "");

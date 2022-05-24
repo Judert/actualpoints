@@ -94,9 +94,22 @@ function Edit({ router, slug, valueArticle }) {
       .min(3, "Too short")
       .max(100, "Too long"),
     category: Yup.string(),
-    tags: Yup.array(),
+    tags: Yup.array()
+      .min(3, "Too few tags")
+      .of(
+        Yup.object().shape({
+          id: Yup.string()
+            .min(25, "Tag(s) too long")
+            .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Tag(s) not valid"),
+          text: Yup.string()
+            .min(25, "Tag(s) too long")
+            .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Tag(s) not valid"),
+        })
+      ),
     published: Yup.boolean(),
-    content: Yup.string().required("Content required"),
+    content: Yup.string()
+      .required("Content required")
+      .matches(/^[\s\S]{1,}$/, "Content required"),
     // .default(valueArticle.content),
   });
   const {

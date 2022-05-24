@@ -36,7 +36,7 @@ function ProfileEdit() {
       .required("Please give a url")
       .matches(
         /^https:\/\/firebasestorage.googleapis.com/,
-        "firebasestorage.googleapis.com url required"
+        "firebasestorage.googleapis.com image required"
       ),
   });
   const {
