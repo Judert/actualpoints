@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ReactDOMServer from "react-dom/server";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
@@ -72,12 +73,6 @@ function ArticleEdit() {
 }
 
 function Edit({ router, slug, valueArticle }) {
-  Yup.addMethod(Yup.string, "wordCount", function () {
-    return this.test("wordCount", function (value) {
-      return wordCount >= value;
-    });
-  });
-
   // React hook form
   const validationSchema = Yup.object().shape({
     title: Yup.string()
@@ -113,19 +108,24 @@ function Edit({ router, slug, valueArticle }) {
         })
       ),
     published: Yup.boolean(),
-    content: Yup.string()
-      .required("Content required")
-      .matches(
-        /!\[.*\]\(.*(?<!https:\/\/firebasestorage\.googleapis\.com.*)\)/,
-        "Invalid Image(s): Please only use uploaded images"
-      )
-      .wordCount(wordCount, "Need atleast 2000 words"),
+    content: Yup.object().shape({
+      text: Yup.string(),
+      // .matches(
+      //   /!\[.*\]\(.*(?<!https:\/\/firebasestorage\.googleapis\.com.*)\)/,
+      //   "Invalid Image(s): Please only use uploaded images"
+      // ),
+      html: Yup.number()
+        .integer()
+        .min(2000, "Too short, need at least 2000 words"),
+    }),
   });
   const {
     register,
     control,
     handleSubmit,
     formState: { errors },
+    watch,
+    setValue,
   } = useForm({
     // defaultValues: validationSchema.cast(),
     resolver: yupResolver(validationSchema),
@@ -143,25 +143,32 @@ function Edit({ router, slug, valueArticle }) {
     update(data);
   };
   const update = async (data) => {
-    await updateDoc(doc(db, "Article", slug), {
-      title: data.title,
-      subtitle: data.subtitle,
-      image: data.image,
-      alt: data.alt,
-      category: data.category,
-      tags: data.tags,
-      published: data.published,
-      content: data.content,
-      date: serverTimestamp(),
-    });
-    const batch = writeBatch(db);
-    for (let i = 0; i < data.tags.length; i++) {
-      batch.set(doc(db, "Tag", data.tags[i].id), {});
-    }
-    await batch.commit();
+    // await updateDoc(doc(db, "Article", slug), {
+    //   title: data.title,
+    //   subtitle: data.subtitle,
+    //   image: data.image,
+    //   alt: data.alt,
+    //   category: data.category,
+    //   tags: data.tags,
+    //   published: data.published,
+    //   content: data.content.text,
+    //   date: serverTimestamp(),
+    // });
+    // const batch = writeBatch(db);
+    // for (let i = 0; i < data.tags.length; i++) {
+    //   batch.set(doc(db, "Tag", data.tags[i].id), {});
+    // }
+    // await batch.commit();
   };
 
-  const [wordCount, setWordCount] = useState(null);
+  const watchHtml = watch(
+    "content.html",
+    ReactDOMServer.renderToString(<Markdown>{valueArticle.content}</Markdown>)
+      .replace(/<[^>]+>/g, "")
+      .split(" ").length
+  );
+
+  const handleChange = (html) => setValue("content.html", html);
 
   return (
     <>
@@ -251,22 +258,39 @@ function Edit({ router, slug, valueArticle }) {
       <Controller
         control={control}
         name="content"
-        defaultValue={valueArticle.content}
+        defaultValue={{
+          text: valueArticle.content,
+          html: watchHtml,
+        }}
         render={({ field: { onChange, onBlur, value, ref } }) => (
           <MdEditor
             htmlClass={null}
             style={{ height: "500px" }}
-            value={value}
+            value={value.text}
             // eslint-disable-next-line react/no-children-prop
             renderHTML={(value) => <Markdown>{value}</Markdown>}
             onChange={({ html, text }, event) => {
-              onChange(text);
-              setWordCount(html.replace(/<[^>]+>/g, "").split(" ").length);
+              const count = html.replace(/<[^>]+>/g, "").split(" ").length;
+              onChange({
+                text: text,
+                html: count,
+              });
+              handleChange(count);
             }}
           />
         )}
       />
-      {wordCount && <Typography>Word Count: {wordCount}</Typography>}
+      {/* {errors.content?.text && (
+        <Typography color="error.main">
+          {errors.content.text.message}
+        </Typography>
+      )} */}
+      {errors.content?.html && (
+        <Typography color="error.main">
+          {errors.content.html.message}
+        </Typography>
+      )}
+      <Typography>Word Count: {watchHtml}</Typography>
       <Divider />
       <ButtonGroup sx={{ my: 4 }}>
         <Button variant="contained" onClick={handleSubmit(handleDone)}>
