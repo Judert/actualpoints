@@ -100,23 +100,24 @@ function Edit({ router, slug, valueArticle }) {
       .of(
         Yup.object().shape({
           id: Yup.string()
-            .min(25, "Tag(s) too long")
-            .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Tag(s) not valid"),
-          text: Yup.string()
-            .min(25, "Tag(s) too long")
-            .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Tag(s) not valid"),
+            .max(25, "Too long")
+            .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Not valid"),
+          text: Yup.string(),
         })
       ),
     published: Yup.boolean(),
     content: Yup.object().shape({
       text: Yup.string(),
-      // .matches(
-      //   /!\[.*\]\(.*(?<!https:\/\/firebasestorage\.googleapis\.com.*)\)/,
-      //   "Invalid Image(s): Please only use uploaded images"
-      // ),
-      html: Yup.number()
+      count: Yup.number()
         .integer()
         .min(2000, "Too short, need at least 2000 words"),
+      html: Yup.string().test(
+        "contains-table",
+        "Need at least one table",
+        (value) => {
+          return value.includes("MuiTableContainer");
+        }
+      ),
     }),
   });
   const {
@@ -126,6 +127,7 @@ function Edit({ router, slug, valueArticle }) {
     formState: { errors },
     watch,
     setValue,
+    getValues,
   } = useForm({
     // defaultValues: validationSchema.cast(),
     resolver: yupResolver(validationSchema),
@@ -143,32 +145,32 @@ function Edit({ router, slug, valueArticle }) {
     update(data);
   };
   const update = async (data) => {
-    // await updateDoc(doc(db, "Article", slug), {
-    //   title: data.title,
-    //   subtitle: data.subtitle,
-    //   image: data.image,
-    //   alt: data.alt,
-    //   category: data.category,
-    //   tags: data.tags,
-    //   published: data.published,
-    //   content: data.content.text,
-    //   date: serverTimestamp(),
-    // });
-    // const batch = writeBatch(db);
-    // for (let i = 0; i < data.tags.length; i++) {
-    //   batch.set(doc(db, "Tag", data.tags[i].id), {});
-    // }
-    // await batch.commit();
+    await updateDoc(doc(db, "Article", slug), {
+      title: data.title,
+      subtitle: data.subtitle,
+      image: data.image,
+      alt: data.alt,
+      category: data.category,
+      tags: data.tags,
+      published: data.published,
+      content: data.content.text,
+      date: serverTimestamp(),
+    });
+    const batch = writeBatch(db);
+    for (let i = 0; i < data.tags.length; i++) {
+      batch.set(doc(db, "Tag", data.tags[i].id), {});
+    }
+    await batch.commit();
   };
 
-  const watchHtml = watch(
-    "content.html",
+  // Word count shit, we need this to have realtime word count
+  const watchCount = watch(
+    "content.count",
     ReactDOMServer.renderToString(<Markdown>{valueArticle.content}</Markdown>)
       .replace(/<[^>]+>/g, "")
       .split(" ").length
   );
-
-  const handleChange = (html) => setValue("content.html", html);
+  const handleChange = (count) => setValue("content.count", count);
 
   return (
     <>
@@ -241,6 +243,15 @@ function Edit({ router, slug, valueArticle }) {
           <Tags tags={value} setTags={onChange} />
         )}
       />
+      {errors.tags?.message && (
+        <Typography color="error.main">{errors.tags.message}</Typography>
+      )}
+      {Array.isArray(errors.tags) &&
+        errors.tags.map((error, i) => (
+          <Typography key={i} color="error.main">
+            {"Tag " + (i + 1) + ": " + error.id.message}{" "}
+          </Typography>
+        ))}
       <Controller
         control={control}
         name="published"
@@ -252,7 +263,6 @@ function Edit({ router, slug, valueArticle }) {
           </Typography>
         )}
       />
-
       <Divider />
       <ImageUploader markdown={true} />
       <Controller
@@ -260,7 +270,10 @@ function Edit({ router, slug, valueArticle }) {
         name="content"
         defaultValue={{
           text: valueArticle.content,
-          html: watchHtml,
+          count: watchCount,
+          html: ReactDOMServer.renderToString(
+            <Markdown>{valueArticle.content}</Markdown>
+          ),
         }}
         render={({ field: { onChange, onBlur, value, ref } }) => (
           <MdEditor
@@ -273,24 +286,25 @@ function Edit({ router, slug, valueArticle }) {
               const count = html.replace(/<[^>]+>/g, "").split(" ").length;
               onChange({
                 text: text,
-                html: count,
+                count: count,
+                html: html,
               });
               handleChange(count);
             }}
           />
         )}
       />
-      {/* {errors.content?.text && (
-        <Typography color="error.main">
-          {errors.content.text.message}
-        </Typography>
-      )} */}
+      <Typography>Word Count: {watchCount}</Typography>
       {errors.content?.html && (
         <Typography color="error.main">
           {errors.content.html.message}
         </Typography>
       )}
-      <Typography>Word Count: {watchHtml}</Typography>
+      {errors.content?.count && (
+        <Typography color="error.main">
+          {errors.content.count.message}
+        </Typography>
+      )}
       <Divider />
       <ButtonGroup sx={{ my: 4 }}>
         <Button variant="contained" onClick={handleSubmit(handleDone)}>
