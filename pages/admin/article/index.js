@@ -77,12 +77,12 @@ function Articles() {
       image: "",
       alt: "",
       content: "",
-      date: serverTimestamp(),
-      username: username,
       published: false,
       category: Category[0].id,
       tags: [],
+      date: serverTimestamp(),
       slug: slug,
+      username: username,
       uid: user.uid,
       displayName: displayName,
       photoURL: photoURL,
@@ -107,7 +107,11 @@ function Articles() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const slug = encodeURI(kebabCase(title));
-  const isValid = title.length > 3 && title.length < 60;
+  const isValid =
+    title.length >= 4 &&
+    title.length <= 60 &&
+    slug.length >= 4 &&
+    slug.length <= 100;
 
   // Page handling
   const [page, setPage] = React.useState(0);

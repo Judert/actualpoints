@@ -2,23 +2,22 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /Article/{articleId} {
-    		allow get;
-        allow list;
-        allow write;
-        // allow create: if request.auth.token.email == request.resource.data.email;
-        // allow update: if request.auth.token.email == resource.data.email;
-        // allow delete: if request.auth.token.email == resource.data.email;
+    		allow get: if author(articleId) || request.resource.data.published;
+    		allow list: if author(articleId) || request.resource.data.published; 
+        allow create: if validArticle(articleId) && validArticleCreate(articleId);
+        allow update: if validArticle(articleId) && validArticleUpdate(articleId);
+        allow delete: if author(articleId);
     }
 		match /Tag/{tagId} {
     	allow get;
       allow list;
-      allow create; // TODO: valid user, tag not blank or a non slug, need length limit
+      allow create: if validTag(tagId);
     }
     match /User/{userId} {
     	allow get;
       allow list;
       allow create: if validUser(userId);
-      allow update: if validUser(userId) && validUserUpdate(userId); // TODO: didnt change username, other fields are not blank
+      allow update: if validUser(userId) && validUserUpdate(userId);
     }
     match /Username/{username} {
     	allow get;
@@ -26,27 +25,98 @@ service cloud.firestore {
       allow create: if validUsername(username);
     }
     match /Email/{emailId} {
-    	allow get: if request.auth.uid == // TODO: logged in?
+    	allow get: if request.auth.uid != null;
     }
     
     function validUsername(username) {
+      // person trying to create a username is trying to create a username for himself only
       let owner = request.auth.uid == request.resource.data.uid;
       let validLength = username.size() >= 3 && username.size() <= 15;
+      // user has a userdoc with the same username
       let validUserDoc = getAfter(/databases/$(database)/documents/User/$(request.auth.uid)).data.username == username;
+      // email verified for use
+      let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
       
-      return owner && validLength && validUserDoc;     
+      return owner && validLength && validUserDoc && validEmail;     
     }
       
     function validUser(userId) {
+      // person trying to create/update userdoc is trying to create/update his own userdoc only (userId is the key for the entry being edited)
       let owner = request.auth.uid == userId;
+      // person has a username
       let createdValidUsername = existsAfter(/databases/$(database)/documents/Username/$(request.resource.data.username));
-      let validEmail = existsAfter(/databases/$(database)/documents/Email/$(request.auth.token.email));
+      // persons email is verified for use
+      let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
       
       return owner && createdValidUsername && validEmail;
     }
 
     function validUserUpdate(userId) {
+      let validDisplayName = request.resource.data.displayName.size() > 0 request.resource.data.displayName.size() <= 50;
+      let validDesc = request.resource.data.desc.size() > 0 request.resource.data.desc.size() <= 255;
+      let validPhotoURL = request.resource.data.photoURL.size() > 0 request.resource.data.photoURL.size() <= 2000;
+      let updateForbidden = request.resource.data.diff(resource.data).affectedKeys().hasAny(['username']);
 
+      return validDisplayName && validDesc && validPhotoURL && !updateForbidden;
+    }
+
+    function validTag(tagId) {
+      // email verified for use
+      let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
+      let validTag = tagId.size() > 0 && tagId.size() <= 25;
+
+      return validEmail && validTag;
+    }
+
+    function validArticle(articleId) {
+      let owner = request.auth.uid == request.resource.data.uid;
+      let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
+      let now = request.time == request.resource.data.date;
+      // username is persons username
+      let validUsername = request.resource.data.username == get(/databases/$(database)/documents/User/$(request.auth.uid)).data.username;
+      // displayName, desc, photoURL is the same as the userdoc
+      let userDoc = get(/databases/$(database)/documents/User/$(request.auth.uid)).data;
+      let validUserDoc = request.resource.data.displayName == userDoc.displayName && request.resource.data.desc == userDoc.desc && request.resource.data.photoURL == userDoc.photoURL;
+
+      return owner && validEmail && now && validUsername && validUserDoc;
+    }
+
+    function validArticleCreate(articleId) {
+      // articleid, slug and article is valid
+      let validId = (request.resource.data.slug + "-" + request.resource.data.uid) == articleId;
+      let validSlug = request.resource.data.slug.size() >= 4 && request.resource.data.slug.size() <= 100;
+      let validTitle =  request.resource.data.title.size() >= 4 && request.resource.data.title.size() <= 60;
+      let validSubtitle = request.resource.data.subtitle == "";
+      let validImage = request.resource.data.image == "";
+      let validAlt = request.resource.data.alt == "";
+      let validContent = request.resource.data.content == "";
+      let validPublished = request.resource.data.published == false;
+      let validCategory = request.resource.data.category == "arts";
+      let validTags = request.resource.data.tags.size() == 0;
+      
+      return validId && validSlug && validTitle && validSubtitle && validImage && validAlt && validContent && validPublished && validCategory && validTags;
+    }
+
+    function validArticleUpdate(articleId) {
+      let updateForbidden = request.resource.data.diff(resource.data).affectedKeys().hasAny(['username', 'displayName', 'desc', 'photoURL', 'uid', 'slug']);
+      let validTitle =  request.resource.data.title.size() >= 4 && request.resource.data.title.size() <= 60;
+      let validSubtitle =  request.resource.data.subtitle.size() >= 4 && request.resource.data.subtitle.size() <= 255;
+      let validImage =  request.resource.data.image.size() > 0 && request.resource.data.image.size() <= 2000;
+      let validAlt =  request.resource.data.alt.size() >= 4 && request.resource.data.alt.size() <= 100;
+      let validCategory = request.resource.data.category.size() > 0;
+      let validTags = request.resource.data.tags.size() >= 3 && request.resource.data.tags.size() <= 10;
+      let validPublished = request.resource.data.published is bool;
+      let validContent = request.resource.data.content.size() > 0;
+
+      return !updateForbidden && validTitle && validSubtitle && validImage && validAlt && validCategory && validTags && validPublished && validContent;
+    }
+
+    function author(articleId) {
+      let owner = request.auth.uid == request.resource.data.uid;
+      let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
+      let validUsername = request.resource.data.username == get(/databases/$(database)/documents/User/$(request.auth.uid)).data.username;
+
+      return owner && validEmail && validUsername;
     }
   }
 }

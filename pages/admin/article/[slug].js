@@ -77,11 +77,11 @@ function Edit({ router, slug, valueArticle }) {
   const validationSchema = Yup.object().shape({
     title: Yup.string()
       .required("Title required")
-      .min(3, "Too short")
+      .min(4, "Too short")
       .max(60, "Too long"),
     subtitle: Yup.string()
       .required("Subtitle required")
-      .min(3, "Too short")
+      .min(4, "Too short")
       .max(255, "Too long"),
     image: Yup.string()
       .url("Url not valid")
@@ -92,11 +92,12 @@ function Edit({ router, slug, valueArticle }) {
       ),
     alt: Yup.string()
       .required("Alt text required")
-      .min(3, "Too short")
+      .min(4, "Too short")
       .max(100, "Too long"),
     category: Yup.string(),
     tags: Yup.array()
       .min(3, "Too few tags")
+      .max(10, "Too many tags")
       .of(
         Yup.object().shape({
           id: Yup.string()
