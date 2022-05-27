@@ -52,9 +52,9 @@ service cloud.firestore {
     }
 
     function validUserUpdate(userId) {
-      let validDisplayName = request.resource.data.displayName.size() > 0 request.resource.data.displayName.size() <= 50;
-      let validDesc = request.resource.data.desc.size() > 0 request.resource.data.desc.size() <= 255;
-      let validPhotoURL = request.resource.data.photoURL.size() > 0 request.resource.data.photoURL.size() <= 2000;
+      let validDisplayName = request.resource.data.displayName.size() > 0 && request.resource.data.displayName.size() <= 50;
+      let validDesc = request.resource.data.desc.size() > 0 && request.resource.data.desc.size() <= 255;
+      let validPhotoURL = request.resource.data.photoURL.size() > 0 && request.resource.data.photoURL.size() <= 2000;
       let updateForbidden = request.resource.data.diff(resource.data).affectedKeys().hasAny(['username']);
 
       return validDisplayName && validDesc && validPhotoURL && !updateForbidden;
