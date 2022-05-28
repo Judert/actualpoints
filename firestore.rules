@@ -4,7 +4,7 @@ service cloud.firestore {
     match /Article/{articleId} {
     		allow get: if author() || resource.data.published;
     		allow list: if author() || resource.data.published; 
-        allow create: if validArticleAuth() && validArticleCreate(articleId);
+        allow create: if validArticleAuth() && validArticleCreateAuth() && validArticleCreate(articleId);
         allow update: if validArticleAuth() && validArticleUpdate();
         allow delete: if author();
     }
@@ -79,13 +79,17 @@ service cloud.firestore {
       return validEmail && now;
     }
 
-    function validArticleCreate(articleId) {
+    function validArticleCreateAuth() {
       let owner = request.auth.uid == request.resource.data.uid;
       let validUsername = request.resource.data.username == get(/databases/$(database)/documents/User/$(request.auth.uid)).data.username;
       // displayName, desc, photoURL is the same as the userdoc
       let userDoc = get(/databases/$(database)/documents/User/$(request.auth.uid)).data;
       let validUserDoc = request.resource.data.displayName == userDoc.displayName && request.resource.data.desc == userDoc.desc && request.resource.data.photoURL == userDoc.photoURL;
-      
+
+      return owner && validUsername && validUserDoc;
+    }
+    
+    function validArticleCreate(articleId) {
       // articleid, slug and article is valid
       let validId = (request.resource.data.slug + "-" + request.auth.uid) == articleId;
       let validSlug = request.resource.data.slug.size() >= 4 && request.resource.data.slug.size() <= 100;
@@ -98,7 +102,7 @@ service cloud.firestore {
       let validCategory = request.resource.data.category == "arts";
       let validTags = request.resource.data.tags.size() == 0;
       
-      return owner && validUsername && validUserDoc && validId && validSlug && validTitle && validSubtitle && validImage && validAlt && validContent && validPublished && validCategory && validTags;
+      return validId && validSlug && validTitle && validSubtitle && validImage && validAlt && validContent && validPublished && validCategory && validTags;
     }
 
     function validArticleUpdate() {
