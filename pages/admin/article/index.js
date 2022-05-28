@@ -58,7 +58,7 @@ function Articles() {
   const [rows, loading, error] = useCollection(
     query(
       collection(db, "Article"),
-      where("username", "==", username),
+      where("uid", "==", user.uid),
       orderBy("date", "desc")
     )
   );
@@ -129,7 +129,7 @@ function Articles() {
 
   return (
     <Content>
-      {error && <Typography>Error: {JSON.stringify(error)}</Typography>}
+      {error && <Typography>Error: {JSON.stringify(error.stack)}</Typography>}
       {loading && <Typography>Collection: Loading...</Typography>}
       {rows && (
         <>

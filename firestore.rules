@@ -29,24 +29,17 @@ service cloud.firestore {
     }
     
     function validUsername(username) {
-      // person trying to create a username is trying to create a username for himself only
       let owner = request.auth.uid == request.resource.data.uid;
       let validLength = username.size() >= 3 && username.size() <= 15;
-      // user has a userdoc with the same username
       let validUserDoc = getAfter(/databases/$(database)/documents/User/$(request.auth.uid)).data.username == username;
-      // email verified for use
       let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
       
       return owner && validLength && validUserDoc && validEmail;     
     }
       
     function validUserCreate(userId) {
-      // person trying to create/update userdoc is trying to create/update his own userdoc only (userId is the key for the entry being edited)
-      // userId == resource.data.uid?
       let owner = request.auth.uid == userId;
-      // person has a username
       let createdValidUsername = existsAfter(/databases/$(database)/documents/Username/$(request.resource.data.username));
-      // persons email is verified for use
       let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
       
       return owner && createdValidUsername && validEmail;
@@ -65,7 +58,6 @@ service cloud.firestore {
     }
 
     function validTag(tagId) {
-      // email verified for use
       let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
       let validTag = tagId.size() > 0 && tagId.size() <= 25;
 
@@ -82,7 +74,6 @@ service cloud.firestore {
     function validArticleCreateAuth() {
       let owner = request.auth.uid == request.resource.data.uid;
       let validUsername = request.resource.data.username == get(/databases/$(database)/documents/User/$(request.auth.uid)).data.username;
-      // displayName, desc, photoURL is the same as the userdoc
       let userDoc = get(/databases/$(database)/documents/User/$(request.auth.uid)).data;
       let validUserDoc = request.resource.data.displayName == userDoc.displayName && request.resource.data.desc == userDoc.desc && request.resource.data.photoURL == userDoc.photoURL;
 
@@ -120,13 +111,6 @@ service cloud.firestore {
 
       return owner && !updateForbidden && validTitle && validSubtitle && validImage && validAlt && validCategory && validTags && validPublished && validContent;
     }
-
-    // function authorWrite() {
-    //   let owner = request.auth.uid == request.resource.data.uid;
-    //   let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
-
-    //   return owner && validEmail;
-    // }
 
     function author() {
       let owner = request.auth.uid == resource.data.uid;
