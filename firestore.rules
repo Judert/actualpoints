@@ -2,7 +2,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /Article/{articleId} {
-    		allow get: if author() || resource.data.published;
+    		allow get: if authorGet(articleId) || resource.data.published;
     		allow list: if author() || resource.data.published; 
         allow create: if validArticleAuth() && validArticleCreateAuth() && validArticleCreate(articleId);
         allow update: if validArticleAuth() && validArticleUpdate();
@@ -32,43 +32,38 @@ service cloud.firestore {
       let owner = request.auth.uid == request.resource.data.uid;
       let validLength = username.size() >= 3 && username.size() <= 15;
       let validUserDoc = getAfter(/databases/$(database)/documents/User/$(request.auth.uid)).data.username == username;
-      let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
       
-      return owner && validLength && validUserDoc && validEmail;     
+      return owner && validLength && validUserDoc && verified();     
     }
       
     function validUserCreate(userId) {
       let owner = request.auth.uid == userId;
       let createdValidUsername = existsAfter(/databases/$(database)/documents/Username/$(request.resource.data.username));
-      let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
       
-      return owner && createdValidUsername && validEmail;
+      return owner && createdValidUsername && verified();
     }
 
     function validUserUpdate(userId) {
       let owner = request.auth.uid == userId;
-      let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
 
       let validDisplayName = request.resource.data.displayName.size() > 0 && request.resource.data.displayName.size() <= 50;
       let validDesc = request.resource.data.desc.size() > 0 && request.resource.data.desc.size() <= 255;
       let validPhotoURL = request.resource.data.photoURL.size() > 0 && request.resource.data.photoURL.size() <= 2000;
       let updateForbidden = request.resource.data.diff(resource.data).affectedKeys().hasAny(['username']);
 
-      return owner && validEmail && validDisplayName && validDesc && validPhotoURL && !updateForbidden;
+      return owner && verified() && validDisplayName && validDesc && validPhotoURL && !updateForbidden;
     }
 
     function validTag(tagId) {
-      let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
       let validTag = tagId.size() > 0 && tagId.size() <= 25;
 
-      return validEmail && validTag;
+      return verified() && validTag;
     }
 
     function validArticleAuth() {
-      let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
       let now = request.time == request.resource.data.date;
 
-      return validEmail && now;
+      return verified() && now;
     }
 
     function validArticleCreateAuth() {
@@ -81,8 +76,8 @@ service cloud.firestore {
     }
     
     function validArticleCreate(articleId) {
-      // articleid, slug and article is valid
-      let validId = (request.resource.data.slug + "-" + request.auth.uid) == articleId;
+      // min: 4 + 1 + 1, max: 100 + 1 + 128
+      let validId = articleId.size() >= 6 && articleId.size() <= 229;
       let validSlug = request.resource.data.slug.size() >= 4 && request.resource.data.slug.size() <= 100;
       let validTitle =  request.resource.data.title.size() >= 4 && request.resource.data.title.size() <= 60;
       let validSubtitle = request.resource.data.subtitle == "";
@@ -112,11 +107,24 @@ service cloud.firestore {
       return owner && !updateForbidden && validTitle && validSubtitle && validImage && validAlt && validCategory && validTags && validPublished && validContent;
     }
 
+    function authorGet(articleId) {
+      // if exists then u must be the owner, if not it doesnt matter
+      let exi = exists(/databases/$(database)/documents/Article/$(articleId));
+      let owner = request.auth.uid == resource.data.uid;
+
+      return ((exi && owner) || !exi) && verified();
+    }
+
     function author() {
       let owner = request.auth.uid == resource.data.uid;
+
+      return owner && verified();
+    }
+
+    function verified() {
       let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
 
-      return owner && validEmail;
+      return validEmail;
     }
   }
 }

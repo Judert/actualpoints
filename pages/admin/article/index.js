@@ -65,13 +65,21 @@ function Articles() {
   const handleAdd = async (e) => {
     e.preventDefault();
     const id = slug + "-" + user.uid;
-    const exists = (await getDoc(doc(db, "Article", id))).exists();
+    const ref = doc(db, "Article", id);
+    const docSnap = await getDoc(ref).catch((error) => {
+      alert("FAILED_GET: " + error.stack);
+      return;
+    });
+    const exists = docSnap.exists().catch((error) => {
+      alert("FAILED_EXISTS: " + error.stack);
+      return;
+    });
     if (exists) {
-      // TODO: show error toast
+      // TODO: error toast
       alert("Article already exists");
       return;
     }
-    await setDoc(doc(db, "Article", id), {
+    await setDoc(ref, {
       title: title,
       subtitle: "",
       image: "",
@@ -87,14 +95,16 @@ function Articles() {
       displayName: displayName,
       photoURL: photoURL,
       desc: desc,
-    }).catch((error) => {
-      // TODO: error toast
-      console.log(error);
-    });
-    // .then(() => {
-    //   // TODO: success toast
-    //   router.push(`/admin/article/${slug}`);
-    // });
+    })
+      .catch((error) => {
+        // TODO: error toast
+        alert("FAILED_SET: " + error.stack);
+        return;
+      })
+      .then(() => {
+        // TODO: success toast
+        router.push(`/admin/article/${slug}`);
+      });
   };
   const handleEdit = async (id) => {
     router.push(`/admin/article/${id}`);
