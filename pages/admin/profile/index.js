@@ -10,6 +10,7 @@ import { useContext } from "react";
 import { useRouter } from "next/router";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
+import { useSnackbar } from "notistack";
 
 export default function Profile() {
   return (
@@ -20,6 +21,7 @@ export default function Profile() {
 }
 
 function ProfileEdit() {
+  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const { displayName, desc, photoURL, user } = useContext(UserContext);
 
@@ -37,7 +39,6 @@ function ProfileEdit() {
   });
   const {
     register,
-    control,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -46,8 +47,15 @@ function ProfileEdit() {
 
   // Firebase Updates
   const handleDone = (data) => {
-    update(data);
-    router.push("/admin");
+    update(data).then(
+      function (value) {
+        enqueueSnackbar("Update Success!", { variant: "success" });
+        router.push("/admin");
+      },
+      function (error) {
+        enqueueSnackbar("Update Failed: " + error, { variant: "error" });
+      }
+    );
   };
   const handleCancel = () => {
     router.push("/admin");

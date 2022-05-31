@@ -40,6 +40,7 @@ import Content from "../../../components/Content";
 import { useRouter } from "next/router";
 import kebabCase from "lodash.kebabcase";
 import Category from "../../../data/category.json";
+import { useSnackbar } from "notistack";
 
 export default function AdminArticle() {
   return (
@@ -53,6 +54,7 @@ function Articles() {
   // Auth
   const { username, user, displayName, photoURL, desc } =
     useContext(UserContext);
+  const { enqueueSnackbar } = useSnackbar();
 
   // Firebase
   const [rows, loading, error] = useCollection(
@@ -67,12 +69,13 @@ function Articles() {
     const id = slug + "-" + user.uid;
     const ref = doc(db, "Article", id);
     const snapshot = await getDoc(ref).catch((error) => {
-      alert("FAILED_GET: " + error.stack);
+      enqueueSnackbar("FAILED_GET: " + error, { variant: "error" });
       return;
     });
     if (snapshot.exists()) {
-      // TODO: error toast
-      alert("Article already exists");
+      enqueueSnackbar("You already have an article with that name!", {
+        variant: "error",
+      });
       return;
     }
     await setDoc(ref, {
@@ -93,12 +96,11 @@ function Articles() {
       desc: desc,
     })
       .catch((error) => {
-        // TODO: error toast
-        alert("FAILED_SET: " + error.stack);
+        enqueueSnackbar("FAILED_SET: " + error, { variant: "error" });
         return;
       })
       .then(() => {
-        // TODO: success toast
+        enqueueSnackbar("Success!", { variant: "success" });
         router.push(`/admin/article/${id}`);
       });
   };
@@ -106,7 +108,14 @@ function Articles() {
     router.push(`/admin/article/${id}`);
   };
   const handleRemove = async (id) => {
-    await deleteDoc(doc(db, "Article", id));
+    await deleteDoc(doc(db, "Article", id)).then(
+      function (value) {
+        enqueueSnackbar("Delete Success!", { variant: "success" });
+      },
+      function (error) {
+        enqueueSnackbar("Delete Failed: " + error, { variant: "error" });
+      }
+    );
   };
 
   // New article

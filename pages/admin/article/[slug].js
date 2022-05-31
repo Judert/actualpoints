@@ -36,6 +36,7 @@ import "react-markdown-editor-lite/lib/index.css";
 import Editor, { Plugins } from "react-markdown-editor-lite";
 import Markdown from "../../../components/Markdown";
 import ImageUploader from "../../../components/ImageUploader";
+import { useSnackbar } from "notistack";
 
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false,
@@ -74,6 +75,7 @@ function ArticleEdit() {
 }
 
 function Edit({ router, slug, valueArticle }) {
+  const { enqueueSnackbar } = useSnackbar();
   // React hook form
   const validationSchema = Yup.object().shape({
     title: Yup.string()
@@ -137,17 +139,28 @@ function Edit({ router, slug, valueArticle }) {
 
   // Firebase Updates
   const handleDone = (data) => {
-    const error = update(data);
-    if (!error) {
-      // TODO: toast
-      router.push("/admin/article");
-    }
+    update(data).then(
+      function (value) {
+        enqueueSnackbar("Update Success!", { variant: "success" });
+        router.push("/admin/article");
+      },
+      function (error) {
+        enqueueSnackbar("Update Failed: " + error, { variant: "error" });
+      }
+    );
   };
   const handleCancel = () => {
     router.push("/admin/article");
   };
   const handleSave = (data) => {
-    update(data);
+    update(data).then(
+      function (value) {
+        enqueueSnackbar("Update Success!", { variant: "success" });
+      },
+      function (error) {
+        enqueueSnackbar("Update Failed: " + error, { variant: "error" });
+      }
+    );
   };
   const update = async (data) => {
     const batch = writeBatch(db);
@@ -165,12 +178,7 @@ function Edit({ router, slug, valueArticle }) {
     for (let i = 0; i < data.tags.length; i++) {
       batch.set(doc(db, "Tag", data.tags[i].id), {});
     }
-    const error = false;
-    await batch.commit().catch((error) => {
-      console.error("FAILED_UPDATE: " + error.stack);
-      error = true;
-    });
-    return error;
+    await batch.commit();
   };
 
   // Word count shit, we need this to have realtime word count
