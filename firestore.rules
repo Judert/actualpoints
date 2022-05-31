@@ -11,7 +11,8 @@ service cloud.firestore {
 		match /Tag/{tagId} {
     	allow get;
       allow list;
-      allow create: if validTag(tagId);
+      allow create: if validTagCreate(tagId);
+      allow update: if validTagUpdate();
     }
     match /User/{userId} {
     	allow get;
@@ -54,10 +55,18 @@ service cloud.firestore {
       return owner && verified() && validDisplayName && validDesc && validPhotoURL && !updateForbidden;
     }
 
-    function validTag(tagId) {
-      let validTag = tagId.size() > 0 && tagId.size() <= 25;
+    function validTagCreate(tagId) {
+      let validId = tagId.size() > 0 && tagId.size() <= 25;
+      let updateForbidden = resource.data.diff({}).affectedKeys().size() == 0;
 
-      return verified() && validTag;
+      return verified() && validId && !updateForbidden;
+    }
+
+    function validTagUpdate() {
+      // user did nothing, this is so we dont have to check if the tags exist in the batch update
+      let updateForbidden = resource.data.diff(request.resource.data).affectedKeys().size() == 0;
+
+      return verified() && !updateForbidden;
     }
 
     function validArticleAuth() {

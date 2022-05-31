@@ -23,6 +23,7 @@ import {
   updateDoc,
   writeBatch,
   serverTimestamp,
+  runTransaction,
 } from "firebase/firestore";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
@@ -136,8 +137,11 @@ function Edit({ router, slug, valueArticle }) {
 
   // Firebase Updates
   const handleDone = (data) => {
-    update(data);
-    router.push("/admin/article");
+    // TODO: if update success then go back else stay on page so user doesnt lose data
+    const success = update(data);
+    if (success) {
+      router.push("/admin/article");
+    }
   };
   const handleCancel = () => {
     router.push("/admin/article");
@@ -146,7 +150,8 @@ function Edit({ router, slug, valueArticle }) {
     update(data);
   };
   const update = async (data) => {
-    await updateDoc(doc(db, "Article", slug), {
+    const batch = writeBatch(db);
+    batch.update(doc(db, "Article", slug), {
       title: data.title,
       subtitle: data.subtitle,
       image: data.image,
@@ -157,11 +162,19 @@ function Edit({ router, slug, valueArticle }) {
       content: data.content.text,
       date: serverTimestamp(),
     });
-    const batch = writeBatch(db);
     for (let i = 0; i < data.tags.length; i++) {
       batch.set(doc(db, "Tag", data.tags[i].id), {});
     }
-    await batch.commit();
+    await batch
+      .commit()
+      .catch((error) => {
+        alert("FAILED_UPDATE: " + error.stack);
+        return null;
+      })
+      .then(() => {
+        //TODO: toast
+        return "SUCCESS";
+      });
   };
 
   // Word count shit, we need this to have realtime word count
