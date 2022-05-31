@@ -137,9 +137,9 @@ function Edit({ router, slug, valueArticle }) {
 
   // Firebase Updates
   const handleDone = (data) => {
-    // TODO: if update success then go back else stay on page so user doesnt lose data
-    const success = update(data);
-    if (success) {
+    const error = update(data);
+    if (!error) {
+      // TODO: toast
       router.push("/admin/article");
     }
   };
@@ -165,16 +165,12 @@ function Edit({ router, slug, valueArticle }) {
     for (let i = 0; i < data.tags.length; i++) {
       batch.set(doc(db, "Tag", data.tags[i].id), {});
     }
-    await batch
-      .commit()
-      .catch((error) => {
-        alert("FAILED_UPDATE: " + error.stack);
-        return null;
-      })
-      .then(() => {
-        //TODO: toast
-        return "SUCCESS";
-      });
+    const error = false;
+    await batch.commit().catch((error) => {
+      console.error("FAILED_UPDATE: " + error.stack);
+      error = true;
+    });
+    return error;
   };
 
   // Word count shit, we need this to have realtime word count
