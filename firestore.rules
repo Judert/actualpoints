@@ -57,16 +57,16 @@ service cloud.firestore {
 
     function validTagCreate(tagId) {
       let validId = tagId.size() > 0 && tagId.size() <= 25;
-      let updateForbidden = request.resource.data.diff({}).affectedKeys() == [].toSet();
+      let noData = request.resource.data == {};
 
-      return verified() && validId && !updateForbidden;
+      return verified() && validId && noData;
     }
 
     function validTagUpdate() {
       // user did nothing, this is so we dont have to check if the tags exist in the batch update
-      let updateForbidden = request.resource.data.diff(resource.data).affectedKeys() == [].toSet();
+      let noData = request.resource.data == {};
 
-      return verified() && !updateForbidden;
+      return verified() && noData;
     }
 
     function validArticleAuth() {
