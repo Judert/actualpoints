@@ -25,23 +25,20 @@ service cloud.firestore {
       allow list;
       allow create: if validUsername(username);
     }
-    match /Email/{emailId} {
-    	allow get: if emailId == request.auth.token.email;
-    }
     
     function validUsername(username) {
       let owner = request.auth.uid == request.resource.data.uid;
       let validLength = username.size() >= 3 && username.size() <= 15;
       let validUserDoc = getAfter(/databases/$(database)/documents/User/$(request.auth.uid)).data.username == username;
       
-      return owner && validLength && validUserDoc && verified();     
+      return owner && validLength && validUserDoc && request.auth.token.verified;     
     }
       
     function validUserCreate(userId) {
       let owner = request.auth.uid == userId;
       let createdValidUsername = existsAfter(/databases/$(database)/documents/Username/$(request.resource.data.username));
       
-      return owner && createdValidUsername && verified();
+      return owner && createdValidUsername && request.auth.token.verified;
     }
 
     function validUserUpdate(userId) {
@@ -52,27 +49,27 @@ service cloud.firestore {
       let validPhotoURL = request.resource.data.photoURL.size() > 0 && request.resource.data.photoURL.size() <= 2000;
       let updateForbidden = request.resource.data.diff(resource.data).affectedKeys().hasAny(['username']);
 
-      return owner && verified() && validDisplayName && validDesc && validPhotoURL && !updateForbidden;
+      return owner && request.auth.token.verified && validDisplayName && validDesc && validPhotoURL && !updateForbidden;
     }
 
     function validTagCreate(tagId) {
       let validId = tagId.size() > 0 && tagId.size() <= 25;
       let noData = request.resource.data == {};
 
-      return verified() && validId && noData;
+      return request.auth.token.verified && validId && noData;
     }
 
     function validTagUpdate() {
       // user did nothing, this is so we dont have to check if the tags exist in the batch update
       let noData = request.resource.data == {};
 
-      return verified() && noData;
+      return request.auth.token.verified && noData;
     }
 
     function validArticleAuth() {
       let now = request.time == request.resource.data.date;
 
-      return verified() && now;
+      return request.auth.token.verified && now;
     }
 
     function validArticleCreateAuth() {
@@ -121,19 +118,13 @@ service cloud.firestore {
       let exi = exists(/databases/$(database)/documents/Article/$(articleId));
       let owner = request.auth.uid == resource.data.uid;
 
-      return ((exi && owner) || !exi) && verified();
+      return ((exi && owner) || !exi) && request.auth.token.verified;
     }
 
     function author() {
       let owner = request.auth.uid == resource.data.uid;
 
-      return owner && verified();
-    }
-
-    function verified() {
-      let validEmail = exists(/databases/$(database)/documents/Email/$(request.auth.token.email));
-
-      return validEmail;
+      return owner && request.auth.token.verified;
     }
   }
 }
