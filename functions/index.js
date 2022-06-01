@@ -33,3 +33,45 @@ exports.articleUserUpdate = functions.firestore
         functions.logger.error(error);
       });
   });
+
+// On sign up.
+exports.processValidationSignIn = functions.auth
+  .user()
+  .onCreate(async (user) => {
+    db.collection("Email")
+      .doc(user.email)
+      .get()
+      .then((doc) => {
+        try {
+          admin.auth().setCustomUserClaims(user.uid, {
+            verified: doc.exists,
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+  });
+
+// Email add/remove from db
+exports.processValidationAddRemove = functions.firestore
+  .document("Email/{email}")
+  .onWrite((change, context) => {
+    try {
+      admin
+        .auth()
+        .getUserByEmail(context.params.email)
+        .then(function (userRecord) {
+          admin.auth().setCustomUserClaims(userRecord.uid, {
+            verified: change.after.exists,
+          });
+        })
+        .catch(function (error) {
+          console.log("Error fetching user data:", error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  });

@@ -3,8 +3,10 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useState } from "react";
 import { auth, storage } from "../lib/firebase";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import { useSnackbar } from "notistack";
 
 export default function ImageUploader({ markdown }) {
+  const { enqueueSnackbar } = useSnackbar();
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [downloadURL, setDownloadURL] = useState(null);
@@ -45,6 +47,10 @@ export default function ImageUploader({ markdown }) {
       },
       (error) => {
         // Handle unsuccessful uploads
+        enqueueSnackbar("Upload Failed: " + error, {
+          variant: "error",
+        });
+        setUploading(false);
       },
       () => {
         // Handle successful uploads on complete
@@ -53,6 +59,7 @@ export default function ImageUploader({ markdown }) {
           setDownloadURL(downloadURL);
           setUploading(false);
         });
+        enqueueSnackbar("Upload Success!", { variant: "success" });
       }
     );
   };
