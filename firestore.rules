@@ -3,7 +3,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /Article/{articleId} {
     		allow get: if authorGet(articleId) || resource.data.published;
-    		allow list: if author() || resource.data.published; 
+    		allow list: if author() || (resource.data.published && request.query.limit <= 10); 
         allow create: if validArticleAuth() && validArticleCreateAuth() && validArticleCreate(articleId);
         allow update: if validArticleAuth() && validArticleUpdate();
         allow delete: if author();
@@ -44,9 +44,9 @@ service cloud.firestore {
     function validUserUpdate(userId) {
       let owner = request.auth.uid == userId;
 
-      let validDisplayName = request.resource.data.displayName.size() > 0 && request.resource.data.displayName.size() <= 50;
-      let validDesc = request.resource.data.desc.size() > 0 && request.resource.data.desc.size() <= 255;
-      let validPhotoURL = request.resource.data.photoURL.size() > 0 && request.resource.data.photoURL.size() <= 2000;
+      let validDisplayName = request.resource.data.displayName.size() > 0 && request.resource.data.displayName.size() <= 50 && request.resource.data.displayName is string;
+      let validDesc = request.resource.data.desc.size() > 0 && request.resource.data.desc.size() <= 255 && request.resource.data.desc is string;
+      let validPhotoURL = request.resource.data.photoURL.size() > 0 && request.resource.data.photoURL.size() <= 2000 && request.resource.data.photoURL is string;
       let updateForbidden = request.resource.data.diff(resource.data).affectedKeys().hasAny(['username']);
 
       return owner && request.auth.token.verified && validDisplayName && validDesc && validPhotoURL && !updateForbidden;
@@ -84,14 +84,14 @@ service cloud.firestore {
     function validArticleCreate(articleId) {
       // min: 4 + 1 + 1, max: 100 + 1 + 128
       let validId = articleId.size() >= 6 && articleId.size() <= 229;
-      let validSlug = request.resource.data.slug.size() >= 4 && request.resource.data.slug.size() <= 100;
-      let validTitle =  request.resource.data.title.size() >= 4 && request.resource.data.title.size() <= 60;
-      let validSubtitle = request.resource.data.subtitle == "";
-      let validImage = request.resource.data.image == "";
-      let validAlt = request.resource.data.alt == "";
-      let validContent = request.resource.data.content == "";
-      let validPublished = request.resource.data.published == false;
-      let validCategory = request.resource.data.category == "arts";
+      let validSlug = request.resource.data.slug.size() >= 4 && request.resource.data.slug.size() <= 100 && request.resource.data.slug is string;
+      let validTitle =  request.resource.data.title.size() >= 4 && request.resource.data.title.size() <= 60 && request.resource.data.title is string;
+      let validSubtitle = request.resource.data.subtitle == "" && request.resource.data.subtitle is string;
+      let validImage = request.resource.data.image == "" && request.resource.data.image is string;
+      let validAlt = request.resource.data.alt == "" && request.resource.data.alt is string;
+      let validContent = request.resource.data.content == "" && request.resource.data.content is string;
+      let validPublished = request.resource.data.published == false && request.resource.data.published is bool;
+      let validCategory = request.resource.data.category == "arts" && request.resource.data.category is string;
       let validTags = request.resource.data.tags.size() == 0;
       
       return validId && validSlug && validTitle && validSubtitle && validImage && validAlt && validContent && validPublished && validCategory && validTags;
@@ -101,14 +101,14 @@ service cloud.firestore {
       let owner = request.auth.uid == resource.data.uid;
 
       let updateForbidden = request.resource.data.diff(resource.data).affectedKeys().hasAny(['username', 'displayName', 'desc', 'photoURL', 'uid', 'slug']);
-      let validTitle =  request.resource.data.title.size() >= 4 && request.resource.data.title.size() <= 60;
-      let validSubtitle =  request.resource.data.subtitle.size() >= 4 && request.resource.data.subtitle.size() <= 255;
-      let validImage =  request.resource.data.image.size() > 0 && request.resource.data.image.size() <= 2000;
-      let validAlt =  request.resource.data.alt.size() >= 4 && request.resource.data.alt.size() <= 100;
-      let validCategory = request.resource.data.category.size() > 0;
+      let validTitle =  request.resource.data.title.size() >= 4 && request.resource.data.title.size() <= 60 && request.resource.data.title is string;
+      let validSubtitle =  request.resource.data.subtitle.size() >= 4 && request.resource.data.subtitle.size() <= 255 && request.resource.data.subtitle is string;
+      let validImage =  request.resource.data.image.size() > 0 && request.resource.data.image.size() <= 2000 && request.resource.data.image is string;
+      let validAlt =  request.resource.data.alt.size() >= 4 && request.resource.data.alt.size() <= 100 && request.resource.data.alt is string;
+      let validCategory = request.resource.data.category.size() > 0 && request.resource.data.category is string;
       let validTags = request.resource.data.tags.size() >= 3 && request.resource.data.tags.size() <= 10;
       let validPublished = request.resource.data.published is bool;
-      let validContent = request.resource.data.content.size() > 0;
+      let validContent = request.resource.data.content.size() > 0 && request.resource.data.content is string;
 
       return owner && !updateForbidden && validTitle && validSubtitle && validImage && validAlt && validCategory && validTags && validPublished && validContent;
     }
