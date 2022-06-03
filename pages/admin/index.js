@@ -31,7 +31,10 @@ export default function Admin() {
             </>
           )
         ) : (
-          <PermissionDenied />
+          <>
+            <PermissionDenied />
+            <SignOutButton />
+          </>
         )
       ) : (
         <SignInButton />

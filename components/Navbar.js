@@ -39,7 +39,7 @@ export default function Navbar(props) {
           <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "row" }}>
             <NextLink href="/" passHref>
               <Typography variant="h6" noWrap pr={2}>
-                Blog
+                Actual Points
               </Typography>
             </NextLink>
 
@@ -50,7 +50,7 @@ export default function Navbar(props) {
                 noLinkStyle
                 href="/category"
               >
-                Articles
+                Categories
               </Button>
               <Button
                 color="inherit"

@@ -101,7 +101,7 @@ function Articles() {
       })
       .then(() => {
         enqueueSnackbar("Success!", { variant: "success" });
-        router.push(`/admin/article/${id}`);
+        // router.push(`/admin/article/${id}`);
       });
   };
   const handleEdit = async (id) => {

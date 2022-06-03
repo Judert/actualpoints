@@ -6,14 +6,12 @@ export default function Content(props) {
       component="main"
       maxWidth="md"
       sx={{
-        mt: 4,
+        my: 4,
         display: "flex",
         justifyContent: "center",
         alignItems: "left",
         flexDirection: "column",
         rowGap: 2,
-        // backgroundColor: "secondary.main",
-        // textAlign: "left",
       }}
     >
       {props.children}

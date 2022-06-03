@@ -37,7 +37,7 @@ export default function Tags({
     setTags(newTags);
   };
   const handleTagClick = (index) => {
-    console.log("The tag at index " + index + " was clicked");
+    // console.log("The tag at index " + index + " was clicked");
   };
 
   return (

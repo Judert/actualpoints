@@ -25,7 +25,7 @@ import {
 import Articles from "../../components/Articles";
 import { db, postToJSON } from "../../lib/firebase";
 
-const LIMIT = 5;
+const LIMIT = 10;
 let initialized = false;
 let mounted = false;
 

@@ -41,7 +41,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Articles from "../../components/Articles";
 
-const LIMIT = 5;
+const LIMIT = 10;
 
 export async function getServerSideProps({ query }) {
   const { slug } = query;

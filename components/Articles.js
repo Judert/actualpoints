@@ -1,12 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  Chip,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Chip, Paper, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,8 +7,8 @@ export default function Articles({ articles }) {
     <Stack spacing={2} sx={{ py: 2 }}>
       {articles.map((article) => (
         <Link href={"/article/" + article.id} passHref key={article.id}>
-          <Card sx={{ display: "flex" }}>
-            <CardContent sx={{ flex: 3, py: 3, pl: 3 }}>
+          <Paper sx={{ display: "flex" }}>
+            <Box sx={{ flex: 3, py: 3, pl: 3 }}>
               <Stack direction="row">
                 <Avatar sx={{ width: 28, height: 28 }} src={article.photoURL} />
                 <Typography variant="subtitle1">
@@ -44,17 +36,17 @@ export default function Articles({ articles }) {
                   label={tag.id}
                 />
               ))}
-            </CardContent>
+            </Box>
             <Box sx={{ flex: 1 }}>
               <Image
                 alt={article.alt}
                 src={article.image}
-                width={150}
-                height={150}
-                layout="responsive"
+                width={250}
+                height={250}
+                layout="fixed"
               />
             </Box>
-          </Card>
+          </Paper>
         </Link>
       ))}
     </Stack>
