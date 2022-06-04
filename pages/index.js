@@ -2,7 +2,15 @@ import React, { useState } from "react";
 import Copyright from "../src/Copyright";
 import Content from "../components/Content";
 import Carousel, { consts } from "react-elastic-carousel";
-import { Box, Button, Container, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  Container,
+  Grid,
+  Paper,
+  Typography,
+} from "@mui/material";
 import Image from "next/image";
 import {
   collection,
@@ -14,8 +22,9 @@ import {
   Timestamp,
   startAfter,
 } from "firebase/firestore";
-import { db, postToJSON } from "../lib/firebase";
+import { db, postToJSON, tagToJSON } from "../lib/firebase";
 import Articles from "../components/Articles";
+import Link from "next/link";
 
 const slides = [
   {
@@ -42,10 +51,12 @@ export async function getServerSideProps() {
     )
   ).docs.map(postToJSON);
 
-  console.log(articles);
+  const tags = (
+    await getDocs(query(collection(db, "Tag"), orderBy("count", "desc")))
+  ).docs.map(tagToJSON);
 
   return {
-    props: { articles },
+    props: { articles, tags },
   };
 }
 
@@ -53,8 +64,8 @@ export default function Index(props) {
   return (
     <>
       <Container
-        // component="main"
-        maxWidth="lg"
+        component="main"
+        maxWidth="xl"
         sx={{
           my: 4,
           display: "flex",
@@ -65,41 +76,82 @@ export default function Index(props) {
         }}
       >
         <Slides />
+        <Container
+          maxWidth="lg"
+          sx={{
+            my: 4,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "left",
+            flexDirection: "column",
+            rowGap: 2,
+          }}
+        >
+          <Grid container spacing={4}>
+            <Grid item xs={9}>
+              <ArticlesLatest {...props} />
+            </Grid>
+            <Grid item xs={3}>
+              <AllTags {...props} />
+            </Grid>
+          </Grid>
+        </Container>
       </Container>
-      <Content>
-        <AllTags />
-        <ArticlesLatest {...props} />
-        <Copyright />
-      </Content>
+      <Footer />
     </>
   );
 }
 
-function AllTags() {
-  const [tags, setTags] = useState([]);
+function Slides() {
+  const Cards = slides.map((slide) => (
+    <Slide
+      key={slide.id}
+      title1={slide.title1}
+      title2={slide.title2}
+      alt={slide.alt}
+      desc={slide.desc}
+      img={slide.img}
+    />
+  ));
 
-  React.useEffect(() => {
-    db.collection("Tag")
-      .get()
-      .then((querySnapshot) => {
-        const tags = querySnapshot.docs.map((doc) => doc.data());
-        setTags(tags);
-      });
-  }, []);
+  function materialArrow({ type, onClick, isEdge }) {
+    const pointer = type === consts.PREV ? "❮" : "❯";
+    return (
+      <Button size="large" onClick={onClick} disabled={isEdge}>
+        {pointer}
+      </Button>
+    );
+  }
 
   return (
-    <>
-      <Typography variant="h5" color={"text.secondary"} py={2}>
-        Popular Tags
-      </Typography>
-      <Box sx={{ display: "flex", flexWrap: "wrap", rowGap: 2 }}>
-        {tags.map((tag) => (
-          <Button key={tag.id} variant="outlined">
-            {tag.name}
-          </Button>
-        ))}
+    <Carousel itemsToShow={1} renderArrow={materialArrow} pagination={false}>
+      {Cards}
+    </Carousel>
+  );
+}
+
+function Slide({ title1, title2, desc, img, alt }) {
+  return (
+    <Paper sx={{ display: "flex" }} elevation={6}>
+      <Box sx={{ flex: 1, py: 3, px: 3 }}>
+        <Typography variant="h1" noWrap>
+          {title1}
+        </Typography>
+        <Typography variant="h1" noWrap>
+          {title2}
+        </Typography>
+        <Typography variant="h5" color={"text.secondary"} py={2}>
+          {desc}
+        </Typography>
+        <Button variant="contained" mr={2}>
+          Learn More
+        </Button>
+        <Button variant="outlined">Join us</Button>
       </Box>
-    </>
+      <Box sx={{ flex: 1 }}>
+        <Image src={img} alt={alt} width={450} height={450} layout="fixed" />
+      </Box>
+    </Paper>
   );
 }
 
@@ -140,7 +192,7 @@ function ArticlesLatest(props) {
 
   return (
     <>
-      <Typography variant="h4">Latest Articles:</Typography>
+      <Typography variant="h4">Latest Articles</Typography>
       <Articles articles={articles} />
       {!end && !loading && (
         <Button variant="contained" onClick={loadMore}>
@@ -153,55 +205,43 @@ function ArticlesLatest(props) {
   );
 }
 
-function Slides() {
-  const Cards = slides.map((slide) => (
-    <Slide
-      key={slide.id}
-      title1={slide.title1}
-      title2={slide.title2}
-      alt={slide.alt}
-      desc={slide.desc}
-      img={slide.img}
-    />
-  ));
-
-  function materialArrow({ type, onClick, isEdge }) {
-    const pointer = type === consts.PREV ? "❮" : "❯";
-    return (
-      <Button size="large" onClick={onClick} disabled={isEdge}>
-        {pointer}
-      </Button>
-    );
-  }
-
+function AllTags(props) {
   return (
-    <Carousel itemsToShow={1} renderArrow={materialArrow} pagination={false}>
-      {Cards}
-    </Carousel>
+    <>
+      <Typography variant="h5" color={"text.secondary"}>
+        Popular Tags
+      </Typography>
+      <Box>
+        {props.tags.map((tag) => (
+          <Link href={"/search?tags=" + tag.id} passHref key={tag.id}>
+            <Chip
+              sx={{ m: 0.5 }}
+              variant="outlined"
+              label={tag.id + " (" + tag.count + ")"}
+            />
+          </Link>
+        ))}
+      </Box>
+    </>
   );
 }
 
-function Slide({ title1, title2, desc, img, alt }) {
+function Footer() {
   return (
-    <Paper sx={{ display: "flex" }}>
-      <Box sx={{ flex: 1, py: 3, px: 3 }}>
-        <Typography variant="h1" noWrap>
-          {title1}
-        </Typography>
-        <Typography variant="h1" noWrap>
-          {title2}
-        </Typography>
-        <Typography variant="h5" color={"text.secondary"} py={2}>
-          {desc}
-        </Typography>
-        <Button variant="contained" mr={2}>
-          Learn More
-        </Button>
-        <Button variant="outlined">Join us</Button>
-      </Box>
-      <Box sx={{ flex: 1 }}>
-        <Image src={img} alt={alt} width={350} height={350} layout="fixed" />
-      </Box>
-    </Paper>
+    <Box sx={{ display: "flex", backgroundColor: "primary.main" }}>
+      <Container
+        maxWidth="md"
+        sx={{
+          my: 4,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          rowGap: 2,
+        }}
+      >
+        <Copyright />
+      </Container>
+    </Box>
   );
 }
