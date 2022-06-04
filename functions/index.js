@@ -47,11 +47,11 @@ exports.processValidationSignIn = functions.auth
             verified: doc.exists,
           });
         } catch (error) {
-          console.log(error);
+          functions.logger.error(error);
         }
       })
       .catch((error) => {
-        console.log("Error getting document:", error);
+        functions.logger.error("Error getting document:", error);
       });
   });
 
@@ -69,9 +69,51 @@ exports.processValidationAddRemove = functions.firestore
           });
         })
         .catch(function (error) {
-          console.log("Error fetching user data:", error);
+          functions.logger.error("Error fetching user data:", error);
         });
     } catch (error) {
-      console.log(error);
+      functions.logger.error(error);
     }
+  });
+
+exports.tagCounts = functions.pubsub
+  .schedule("every 12 hours")
+  .onRun(async (context) => {
+    db.collection("Article")
+      .where("published", "==", true)
+      .get()
+      .then((snapshot) => {
+        const promises = [];
+        snapshot.forEach((doc) => {
+          doc.data().tags.forEach((tag) => {
+            promises.push(tag.id);
+          });
+        });
+        return Promise.all(promises);
+      })
+      .then((tags) => {
+        const counts = {};
+        tags.forEach(function (x) {
+          counts[x] = (counts[x] || 0) + 1;
+        });
+        db.collection("Tag")
+          .get()
+          .then((snapshot) => {
+            snapshot.forEach((doc) => {
+              if (counts[doc.id]) {
+                doc.ref.update({
+                  count: counts[doc.id],
+                });
+              } else {
+                doc.ref.delete();
+              }
+            });
+          })
+          .catch((error) => {
+            functions.logger.error("TAG_UPDATE_FAILED: ", error);
+          });
+      })
+      .catch((error) => {
+        functions.logger.error("ARTICLE_GET_FAILED: ", error);
+      });
   });

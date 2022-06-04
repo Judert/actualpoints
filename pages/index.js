@@ -67,9 +67,38 @@ export default function Index(props) {
         <Slides />
       </Container>
       <Content>
+        <AllTags />
         <ArticlesLatest {...props} />
         <Copyright />
       </Content>
+    </>
+  );
+}
+
+function AllTags() {
+  const [tags, setTags] = useState([]);
+
+  React.useEffect(() => {
+    db.collection("Tag")
+      .get()
+      .then((querySnapshot) => {
+        const tags = querySnapshot.docs.map((doc) => doc.data());
+        setTags(tags);
+      });
+  }, []);
+
+  return (
+    <>
+      <Typography variant="h5" color={"text.secondary"} py={2}>
+        Popular Tags
+      </Typography>
+      <Box sx={{ display: "flex", flexWrap: "wrap", rowGap: 2 }}>
+        {tags.map((tag) => (
+          <Button key={tag.id} variant="outlined">
+            {tag.name}
+          </Button>
+        ))}
+      </Box>
     </>
   );
 }
