@@ -8,7 +8,7 @@ import Link from "next/link";
 export default function CategoryAll() {
   return (
     <Content>
-      <Typography variant="h2">Categories</Typography>
+      <Typography variant="h3">Categories</Typography>
       <Grid container spacing={2}>
         {Category.map((category) => (
           <Link href={`/category/${category.id}`} passHref key={category.id}>

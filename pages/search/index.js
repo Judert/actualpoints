@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
+  CircularProgress,
+  Container,
   FormControl,
   InputLabel,
   NativeSelect,
@@ -115,13 +117,21 @@ export default function Search() {
     <Content>
       <Tags tags={tags} setTags={setTags} />
       {articles && <Articles articles={articles} />}
-      {articles && !end && !loading && (
-        <Button variant="contained" onClick={loadMore}>
-          Load More
-        </Button>
-      )}
-      {loading && <div>Loading...</div>}
-      {end && <div>End</div>}
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {articles && !end && !loading && (
+          <Button variant="contained" onClick={loadMore}>
+            Load More
+          </Button>
+        )}
+        {loading && <CircularProgress />}
+        {end && <Typography>End</Typography>}
+      </Container>
     </Content>
   );
 }

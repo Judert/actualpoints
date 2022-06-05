@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Chip,
+  CircularProgress,
   Container,
   Grid,
   Paper,
@@ -25,6 +26,7 @@ import {
 import { db, postToJSON, tagToJSON } from "../lib/firebase";
 import Articles from "../components/Articles";
 import Link from "next/link";
+import Category from "../data/category.json";
 
 const slides = [
   {
@@ -79,20 +81,22 @@ export default function Index(props) {
         <Container
           maxWidth="lg"
           sx={{
-            my: 4,
+            my: 6,
             display: "flex",
             justifyContent: "center",
             alignItems: "left",
             flexDirection: "column",
             rowGap: 2,
+            // backgroundColor: "secondary.main",
           }}
         >
           <Grid container spacing={4}>
+            <Grid item xs={3}>
+              <Categories />
+              <AllTags {...props} />
+            </Grid>
             <Grid item xs={9}>
               <ArticlesLatest {...props} />
-            </Grid>
-            <Grid item xs={3}>
-              <AllTags {...props} />
             </Grid>
           </Grid>
         </Container>
@@ -133,14 +137,14 @@ function Slides() {
 function Slide({ title1, title2, desc, img, alt }) {
   return (
     <Paper sx={{ display: "flex" }} elevation={6}>
-      <Box sx={{ flex: 1, py: 3, px: 3 }}>
+      <Box sx={{ flexGrow: 1, py: 6, px: 6 }}>
         <Typography variant="h1" noWrap>
           {title1}
         </Typography>
         <Typography variant="h1" noWrap>
           {title2}
         </Typography>
-        <Typography variant="h5" color={"text.secondary"} py={2}>
+        <Typography variant="h5" color={"text.secondary"} py={2} pb={4}>
           {desc}
         </Typography>
         <Button variant="contained" mr={2}>
@@ -148,9 +152,7 @@ function Slide({ title1, title2, desc, img, alt }) {
         </Button>
         <Button variant="outlined">Join us</Button>
       </Box>
-      <Box sx={{ flex: 1 }}>
-        <Image src={img} alt={alt} width={450} height={450} layout="fixed" />
-      </Box>
+      <Image src={img} alt={alt} width={450} height={450} layout="fixed" />
     </Paper>
   );
 }
@@ -194,21 +196,46 @@ function ArticlesLatest(props) {
     <>
       <Typography variant="h4">Latest Articles</Typography>
       <Articles articles={articles} />
-      {!end && !loading && (
-        <Button variant="contained" onClick={loadMore}>
-          Load More
-        </Button>
-      )}
-      {loading && <div>Loading...</div>}
-      {end && <div>End</div>}
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {!end && !loading && (
+          <Button variant="contained" onClick={loadMore}>
+            Load More
+          </Button>
+        )}
+        {loading && <CircularProgress />}
+        {end && <Typography>End</Typography>}
+      </Container>
     </>
+  );
+}
+
+function Categories() {
+  return (
+    <Box pb={2}>
+      <Typography variant="h5" color={"text.secondary"} gutterBottom>
+        Categories
+      </Typography>
+      <Box>
+        {Category.map((category) => (
+          <Link href={`/category/${category.id}`} passHref key={category.id}>
+            <Chip sx={{ m: 0.5 }} variant="contained" label={category.name} />
+          </Link>
+        ))}
+      </Box>
+    </Box>
   );
 }
 
 function AllTags(props) {
   return (
-    <>
-      <Typography variant="h5" color={"text.secondary"}>
+    <Box>
+      <Typography variant="h5" color={"text.secondary"} gutterBottom>
         Popular Tags
       </Typography>
       <Box>
@@ -222,7 +249,7 @@ function AllTags(props) {
           </Link>
         ))}
       </Box>
-    </>
+    </Box>
   );
 }
 

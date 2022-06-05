@@ -28,6 +28,7 @@ import {
   Divider,
   Button,
   Chip,
+  CircularProgress,
 } from "@mui/material";
 import { WithContext as ReactTags } from "react-tag-input";
 import InputLabel from "@mui/material/InputLabel";
@@ -108,15 +109,23 @@ export default function Category(props) {
 
   return (
     <Content>
-      <Typography variant="h4">{props.cat.name}</Typography>
+      <Typography variant="h3">{props.cat.name}</Typography>
       <Articles articles={articles} />
-      {!end && !loading && (
-        <Button variant="contained" onClick={loadMore}>
-          Load More
-        </Button>
-      )}
-      {loading && <div>Loading...</div>}
-      {end && <div>End</div>}
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {!end && !loading && (
+          <Button variant="contained" onClick={loadMore}>
+            Load More
+          </Button>
+        )}
+        {loading && <CircularProgress />}
+        {end && <Typography>End</Typography>}
+      </Container>
     </Content>
   );
 }
