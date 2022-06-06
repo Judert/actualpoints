@@ -8,10 +8,11 @@ export default function Content(props) {
       sx={{
         my: 4,
         display: "flex",
-        justifyContent: "center",
+        // justifyContent: "center",
         alignItems: "left",
         flexDirection: "column",
         rowGap: 2,
+        // minHeight: window.outerHeight,
       }}
     >
       {props.children}

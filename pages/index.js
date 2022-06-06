@@ -23,10 +23,9 @@ import {
   Timestamp,
   startAfter,
 } from "firebase/firestore";
-import { db, postToJSON, tagToJSON } from "../lib/firebase";
+import { categoryToJSON, db, postToJSON, tagToJSON } from "../lib/firebase";
 import Articles from "../components/Articles";
 import Link from "next/link";
-import Category from "../data/category.json";
 
 const slides = [
   {
@@ -41,7 +40,7 @@ const slides = [
 
 const LIMIT = 10;
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const articles = (
     await getDocs(
       query(
@@ -57,8 +56,13 @@ export async function getServerSideProps() {
     await getDocs(query(collection(db, "Tag"), orderBy("count", "desc")))
   ).docs.map(tagToJSON);
 
+  const categories = (await getDocs(collection(db, "Category"))).docs.map(
+    categoryToJSON
+  );
+
   return {
-    props: { articles, tags },
+    props: { articles, tags, categories },
+    revalidate: 60 * 60 * 6,
   };
 }
 
@@ -92,7 +96,7 @@ export default function Index(props) {
         >
           <Grid container spacing={4}>
             <Grid item xs={3}>
-              <Categories />
+              <Categories {...props} />
               <AllTags {...props} />
             </Grid>
             <Grid item xs={9}>
@@ -101,7 +105,6 @@ export default function Index(props) {
           </Grid>
         </Container>
       </Container>
-      <Footer />
     </>
   );
 }
@@ -215,14 +218,14 @@ function ArticlesLatest(props) {
   );
 }
 
-function Categories() {
+function Categories(props) {
   return (
     <Box pb={2}>
       <Typography variant="h5" color={"text.secondary"} gutterBottom>
         Categories
       </Typography>
       <Box>
-        {Category.map((category) => (
+        {props.categories.map((category) => (
           <Link href={`/category/${category.id}`} passHref key={category.id}>
             <Chip sx={{ m: 0.5 }} variant="contained" label={category.name} />
           </Link>
@@ -242,6 +245,7 @@ function AllTags(props) {
         {props.tags.map((tag) => (
           <Link href={"/search?tags=" + tag.id} passHref key={tag.id}>
             <Chip
+              size="small"
               sx={{ m: 0.5 }}
               variant="outlined"
               label={tag.id + " (" + tag.count + ")"}
@@ -249,26 +253,6 @@ function AllTags(props) {
           </Link>
         ))}
       </Box>
-    </Box>
-  );
-}
-
-function Footer() {
-  return (
-    <Box sx={{ display: "flex", backgroundColor: "primary.main" }}>
-      <Container
-        maxWidth="md"
-        sx={{
-          my: 4,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          rowGap: 2,
-        }}
-      >
-        <Copyright />
-      </Container>
     </Box>
   );
 }

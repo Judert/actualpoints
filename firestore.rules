@@ -3,7 +3,8 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /Article/{articleId} {
     		allow get: if authorGet(articleId) || resource.data.published;
-    		allow list: if author() || (resource.data.published && request.query.limit <= 10); 
+        allow list: if author() || resource.data.published;
+    		// allow list: if author() || (resource.data.published && request.query.limit <= 10); 
         allow create: if validArticleAuth() && validArticleCreateAuth() && validArticleCreate(articleId);
         allow update: if validArticleAuth() && validArticleUpdate();
         allow delete: if author();
@@ -12,7 +13,6 @@ service cloud.firestore {
     	allow get;
       allow list;
       allow create: if validTagCreate(tagId);
-      allow update: if validTagUpdate();
     }
     match /User/{userId} {
     	allow get;
@@ -24,6 +24,9 @@ service cloud.firestore {
     	allow get;
       allow list;
       allow create: if validUsername(username);
+    }
+    match /Category/{category} {
+      allow list;
     }
     
     function validUsername(username) {
@@ -57,13 +60,6 @@ service cloud.firestore {
       let noData = request.resource.data == {};
 
       return request.auth.token.verified && validId && noData;
-    }
-
-    function validTagUpdate() {
-      // user did nothing, this is so we dont have to check if the tags exist in the batch update
-      let noData = request.resource.data == {};
-
-      return request.auth.token.verified && noData;
     }
 
     function validArticleAuth() {

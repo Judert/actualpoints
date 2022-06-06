@@ -37,13 +37,11 @@ export async function getStaticProps({ params }) {
 
   return {
     props: { post, path },
-    revalidate: 100,
+    revalidate: 60 * 60 * 6,
   };
 }
 
 export default function Article(props) {
-  // const [realtimePost] = useDocumentData(doc(db, props.path));
-  // const post = realtimePost || props.post;
   const article = props.post;
 
   return (

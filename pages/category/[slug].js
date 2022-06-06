@@ -1,14 +1,5 @@
-import React, { useState, useEffect } from "react";
-import IconButton from "@mui/material/IconButton";
-import Card from "@mui/material/Card";
-import Avatar from "@mui/material/Avatar";
-import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Box from "@mui/material/Box";
-import { useCollection } from "react-firebase-hooks/firestore";
-import { db, postToJSON } from "../../lib/firebase";
+import React, { useState } from "react";
+import { categoryToJSON, db, postToJSON } from "../../lib/firebase";
 import {
   collection,
   query as firestoreQuery,
@@ -19,46 +10,40 @@ import {
   limit,
   startAfter,
 } from "firebase/firestore";
-import {
-  Checkbox,
-  Typography,
-  Container,
-  Stack,
-  Grid,
-  Divider,
-  Button,
-  Chip,
-  CircularProgress,
-} from "@mui/material";
-import { WithContext as ReactTags } from "react-tag-input";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import NativeSelect from "@mui/material/NativeSelect";
+import { Typography, Container, Button, CircularProgress } from "@mui/material";
 import Content from "../../components/Content";
-import { useRouter } from "next/router";
-import category from "../../data/category.json";
-import find from "lodash.find";
-import Image from "next/image";
-import Link from "next/link";
 import Articles from "../../components/Articles";
 
 const LIMIT = 10;
 
-export async function getServerSideProps({ query }) {
-  const { slug } = query;
-  const cat = find(category, ["id", slug]);
+export async function getStaticPaths() {
+  const categories = (await getDocs(collection(db, "Category"))).docs.map(
+    categoryToJSON
+  );
 
-  if (!cat) {
+  const paths = categories.map((category) => {
     return {
-      notFound: true,
+      params: {
+        slug: category.id + "-" + category.name,
+      },
     };
-  }
+  });
+
+  return {
+    paths,
+    fallback: "blocking",
+  };
+}
+
+export async function getStaticProps({ params }) {
+  const { slug } = params;
+  const categoryId = slug.split("-")[0];
 
   const articles = (
     await getDocs(
       firestoreQuery(
         collection(db, "Article"),
-        where("category", "==", cat.id),
+        where("category", "==", categoryId),
         where("published", "==", true),
         orderBy("date", "desc"),
         limit(LIMIT)
@@ -67,7 +52,8 @@ export async function getServerSideProps({ query }) {
   ).docs.map(postToJSON);
 
   return {
-    props: { cat, articles },
+    props: { slug, articles },
+    revalidate: 60 * 60 * 6,
   };
 }
 
@@ -88,7 +74,7 @@ export default function Category(props) {
         await getDocs(
           firestoreQuery(
             collection(db, "Article"),
-            where("category", "==", props.cat.id),
+            where("category", "==", props.slug.split("-")[0]),
             where("published", "==", true),
             orderBy("date", "desc"),
             startAfter(start),
@@ -109,7 +95,7 @@ export default function Category(props) {
 
   return (
     <Content>
-      <Typography variant="h3">{props.cat.name}</Typography>
+      <Typography variant="h3">{props.slug.split("-")[1]}</Typography>
       <Articles articles={articles} />
       <Container
         sx={{

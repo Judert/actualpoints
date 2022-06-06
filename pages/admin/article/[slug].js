@@ -24,6 +24,8 @@ import {
   writeBatch,
   serverTimestamp,
   runTransaction,
+  getDocs,
+  collection,
 } from "firebase/firestore";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
@@ -112,16 +114,16 @@ function Edit({ router, slug, valueArticle }) {
     published: Yup.boolean(),
     content: Yup.object().shape({
       text: Yup.string(),
-      count: Yup.number()
-        .integer()
-        .min(2000, "Too short, need at least 2000 words"),
-      html: Yup.string().test(
-        "contains-table",
-        "Need at least one table",
-        (value) => {
-          return value.includes("MuiTableContainer");
-        }
-      ),
+      // count: Yup.number()
+      //   .integer()
+      //   .min(2000, "Too short, need at least 2000 words"),
+      // html: Yup.string().test(
+      //   "contains-table",
+      //   "Need at least one table",
+      //   (value) => {
+      //     return value.includes("MuiTableContainer");
+      //   }
+      // ),
     }),
   });
   const {
@@ -163,6 +165,9 @@ function Edit({ router, slug, valueArticle }) {
     );
   };
   const update = async (data) => {
+    const tags = (await getDocs(collection(db, "Tag"))).docs.map((doc) => {
+      return doc.id;
+    });
     const batch = writeBatch(db);
     batch.update(doc(db, "Article", slug), {
       title: data.title,
@@ -175,20 +180,23 @@ function Edit({ router, slug, valueArticle }) {
       content: data.content.text,
       date: serverTimestamp(),
     });
-    for (let i = 0; i < data.tags.length; i++) {
-      batch.set(doc(db, "Tag", data.tags[i].id), {});
+    const tagIds = data.tags.map((tag) => tag.id);
+    const newTags = tagIds.filter((x) => !tags.includes(x));
+    // console.log(tags, tagIds, newTags);
+    for (let i = 0; i < newTags.length; i++) {
+      batch.set(doc(db, "Tag", newTags[i].id), {});
     }
     await batch.commit();
   };
 
-  // Word count shit, we need this to have realtime word count
-  const watchCount = watch(
-    "content.count",
-    ReactDOMServer.renderToString(<Markdown>{valueArticle.content}</Markdown>)
-      .replace(/<[^>]+>/g, "")
-      .split(" ").length
-  );
-  const handleChange = (count) => setValue("content.count", count);
+  // // Word count shit, we need this to have realtime word count
+  // const watchCount = watch(
+  //   "content.count",
+  //   ReactDOMServer.renderToString(<Markdown>{valueArticle.content}</Markdown>)
+  //     .replace(/<[^>]+>/g, "")
+  //     .split(" ").length
+  // );
+  // const handleChange = (count) => setValue("content.count", count);
 
   return (
     <>
@@ -288,10 +296,10 @@ function Edit({ router, slug, valueArticle }) {
         name="content"
         defaultValue={{
           text: valueArticle.content,
-          count: watchCount,
-          html: ReactDOMServer.renderToString(
-            <Markdown>{valueArticle.content}</Markdown>
-          ),
+          // count: watchCount,
+          // html: ReactDOMServer.renderToString(
+          //   <Markdown>{valueArticle.content}</Markdown>
+          // ),
         }}
         render={({ field: { onChange, onBlur, value, ref } }) => (
           <MdEditor
@@ -301,19 +309,19 @@ function Edit({ router, slug, valueArticle }) {
             // eslint-disable-next-line react/no-children-prop
             renderHTML={(value) => <Markdown>{value}</Markdown>}
             onChange={({ html, text }, event) => {
-              const count = html.replace(/<[^>]+>/g, "").split(" ").length;
+              // const count = html.replace(/<[^>]+>/g, "").split(" ").length;
               onChange({
                 text: text,
-                count: count,
-                html: html,
+                // count: count,
+                // html: html,
               });
-              handleChange(count);
+              // handleChange(count);
             }}
           />
         )}
       />
-      <Typography>Word Count: {watchCount}</Typography>
-      {errors.content?.html && (
+      {/* <Typography>Word Count: {watchCount}</Typography> */}
+      {/* {errors.content?.html && (
         <Typography color="error.main">
           {errors.content.html.message}
         </Typography>
@@ -322,7 +330,7 @@ function Edit({ router, slug, valueArticle }) {
         <Typography color="error.main">
           {errors.content.count.message}
         </Typography>
-      )}
+      )} */}
       <Divider />
       <ButtonGroup sx={{ my: 4 }}>
         <Button variant="contained" onClick={handleSubmit(handleDone)}>

@@ -10,6 +10,8 @@ import Navbar from "../components/Navbar";
 import { UserContext } from "../lib/context";
 import { useUserData } from "../lib/hooks";
 import { SnackbarProvider } from "notistack";
+import { Box, Container } from "@mui/material";
+import Copyright from "../src/Copyright";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -33,6 +35,7 @@ export default function MyApp(props) {
             <CssBaseline />
             <Navbar />
             <Component {...pageProps} />
+            <Footer />
           </ThemeProvider>
         </CacheProvider>
       </UserContext.Provider>
@@ -45,3 +48,23 @@ MyApp.propTypes = {
   emotionCache: PropTypes.object,
   pageProps: PropTypes.object.isRequired,
 };
+
+function Footer() {
+  return (
+    <Box sx={{ display: "flex", backgroundColor: "primary.main" }}>
+      <Container
+        maxWidth="md"
+        sx={{
+          my: 4,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          rowGap: 2,
+        }}
+      >
+        <Copyright />
+      </Container>
+    </Box>
+  );
+}
