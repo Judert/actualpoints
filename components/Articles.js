@@ -51,13 +51,16 @@ export default function Articles({ articles }) {
               /> */}
               {/* ))} */}
             </Box>
+            {/* <div style={{ width: 250, height: 250, overflow: "hidden" }}> */}
             <Image
               alt={article.alt}
               src={article.image}
+              // width={444.4444444444444}
               width={250}
               height={250}
               layout="fixed"
             />
+            {/* </div> */}
           </Paper>
         </Link>
       ))}

@@ -1,4 +1,13 @@
-import { Avatar, Grid, Paper, Typography, Chip, Box } from "@mui/material";
+import {
+  Avatar,
+  Grid,
+  Paper,
+  Typography,
+  Chip,
+  Box,
+  Stack,
+  Container,
+} from "@mui/material";
 import Content from "../../components/Content";
 import { db, postToJSON } from "../../lib/firebase";
 import {
@@ -8,10 +17,15 @@ import {
   collection,
   where,
   doc,
+  orderBy,
+  limit,
 } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import Markdown from "../../components/Markdown";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+
+const LIMIT = 10;
 
 export async function getStaticPaths() {
   const snapshot = await getDocs(
@@ -35,60 +49,136 @@ export async function getStaticProps({ params }) {
   const path = ref.path;
   const post = postToJSON(await getDoc(ref));
 
+  const articles = (
+    await getDocs(
+      query(
+        collection(db, "Article"),
+        where("published", "==", true),
+        orderBy("date", "desc"),
+        limit(LIMIT)
+      )
+    )
+  ).docs.map(postToJSON);
+
   return {
-    props: { post, path },
+    props: { post, path, articles },
     revalidate: 60 * 60 * 6,
   };
 }
 
 export default function Article(props) {
   const article = props.post;
+  const articles = props.articles;
 
   return (
-    <Content>
-      <Paper sx={{ p: 3, display: "flex", flexDirection: "column" }}>
-        <Typography variant="h3">{article.title}</Typography>
-        <Typography variant="h6" color="text.secondary">
-          {article.subtitle}
-        </Typography>
-        <Typography variant="subtitle1" color="text.secondary">
-          Last Updated: {new Date(article.date).toDateString()}
-        </Typography>
-        <Image
-          alt={article.alt}
-          src={article.image}
-          width={300}
-          height={200}
-          layout="responsive"
-        />
-        <Markdown>{article.content}</Markdown>
-      </Paper>
-      <Typography variant="h6" color="text.secondary">
-        Article contributed by:
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs="auto">
-          <Avatar sx={{ width: 56, height: 56 }} src={article.photoURL} />
-        </Grid>
-        <Grid item container xs="auto">
-          <Grid item xs={12}>
-            <Typography variant="body1">{article.displayName}</Typography>
+    <Container
+      component="main"
+      maxWidth="lg"
+      sx={{
+        my: 4,
+        display: "flex",
+        // justifyContent: "center",
+        alignItems: "left",
+        flexDirection: "column",
+        rowGap: 2,
+        // minHeight: window.outerHeight,
+      }}
+    >
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={8}>
+          <Paper sx={{ p: 3, display: "flex", flexDirection: "column" }}>
+            <Typography variant="h3">{article.title}</Typography>
+            <Typography variant="h6" color="text.secondary">
+              {article.subtitle}
+            </Typography>
+            <Typography variant="subtitle1" color="text.secondary">
+              Last Updated: {new Date(article.date).toDateString()}
+            </Typography>
+            <Image
+              alt={article.alt}
+              src={article.image}
+              width={300}
+              height={200}
+              layout="responsive"
+            />
+            <Markdown>{article.content}</Markdown>
+          </Paper>
+          <Typography variant="h6" color="text.secondary">
+            Article contributed by:
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs="auto">
+              <Avatar sx={{ width: 56, height: 56 }} src={article.photoURL} />
+            </Grid>
+            <Grid item container xs="auto">
+              <Grid item xs={12}>
+                <Typography variant="body1">{article.displayName}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="body1">
+                  {"@" + article.username}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} sm={8}>
+              <Typography variant="body1">{article.desc}</Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Typography variant="body1">{"@" + article.username}</Typography>
-          </Grid>
+          <Box>
+            {article.tags.map((tag) => (
+              <Link href={"/search?tags=" + tag.id} passHref key={tag.id}>
+                <Chip sx={{ m: 0.5 }} variant="outlined" label={tag.id} />
+              </Link>
+            ))}
+          </Box>
         </Grid>
-        <Grid item xs={12} sm={8}>
-          <Typography variant="body1">{article.desc}</Typography>
+        <Grid item xs={12} md={4}>
+          <Typography variant="h5" color={"text.secondary"} gutterBottom>
+            Latest Articles
+          </Typography>
+          {articles.map((article) => (
+            <Box
+              key={article.id}
+              sx={{
+                py: 3,
+                px: 3,
+              }}
+            >
+              <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
+                {/* <Avatar sx={{ width: 28, height: 28 }} src={article.photoURL} /> */}
+                <Typography variant="subtitle1">
+                  {article.displayName}
+                </Typography>
+                {/* <Typography variant="subtitle1" color="text.secondary">
+                  {new Date(article.date).toLocaleDateString()}
+                </Typography> */}
+                <LocalOfferIcon color="disabled" sx={{ fontSize: 20 }} />
+                <Typography variant="subtitle1" color="text.secondary">
+                  {article.tags[0].id}
+                </Typography>
+              </Stack>
+              <Typography gutterBottom variant="h5">
+                {article.title}
+              </Typography>
+              <Typography
+                sx={{ textOverflow: "ellipsis" }}
+                variant="body1"
+                color="text.secondary"
+                gutterBottom
+              >
+                {article.subtitle}
+              </Typography>
+              <Image
+                alt={article.alt}
+                src={article.image}
+                width={444.4444444444444}
+                height={250}
+                // layout="fixed"
+              />
+            </Box>
+          ))}
         </Grid>
       </Grid>
-      <Box>
-        {article.tags.map((tag) => (
-          <Link href={"/search?tags=" + tag.id} passHref key={tag.id}>
-            <Chip sx={{ m: 0.5 }} variant="outlined" label={tag.id} />
-          </Link>
-        ))}
-      </Box>
-    </Content>
+    </Container>
   );
 }
