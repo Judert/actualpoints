@@ -17,14 +17,13 @@ export async function getStaticProps() {
 }
 
 export default function CategoryAll(props) {
-  console.log(props);
   return (
     <Content>
       <Typography variant="h3">Categories</Typography>
       <Grid container spacing={2}>
         {props.categories.map((category) => (
           <Link href={`/category/${category.id}`} passHref key={category.id}>
-            <Grid md={4} item style={{ position: "relative" }}>
+            <Grid xs={12} sm={6} md={4} item style={{ position: "relative" }}>
               <Paper elevation={6}>
                 <Image
                   alt={category.name}

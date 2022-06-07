@@ -27,9 +27,8 @@ import {
   getDocs,
   collection,
 } from "firebase/firestore";
-import { useDocumentData } from "react-firebase-hooks/firestore";
+import { useDocumentData, useCollection } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
-import Category from "../../../data/category.json";
 import Content from "../../../components/Content";
 import Authorize from "../../../components/Authorize";
 import Tags from "../../../components/Tags";
@@ -198,6 +197,10 @@ function Edit({ router, slug, valueArticle }) {
   // );
   // const handleChange = (count) => setValue("content.count", count);
 
+  const [categories, loading, error] = useCollection(
+    collection(db, "Category")
+  );
+
   return (
     <>
       <TextField
@@ -240,27 +243,31 @@ function Edit({ router, slug, valueArticle }) {
         error={errors.alt ? true : false}
         helperText={errors.alt?.message}
       />
-      <Box sx={{ minWidth: 120 }}>
-        <FormControl>
-          <InputLabel variant="standard" htmlFor="uncontrolled-native">
-            Category
-          </InputLabel>
-          <NativeSelect
-            defaultValue={valueArticle.category}
-            inputProps={{
-              name: "category",
-              id: "uncontrolled-native",
-            }}
-            {...register("category")}
-          >
-            {Category.map((row) => (
-              <option key={row.id} value={row.id}>
-                {row.name}
-              </option>
-            ))}
-          </NativeSelect>
-        </FormControl>
-      </Box>
+      {error && <Typography>Error: {JSON.stringify(error)}</Typography>}
+      {loading && <Typography>Collection: Loading...</Typography>}
+      {categories && (
+        <Box sx={{ minWidth: 120 }}>
+          <FormControl>
+            <InputLabel variant="standard" htmlFor="uncontrolled-native">
+              Category
+            </InputLabel>
+            <NativeSelect
+              defaultValue={valueArticle.category}
+              inputProps={{
+                name: "category",
+                id: "uncontrolled-native",
+              }}
+              {...register("category")}
+            >
+              {categories.docs.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.data().name}
+                </option>
+              ))}
+            </NativeSelect>
+          </FormControl>
+        </Box>
+      )}
       <Controller
         control={control}
         name="tags"

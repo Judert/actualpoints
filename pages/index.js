@@ -71,7 +71,7 @@ export default function Index(props) {
     <>
       <Container
         component="main"
-        maxWidth="xl"
+        maxWidth="lg"
         sx={{
           my: 4,
           display: "flex",
@@ -82,28 +82,15 @@ export default function Index(props) {
         }}
       >
         <Slides />
-        <Container
-          maxWidth="lg"
-          sx={{
-            my: 6,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "left",
-            flexDirection: "column",
-            rowGap: 2,
-            // backgroundColor: "secondary.main",
-          }}
-        >
-          <Grid container spacing={4}>
-            <Grid item xs={3}>
-              <Categories {...props} />
-              <AllTags {...props} />
-            </Grid>
-            <Grid item xs={9}>
-              <ArticlesLatest {...props} />
-            </Grid>
+        <Grid container spacing={4}>
+          <Grid item xs={3}>
+            <Categories {...props} />
+            <AllTags {...props} />
           </Grid>
-        </Container>
+          <Grid item xs={9}>
+            <ArticlesLatest {...props} />
+          </Grid>
+        </Grid>
       </Container>
     </>
   );

@@ -15,34 +15,88 @@ import SearchIcon from "@mui/icons-material/Search";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Link from "../src/Link";
-const NextLink = require("next/link").default;
 import { useContext } from "react";
 import { UserContext } from "../lib/context";
+import { LogoIcon } from "../components/LogoIcon";
 
 export default function Navbar(props) {
   const theme = useTheme();
-
   const { photoURL } = useContext(UserContext);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            sx={{ mr: 2, display: { xs: "block", md: "none" } }}
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: "flex",
+              alignItems: "center",
+            }}
           >
-            <MenuIcon />
-          </IconButton>
-          <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "row" }}>
-            <NextLink href="/" passHref>
-              <Typography variant="h6" noWrap pr={2}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClick}
+              sx={{ mr: 2, display: { xs: "flex", md: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+              <MenuItem
+                onClick={handleClose}
+                component={Link}
+                noLinkStyle
+                href="/category"
+              >
+                Categories
+              </MenuItem>
+              <MenuItem
+                onClick={handleClose}
+                component={Link}
+                noLinkStyle
+                href="/about"
+              >
+                About
+              </MenuItem>
+              <MenuItem
+                onClick={handleClose}
+                component={Link}
+                noLinkStyle
+                href="/apply"
+              >
+                Apply
+              </MenuItem>
+            </Menu>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                columnGap: 1,
+                pr: 2,
+              }}
+            >
+              <Link
+                href="/"
+                passHref
+                variant="h6"
+                noWrap
+                color="inherit"
+                underline="none"
+              >
                 Actual Points
-              </Typography>
-            </NextLink>
-
+              </Link>
+              <LogoIcon />
+            </Box>
             <Box sx={{ display: { xs: "none", md: "block" } }}>
               <Button
                 color="inherit"
@@ -82,13 +136,17 @@ export default function Navbar(props) {
               <Brightness4Icon />
             )}
           </IconButton> */}
-          <Brightness7Icon sx={{ mx: 1 }} />
+          {/* <Brightness7Icon sx={{ mx: 1 }} /> */}
 
-          <NextLink href="/search" passHref>
-            <IconButton color="inherit">
-              <SearchIcon />
-            </IconButton>
-          </NextLink>
+          <IconButton
+            passHref
+            href="/search"
+            color="inherit"
+            component={Link}
+            noLinkStyle
+          >
+            <SearchIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
     </Box>
