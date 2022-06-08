@@ -39,7 +39,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const { slug } = params;
-  const category = (await getDoc(doc(db, "Category", slug))).data();
+  const category = categoryToJSON(await getDoc(doc(db, "Category", slug)));
 
   const articles = (
     await getDocs(

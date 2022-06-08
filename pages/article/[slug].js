@@ -49,26 +49,14 @@ export async function getStaticProps({ params }) {
   const path = ref.path;
   const post = postToJSON(await getDoc(ref));
 
-  const articles = (
-    await getDocs(
-      query(
-        collection(db, "Article"),
-        where("published", "==", true),
-        orderBy("date", "desc"),
-        limit(LIMIT)
-      )
-    )
-  ).docs.map(postToJSON);
-
   return {
-    props: { post, path, articles },
+    props: { post, path },
     revalidate: 60 * 60 * 6,
   };
 }
 
 export default function Article(props) {
   const article = props.post;
-  const articles = props.articles;
 
   return (
     <Container
@@ -131,52 +119,6 @@ export default function Article(props) {
               </Link>
             ))}
           </Box>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Typography variant="h5" color={"text.secondary"} gutterBottom>
-            Latest Articles
-          </Typography>
-          {articles.map((article) => (
-            <Box
-              key={article.id}
-              sx={{
-                py: 3,
-                px: 3,
-              }}
-            >
-              <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
-                {/* <Avatar sx={{ width: 28, height: 28 }} src={article.photoURL} /> */}
-                <Typography variant="subtitle1">
-                  {article.displayName}
-                </Typography>
-                {/* <Typography variant="subtitle1" color="text.secondary">
-                  {new Date(article.date).toLocaleDateString()}
-                </Typography> */}
-                <LocalOfferIcon color="disabled" sx={{ fontSize: 20 }} />
-                <Typography variant="subtitle1" color="text.secondary">
-                  {article.tags[0].id}
-                </Typography>
-              </Stack>
-              <Typography gutterBottom variant="h5">
-                {article.title}
-              </Typography>
-              <Typography
-                sx={{ textOverflow: "ellipsis" }}
-                variant="body1"
-                color="text.secondary"
-                gutterBottom
-              >
-                {article.subtitle}
-              </Typography>
-              <Image
-                alt={article.alt}
-                src={article.image}
-                width={444.4444444444444}
-                height={250}
-                // layout="fixed"
-              />
-            </Box>
-          ))}
         </Grid>
       </Grid>
     </Container>
