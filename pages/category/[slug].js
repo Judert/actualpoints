@@ -9,6 +9,8 @@ import {
   orderBy,
   limit,
   startAfter,
+  getDoc,
+  doc,
 } from "firebase/firestore";
 import { Typography, Container, Button, CircularProgress } from "@mui/material";
 import Content from "../../components/Content";
@@ -24,7 +26,7 @@ export async function getStaticPaths() {
   const paths = categories.map((category) => {
     return {
       params: {
-        slug: category.id + "-" + category.name,
+        slug: category.id,
       },
     };
   });
@@ -37,13 +39,13 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const { slug } = params;
-  const categoryId = slug.split("-")[0];
+  const category = (await getDoc(doc(db, "Category", slug))).data();
 
   const articles = (
     await getDocs(
       firestoreQuery(
         collection(db, "Article"),
-        where("category", "==", categoryId),
+        where("category", "==", slug),
         where("published", "==", true),
         orderBy("date", "desc"),
         limit(LIMIT)
@@ -52,7 +54,7 @@ export async function getStaticProps({ params }) {
   ).docs.map(postToJSON);
 
   return {
-    props: { slug, articles },
+    props: { slug, category, articles },
     revalidate: 60 * 60 * 6,
   };
 }
@@ -74,7 +76,7 @@ export default function Category(props) {
         await getDocs(
           firestoreQuery(
             collection(db, "Article"),
-            where("category", "==", props.slug.split("-")[0]),
+            where("category", "==", props.slug),
             where("published", "==", true),
             orderBy("date", "desc"),
             startAfter(start),
@@ -95,8 +97,14 @@ export default function Category(props) {
 
   return (
     <Content>
-      <Typography variant="h3">{props.slug.split("-")[1]}</Typography>
-      <Articles articles={articles} />
+      <Typography variant="h3">{props.category.name}</Typography>
+      {articles[0] ? (
+        <Articles articles={articles} />
+      ) : (
+        <Typography variant="h5" color="text.secondary">
+          No articles yet
+        </Typography>
+      )}
       <Container
         sx={{
           display: "flex",
@@ -104,7 +112,7 @@ export default function Category(props) {
           alignItems: "center",
         }}
       >
-        {!end && !loading && (
+        {articles[0] && !end && !loading && (
           <Button variant="contained" onClick={loadMore}>
             Load More
           </Button>

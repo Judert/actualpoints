@@ -87,7 +87,7 @@ export default function Navbar(props) {
             >
               <Link
                 href="/"
-                passHref
+                // passHref
                 variant="h6"
                 noWrap
                 color="inherit"
@@ -139,7 +139,7 @@ export default function Navbar(props) {
           {/* <Brightness7Icon sx={{ mx: 1 }} /> */}
 
           <IconButton
-            passHref
+            // passHref
             href="/search"
             color="inherit"
             component={Link}

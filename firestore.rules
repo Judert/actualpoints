@@ -26,6 +26,7 @@ service cloud.firestore {
       allow create: if validUsername(username);
     }
     match /Category/{category} {
+      allow get;
       allow list;
     }
     
