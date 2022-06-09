@@ -183,7 +183,7 @@ function Edit({ router, slug, valueArticle }) {
     const newTags = tagIds.filter((x) => !tags.includes(x));
     // console.log(tags, tagIds, newTags);
     for (let i = 0; i < newTags.length; i++) {
-      batch.set(doc(db, "Tag", newTags[i].id), {});
+      batch.set(doc(db, "Tag", newTags[i]), {});
     }
     await batch.commit();
   };

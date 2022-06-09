@@ -68,31 +68,29 @@ export async function getStaticProps() {
 
 export default function Index(props) {
   return (
-    <>
-      <Container
-        component="main"
-        maxWidth="lg"
-        sx={{
-          my: 4,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "left",
-          flexDirection: "column",
-          rowGap: 2,
-        }}
-      >
-        <Slides />
-        <Grid container spacing={4}>
-          <Grid item xs={3}>
-            <Categories {...props} />
-            <AllTags {...props} />
-          </Grid>
-          <Grid item xs={9}>
-            <ArticlesLatest {...props} />
-          </Grid>
+    <Container
+      component="main"
+      maxWidth="lg"
+      sx={{
+        my: 4,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "left",
+        flexDirection: "column",
+        rowGap: 2,
+      }}
+    >
+      <Slides />
+      <Grid container spacing={4}>
+        <Grid item xs={12} sm={12} md={3}>
+          <Categories {...props} />
+          <AllTags {...props} />
         </Grid>
-      </Container>
-    </>
+        <Grid item xs={12} sm={12} md={9}>
+          <ArticlesLatest {...props} />
+        </Grid>
+      </Grid>
+    </Container>
   );
 }
 
