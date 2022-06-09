@@ -9,7 +9,7 @@ export default function Articles({ articles }) {
       {articles.map((article) => (
         <Link href={"/article/" + article.id} passHref key={article.id}>
           <Paper
-            elevation={1}
+            elevation={2}
             sx={{
               display: "flex",
               flexDirection: { xs: "column", sm: "row" },
@@ -17,9 +17,9 @@ export default function Articles({ articles }) {
           >
             <Box
               sx={{
-                flexGrow: 1,
-                height: 250,
-                width: 500,
+                flexGrow: { xs: 0, sm: 1 },
+                height: { xs: "none", sm: 250 },
+                width: { xs: "none", sm: 500 },
                 py: 2,
                 px: 3,
               }}
@@ -29,7 +29,6 @@ export default function Articles({ articles }) {
                 spacing={1}
                 sx={{
                   alignItems: "center",
-                  // width: 500
                 }}
               >
                 <Avatar sx={{ width: 32, height: 32 }} src={article.photoURL} />
@@ -81,7 +80,7 @@ export default function Articles({ articles }) {
                   textOverflow: "ellipsis",
                   whiteSpace: "normal",
                   display: "-webkit-box",
-                  WebkitLineClamp: 2,
+                  WebkitLineClamp: { xs: 4, sm: 2 },
                   WebkitBoxOrient: "vertical",
                 }}
               >
@@ -92,7 +91,7 @@ export default function Articles({ articles }) {
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "normal",
-                  display: "-webkit-box",
+                  display: { xs: "none", sm: "-webkit-box" },
                   WebkitLineClamp: 3,
                   WebkitBoxOrient: "vertical",
                 }}
@@ -102,6 +101,22 @@ export default function Articles({ articles }) {
               >
                 {article.subtitle}
               </Typography>
+              <Box
+                sx={{
+                  justifyContent: "center",
+                  py: 1,
+                  display: { xs: "flex", sm: "none" },
+                }}
+              >
+                <Image
+                  alt={article.alt}
+                  src={article.image}
+                  width={320}
+                  height={180}
+                  // layout="responsive"
+                  objectFit="cover"
+                />
+              </Box>
             </Box>
             <Box
               sx={{
@@ -115,22 +130,6 @@ export default function Articles({ articles }) {
                 src={article.image}
                 width={250}
                 height={250}
-                // layout="fixed"
-                objectFit="cover"
-              />
-            </Box>
-            <Box
-              sx={{
-                width: 500,
-                height: 281.25,
-                display: { xs: "flex", sm: "none" },
-              }}
-            >
-              <Image
-                alt={article.alt}
-                src={article.image}
-                width={500}
-                height={281.25}
                 // layout="fixed"
                 objectFit="cover"
               />
