@@ -25,6 +25,7 @@ import Link from "next/link";
 import Markdown from "../../components/Markdown";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import Articles from "../../components/Articles";
+import Article from "../../components/Article";
 
 const LIMIT = 10;
 
@@ -67,7 +68,7 @@ export async function getStaticProps({ params }) {
   };
 }
 
-export default function Article(props) {
+export default function ArticleMain(props) {
   const article = props.post;
   const articles = props.articles;
 
@@ -86,7 +87,7 @@ export default function Article(props) {
       }}
     >
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={12} md={9}>
+        <Grid item xs={12} sm={12} md={8}>
           <Paper
             elevation={3}
             sx={{ p: 3, display: "flex", flexDirection: "column" }}
@@ -136,9 +137,11 @@ export default function Article(props) {
             ))}
           </Box>
         </Grid>
-        <Grid item xs={12} sm={12} md={3}>
-          <Articles articles={articles} />
-        </Grid>
+        {articles.map((article) => (
+          <Grid key={article.id} item xs={6} sm={6} md={4}>
+            <Article article={article} small={true} />
+          </Grid>
+        ))}
       </Grid>
     </Container>
   );
