@@ -24,6 +24,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Markdown from "../../components/Markdown";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import Articles from "../../components/Articles";
 
 const LIMIT = 10;
 
@@ -49,14 +50,26 @@ export async function getStaticProps({ params }) {
   const path = ref.path;
   const post = postToJSON(await getDoc(ref));
 
+  const articles = (
+    await getDocs(
+      query(
+        collection(db, "Article"),
+        where("published", "==", true),
+        orderBy("date", "desc"),
+        limit(LIMIT)
+      )
+    )
+  ).docs.map(postToJSON);
+
   return {
-    props: { post, path },
+    props: { post, path, articles },
     revalidate: 60 * 60 * 6,
   };
 }
 
 export default function Article(props) {
   const article = props.post;
+  const articles = props.articles;
 
   return (
     <Container
@@ -73,8 +86,11 @@ export default function Article(props) {
       }}
     >
       <Grid container spacing={3}>
-        <Grid item xs={12} md={8}>
-          <Paper sx={{ p: 3, display: "flex", flexDirection: "column" }}>
+        <Grid item xs={12} sm={12} md={9}>
+          <Paper
+            elevation={3}
+            sx={{ p: 3, display: "flex", flexDirection: "column" }}
+          >
             <Typography variant="h3">{article.title}</Typography>
             <Typography variant="h6" color="text.secondary">
               {article.subtitle}
@@ -119,6 +135,9 @@ export default function Article(props) {
               </Link>
             ))}
           </Box>
+        </Grid>
+        <Grid item xs={12} sm={12} md={3}>
+          <Articles articles={articles} />
         </Grid>
       </Grid>
     </Container>

@@ -5,16 +5,7 @@ import Link from "next/link";
 import { collection, getDocs, query } from "firebase/firestore";
 import { categoryToJSON, db } from "../../lib/firebase";
 
-export async function getStaticProps() {
-  const categories = (await getDocs(collection(db, "Category"))).docs.map(
-    categoryToJSON
-  );
-
-  return {
-    props: { categories },
-    revalidate: 60 * 60 * 6,
-  };
-}
+export { getStaticProps } from "../index";
 
 export default function CategoryAll(props) {
   return (
