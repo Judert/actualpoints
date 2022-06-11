@@ -17,7 +17,7 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { db } from "../../../lib/firebase";
+import { categoryToJSON, db } from "../../../lib/firebase";
 import {
   collection,
   query,
@@ -29,6 +29,7 @@ import {
   doc,
   orderBy,
   serverTimestamp,
+  getDocs,
 } from "firebase/firestore";
 import { Checkbox, TextField, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
@@ -39,7 +40,6 @@ import { UserContext } from "../../../lib/context";
 import Content from "../../../components/Content";
 import { useRouter } from "next/router";
 import kebabCase from "lodash.kebabcase";
-import Category from "../../../data/category.json";
 import { useSnackbar } from "notistack";
 
 export default function AdminArticle() {
@@ -69,9 +69,15 @@ function Articles() {
     const id = slug + "-" + user.uid;
     const ref = doc(db, "Article", id);
     const snapshot = await getDoc(ref).catch((error) => {
-      enqueueSnackbar("FAILED_GET: " + error, { variant: "error" });
+      enqueueSnackbar("FAILED_ARTICLE_GET: " + error, { variant: "error" });
       return;
     });
+    const categories = (
+      await getDocs(collection(db, "Category")).catch((error) => {
+        enqueueSnackbar("FAILED_CATEGORY_GET: " + error, { variant: "error" });
+        return;
+      })
+    ).docs.map(categoryToJSON);
     if (snapshot.exists()) {
       enqueueSnackbar("You already have an article with that name!", {
         variant: "error",
@@ -85,7 +91,7 @@ function Articles() {
       alt: "",
       content: "",
       published: false,
-      category: Category[0].id,
+      category: categories[0].id,
       tags: [],
       date: serverTimestamp(),
       slug: slug,

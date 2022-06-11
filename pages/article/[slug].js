@@ -89,59 +89,102 @@ export default function ArticleMain(props) {
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12} md={8}>
           <Paper
-            elevation={3}
-            sx={{ p: 3, display: "flex", flexDirection: "column" }}
+            elevation={2}
+            sx={{ p: 3, display: "flex", flexDirection: "column", rowGap: 2 }}
           >
             <Typography variant="h3">{article.title}</Typography>
             <Typography variant="h6" color="text.secondary">
               {article.subtitle}
             </Typography>
-            <Typography variant="subtitle1" color="text.secondary">
+            <Typography variant="body1" color="text.secondary">
               Last Updated: {new Date(article.date).toDateString()}
             </Typography>
             <Image
               alt={article.alt}
               src={article.image}
-              width={300}
-              height={200}
-              layout="responsive"
+              width={16000}
+              height={9000}
             />
-            <Markdown>{article.content}</Markdown>
+            <Box sx={{ rowGap: 0 }}>
+              <Markdown>{article.content}</Markdown>
+            </Box>
           </Paper>
-          <Typography variant="h6" color="text.secondary">
-            Article contributed by:
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs="auto">
-              <Avatar sx={{ width: 56, height: 56 }} src={article.photoURL} />
-            </Grid>
-            <Grid item container xs="auto">
-              <Grid item xs={12}>
-                <Typography variant="body1">{article.displayName}</Typography>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              rowGap: 3,
+              pt: 3,
+              pb: 0,
+            }}
+          >
+            <Typography variant="h5" color="text.secondary">
+              Article contributed by
+            </Typography>
+            <Grid container spacing={3}>
+              <Grid item xs="auto">
+                <Avatar
+                  sx={{ width: 150, height: 150 }}
+                  src={article.photoURL}
+                />
               </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body1">
-                  {"@" + article.username}
-                </Typography>
+              <Grid item container xs={9}>
+                <Grid item xs={12}>
+                  <Typography variant="h6">{article.displayName}</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="h6" color="text.secondary">
+                    {"@" + article.username}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="body1">{article.desc}</Typography>
+                </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} sm={8}>
-              <Typography variant="body1">{article.desc}</Typography>
-            </Grid>
-          </Grid>
-          <Box>
-            {article.tags.map((tag) => (
-              <Link href={"/search?tags=" + tag.id} passHref key={tag.id}>
-                <Chip sx={{ m: 0.5 }} variant="outlined" label={tag.id} />
-              </Link>
-            ))}
+            <Box>
+              {article.tags.map((tag) => (
+                <Link href={"/search?tags=" + tag.id} passHref key={tag.id}>
+                  <Chip sx={{ m: 0.5 }} variant="outlined" label={tag.id} />
+                </Link>
+              ))}
+            </Box>
+            <Typography
+              variant="h4"
+              color="text.secondary"
+              sx={{ display: { xs: "flex", md: "none" } }}
+            >
+              Latest Articles
+            </Typography>
           </Box>
         </Grid>
-        {articles.map((article) => (
-          <Grid key={article.id} item xs={6} sm={6} md={4}>
-            <Article article={article} small={true} />
+        <Grid item container spacing={2} xs={12} sm={12} md={4}>
+          <Grid
+            item
+            sx={{
+              display: { xs: "none", md: "flex" },
+              flexDirection: "column",
+            }}
+            md={12}
+          >
+            <Typography variant="h4" color="text.secondary">
+              Latest Articles
+            </Typography>
+            <Articles articles={articles} small={true} />
           </Grid>
-        ))}
+          {articles.map((article) => (
+            <Grid
+              key={article.id}
+              item
+              sx={{ display: { xs: "flex", md: "none" } }}
+              xs={12}
+              sm={6}
+              md={12}
+            >
+              <Article article={article} small={true} />
+            </Grid>
+          ))}
+        </Grid>
       </Grid>
     </Container>
   );

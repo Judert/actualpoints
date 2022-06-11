@@ -10,7 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import Content from "../../components/Content";
-import Category from "../../data/category.json";
 import { WithContext as ReactTags } from "react-tag-input";
 import Tags from "../../components/Tags";
 import { useRouter } from "next/router";

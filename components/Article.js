@@ -34,7 +34,7 @@ export default function Article({ article, small }) {
     <ThemeProvider theme={themeNested}>
       <Link href={"/article/" + article.id} passHref key={article.id}>
         <Paper
-          elevation={2}
+          elevation={1}
           sx={{
             display: "flex",
             flexDirection: { xs: "column", sm: "row" },
