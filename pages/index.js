@@ -25,7 +25,8 @@ import {
 } from "firebase/firestore";
 import { db, postToJSON, otherToJSON } from "../lib/firebase";
 import Articles from "../components/Articles";
-import Link from "../src/Link";
+import MUILink from "../src/Link";
+import Link from "next/link";
 
 const LIMIT = 10;
 
@@ -117,8 +118,6 @@ function Slides(props) {
     );
   }
 
-  console.log(slides);
-
   return (
     <Carousel itemsToShow={1} renderArrow={materialArrow} pagination={false}>
       {slides}
@@ -130,8 +129,8 @@ function Slide({ title1, title2, desc, img, alt, link }) {
   return (
     <Paper
       elevation={6}
-      // sx={{ display: "flex" }}
-      // style={{ position: "relative" }}
+      sx={{ display: "flex" }}
+      style={{ position: "relative" }}
     >
       <Image
         src={img}
@@ -170,7 +169,7 @@ function Slide({ title1, title2, desc, img, alt, link }) {
         <Typography variant="h5" py={2} pb={4}>
           {desc}
         </Typography>
-        <Button variant="contained" component={Link} noLinkStyle href={link}>
+        <Button variant="contained" component={MUILink} noLinkStyle href={link}>
           Learn More
         </Button>
       </Box>
@@ -244,7 +243,12 @@ function Categories(props) {
       </Typography>
       <Box>
         {props.categories.map((category) => (
-          <Link href={`/category/${category.id}`} passHref key={category.id}>
+          <Link
+            // underline="none"
+            href={`/category/${category.id}`}
+            passHref
+            key={category.id}
+          >
             <Chip sx={{ m: 0.5 }} variant="contained" label={category.name} />
           </Link>
         ))}
@@ -261,7 +265,12 @@ function AllTags(props) {
       </Typography>
       <Box>
         {props.tags.map((tag) => (
-          <Link href={"/search?tags=" + tag.id} passHref key={tag.id}>
+          <Link
+            // underline="none"
+            href={"/search?tags=" + tag.id}
+            passHref
+            key={tag.id}
+          >
             <Chip
               size="small"
               sx={{ m: 0.5 }}

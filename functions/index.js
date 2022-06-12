@@ -128,10 +128,13 @@ exports.articleSlideCreate = functions.firestore
       .doc(context.params.articleId)
       .set({
         title1: data.title,
+        title2: data.title,
         desc: data.subtitle,
         img: data.image,
         alt: data.alt,
-        link: "/" + context.params.articleId,
+        link: "/article/" + context.params.articleId,
+        active: false,
+        order: 9,
       })
       .catch((error) => {
         functions.logger.error(error);
