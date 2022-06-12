@@ -129,7 +129,7 @@ export default function Search() {
           </Button>
         )}
         {loading && <CircularProgress />}
-        {end && <Typography>End</Typography>}
+        {/* {end && <Typography>End</Typography>} */}
       </Container>
     </Content>
   );

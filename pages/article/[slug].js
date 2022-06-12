@@ -123,10 +123,13 @@ export default function ArticleMain(props) {
             </Typography>
             <Grid container spacing={3}>
               <Grid item xs="auto">
-                <Avatar
-                  sx={{ width: 150, height: 150 }}
-                  src={article.photoURL}
-                />
+                <Avatar sx={{ width: 150, height: 150 }}>
+                  <Image
+                    src={article.photoURL}
+                    alt={article.username}
+                    layout="fill"
+                  />
+                </Avatar>
               </Grid>
               <Grid item container xs={9}>
                 <Grid item xs={12}>

@@ -118,7 +118,7 @@ export default function Category(props) {
           </Button>
         )}
         {loading && <CircularProgress />}
-        {end && <Typography>End</Typography>}
+        {/* {end && <Typography>End</Typography>} */}
       </Container>
     </Content>
   );

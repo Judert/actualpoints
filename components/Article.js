@@ -56,7 +56,13 @@ export default function Article({ article, small }) {
                 alignItems: "center",
               }}
             >
-              <Avatar sx={{ width: 32, height: 32 }} src={article.photoURL} />
+              <Avatar sx={{ width: 32, height: 32 }}>
+                <Image
+                  src={article.photoURL}
+                  alt={article.username}
+                  layout="fill"
+                />
+              </Avatar>
               <Stack direction="column">
                 <Typography
                   variant="subtitle1"

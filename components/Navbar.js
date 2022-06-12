@@ -18,10 +18,13 @@ import Link from "../src/Link";
 import { useContext } from "react";
 import { UserContext } from "../lib/context";
 import { LogoIcon } from "../components/LogoIcon";
+import { useRouter } from "next/router";
+import Image from "next/image";
 
 export default function Navbar(props) {
   const theme = useTheme();
   const { photoURL } = useContext(UserContext);
+  const router = useRouter();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -125,9 +128,29 @@ export default function Navbar(props) {
             </Box>
           </Box>
 
-          <IconButton component={Link} noLinkStyle href="/admin" sx={{ py: 0 }}>
-            <Avatar sx={{ width: 28, height: 28 }} src={photoURL} />
-          </IconButton>
+          {photoURL ? (
+            <IconButton
+              component={Link}
+              noLinkStyle
+              href="/admin"
+              sx={{ py: 0 }}
+            >
+              <Avatar sx={{ width: 28, height: 28 }}>
+                <Image src={photoURL} alt="Profile" layout="fill" />
+              </Avatar>
+            </IconButton>
+          ) : (
+            router.pathname !== "/admin" && (
+              <Button
+                color="inherit"
+                component={Link}
+                noLinkStyle
+                href="/admin"
+              >
+                Sign In
+              </Button>
+            )
+          )}
 
           {/* <IconButton onClick={props.colorMode.toggleColorMode} color="inherit">
             {theme.palette.mode === "dark" ? (
