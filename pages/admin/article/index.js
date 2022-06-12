@@ -17,7 +17,7 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { categoryToJSON, db } from "../../../lib/firebase";
+import { otherToJSON, db } from "../../../lib/firebase";
 import {
   collection,
   query,
@@ -77,7 +77,7 @@ function Articles() {
         enqueueSnackbar("FAILED_CATEGORY_GET: " + error, { variant: "error" });
         return;
       })
-    ).docs.map(categoryToJSON);
+    ).docs.map(otherToJSON);
     if (snapshot.exists()) {
       enqueueSnackbar("You already have an article with that name!", {
         variant: "error",

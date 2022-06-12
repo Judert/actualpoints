@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { categoryToJSON, db, postToJSON } from "../../lib/firebase";
+import { otherToJSON, db, postToJSON } from "../../lib/firebase";
 import {
   collection,
   query as firestoreQuery,
@@ -20,7 +20,7 @@ const LIMIT = 10;
 
 export async function getStaticPaths() {
   const categories = (await getDocs(collection(db, "Category"))).docs.map(
-    categoryToJSON
+    otherToJSON
   );
 
   const paths = categories.map((category) => {
@@ -39,7 +39,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const { slug } = params;
-  const category = categoryToJSON(await getDoc(doc(db, "Category", slug)));
+  const category = otherToJSON(await getDoc(doc(db, "Category", slug)));
 
   const articles = (
     await getDocs(

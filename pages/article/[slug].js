@@ -70,7 +70,7 @@ export async function getStaticProps({ params }) {
 
 export default function ArticleMain(props) {
   const article = props.post;
-  const articles = props.articles;
+  const articles = props.articles.filter((x) => x.id !== article.id);
 
   return (
     <Container
@@ -96,8 +96,8 @@ export default function ArticleMain(props) {
             <Typography variant="h6" color="text.secondary">
               {article.subtitle}
             </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Last Updated: {new Date(article.date).toDateString()}
+            <Typography variant="subtitle1" color="text.secondary">
+              Last Updated: {new Date(article.date).toGMTString()}
             </Typography>
             <Image
               alt={article.alt}

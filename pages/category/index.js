@@ -2,8 +2,6 @@ import Content from "../../components/Content";
 import { Grid, Paper, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
-import { collection, getDocs, query } from "firebase/firestore";
-import { categoryToJSON, db } from "../../lib/firebase";
 
 export { getStaticProps } from "../index";
 

@@ -9,13 +9,14 @@ exports.articleUserUpdate = functions.firestore
     const data = change.after.data();
     const previousData = change.before.data();
 
-    if (
-      data.displayName == previousData.displayName &&
-      data.photoURL == previousData.photoURL &&
-      data.desc == previousData.desc
-    ) {
-      return null;
-    }
+    // We are not editing the User here so there can't be an infinite loop
+    // if (
+    //   data.displayName == previousData.displayName &&
+    //   data.photoURL == previousData.photoURL &&
+    //   data.desc == previousData.desc
+    // ) {
+    //   return null;
+    // }
 
     db.collection("Article")
       .where("uid", "==", context.params.userId)
@@ -115,5 +116,24 @@ exports.tagCounts = functions.pubsub
       })
       .catch((error) => {
         functions.logger.error("ARTICLE_GET_FAILED: ", error);
+      });
+  });
+
+exports.articleSlideCreate = functions.firestore
+  .document("Article/{articleId}")
+  .onUpdate((change, context) => {
+    const data = change.after.data();
+
+    db.collection("Slide")
+      .doc(context.params.articleId)
+      .set({
+        title1: data.title,
+        desc: data.subtitle,
+        img: data.image,
+        alt: data.alt,
+        link: "/" + context.params.articleId,
+      })
+      .catch((error) => {
+        functions.logger.error(error);
       });
   });

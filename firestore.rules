@@ -29,6 +29,10 @@ service cloud.firestore {
       allow get;
       allow list;
     }
+    match /Slide/{slideId} {
+      allow get: if resource.data.active;
+      allow list: if resource.data.active;
+    }
     
     function validUsername(username) {
       let owner = request.auth.uid == request.resource.data.uid;

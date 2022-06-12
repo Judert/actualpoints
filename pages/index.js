@@ -23,20 +23,9 @@ import {
   Timestamp,
   startAfter,
 } from "firebase/firestore";
-import { categoryToJSON, db, postToJSON, tagToJSON } from "../lib/firebase";
+import { db, postToJSON, otherToJSON } from "../lib/firebase";
 import Articles from "../components/Articles";
-import Link from "next/link";
-
-const slides = [
-  {
-    id: 1,
-    img: "https://firebasestorage.googleapis.com/v0/b/blog-veselcode.appspot.com/o/Carousel%2Fuser-smile-fill-svgrepo-com.svg?alt=media&token=77687758-f189-43d2-af82-b5ca49c6fcbf",
-    alt: "Logo",
-    title1: "Welcome to",
-    title2: "Actual Points",
-    desc: "We condense high quality information for your reading pleasure.",
-  },
-];
+import Link from "../src/Link";
 
 const LIMIT = 10;
 
@@ -54,14 +43,24 @@ export async function getStaticProps() {
 
   const tags = (
     await getDocs(query(collection(db, "Tag"), orderBy("count", "desc")))
-  ).docs.map(tagToJSON);
+  ).docs.map(otherToJSON);
 
   const categories = (await getDocs(collection(db, "Category"))).docs.map(
-    categoryToJSON
+    otherToJSON
   );
 
+  const slides = (
+    await getDocs(
+      query(
+        collection(db, "Slide"),
+        where("active", "==", true),
+        orderBy("order", "asc")
+      )
+    )
+  ).docs.map(otherToJSON);
+
   return {
-    props: { articles, tags, categories },
+    props: { articles, tags, categories, slides },
     revalidate: 60 * 60 * 6,
   };
 }
@@ -70,32 +69,34 @@ export default function Index(props) {
   return (
     <Container
       component="main"
-      maxWidth="lg"
+      maxWidth="xl"
       sx={{
         my: 4,
         display: "flex",
         justifyContent: "center",
         alignItems: "left",
         flexDirection: "column",
-        rowGap: 2,
+        rowGap: 6,
       }}
     >
-      <Slides />
-      <Grid container spacing={4}>
-        <Grid item xs={12} sm={12} md={3}>
-          <Categories {...props} />
-          <AllTags {...props} />
+      <Slides {...props} />
+      <Container maxWidth="lg">
+        <Grid container spacing={4}>
+          <Grid item xs={12} sm={12} md={3}>
+            <Categories {...props} />
+            <AllTags {...props} />
+          </Grid>
+          <Grid item xs={12} sm={12} md={9}>
+            <ArticlesLatest {...props} />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={12} md={9}>
-          <ArticlesLatest {...props} />
-        </Grid>
-      </Grid>
+      </Container>
     </Container>
   );
 }
 
-function Slides() {
-  const Cards = slides.map((slide) => (
+function Slides(props) {
+  const slides = props.slides.map((slide) => (
     <Slide
       key={slide.id}
       title1={slide.title1}
@@ -103,6 +104,7 @@ function Slides() {
       alt={slide.alt}
       desc={slide.desc}
       img={slide.img}
+      link={slide.link}
     />
   ));
 
@@ -115,32 +117,63 @@ function Slides() {
     );
   }
 
+  console.log(slides);
+
   return (
     <Carousel itemsToShow={1} renderArrow={materialArrow} pagination={false}>
-      {Cards}
+      {slides}
     </Carousel>
   );
 }
 
-function Slide({ title1, title2, desc, img, alt }) {
+function Slide({ title1, title2, desc, img, alt, link }) {
   return (
-    <Paper sx={{ display: "flex" }} elevation={6}>
-      <Box sx={{ flexGrow: 1, py: 6, px: 6 }}>
+    <Paper
+      elevation={6}
+      // sx={{ display: "flex" }}
+      // style={{ position: "relative" }}
+    >
+      <Image
+        src={img}
+        alt={alt}
+        width={1920}
+        height={1080}
+        // layout="responsive"
+      />
+      <Box
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          backgroundColor: "primary.main",
+          opacity: 0.7,
+          height: "100%",
+          width: "100%",
+          // zIndex: "100",
+        }}
+      />
+      <Box
+        sx={{ p: 6 }}
+        style={{
+          position: "absolute",
+          color: "white",
+          top: "17.5%",
+          left: "7.5%",
+        }}
+      >
         <Typography variant="h1" noWrap>
           {title1}
         </Typography>
         <Typography variant="h1" noWrap>
           {title2}
         </Typography>
-        <Typography variant="h5" color={"text.secondary"} py={2} pb={4}>
+        <Typography variant="h5" py={2} pb={4}>
           {desc}
         </Typography>
-        <Button variant="contained" mr={2}>
+        <Button variant="contained" component={Link} noLinkStyle href={link}>
           Learn More
         </Button>
-        <Button variant="outlined">Join us</Button>
       </Box>
-      <Image src={img} alt={alt} width={450} height={450} layout="fixed" />
     </Paper>
   );
 }
