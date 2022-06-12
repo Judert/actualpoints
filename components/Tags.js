@@ -6,12 +6,27 @@ import { WithContext as ReactTags } from "react-tag-input";
 import React, { useEffect } from "react";
 import kebabCase from "lodash.kebabcase";
 
-export default function Tags({
-  // initial,
-  tags,
-  setTags,
-}) {
+export default function Tags({ tags, setTags }) {
   const [snapshot, loading, error] = useCollection(collection(db, "Tag"));
+
+  return (
+    <>
+      {error && <Typography>Error: {JSON.stringify(error)}</Typography>}
+      {loading && <Typography>Collection: Loading...</Typography>}
+      {snapshot && (
+        <Edit
+          snapshot={snapshot}
+          loading={loading}
+          error={error}
+          tags={tags}
+          setTags={setTags}
+        />
+      )}
+    </>
+  );
+}
+
+function Edit({ snapshot, tags, setTags }) {
   const KeyCodes = {
     tab: 9,
     comma: 188,
@@ -26,7 +41,7 @@ export default function Tags({
   };
   const handleAddition = (tag) => {
     tag["id"] = encodeURI(kebabCase(tag.id));
-    tag["text"] = encodeURI(kebabCase(tag.text));
+    tag["text"] = encodeURI(kebabCase(tag.id));
     setTags([...tags, tag]);
   };
   const handleDrag = (tag, currPos, newPos) => {
@@ -39,31 +54,32 @@ export default function Tags({
   const handleTagClick = (index) => {
     // console.log("The tag at index " + index + " was clicked");
   };
+  const onClearAll = () => {
+    setTags([]);
+  };
+
+  const suggestions = snapshot.docs.map((row) => {
+    return {
+      id: row.id,
+      text: row.id + " (" + row.data().count + ")",
+    };
+  });
 
   return (
-    <>
-      {error && <Typography>Error: {JSON.stringify(error)}</Typography>}
-      {loading && <Typography>Collection: Loading...</Typography>}
-      {snapshot && (
-        <div className="app">
-          <ReactTags
-            tags={tags}
-            suggestions={snapshot.docs.map((row) => {
-              return {
-                id: row.id,
-                text: row.id,
-              };
-            })}
-            delimiters={delimiters}
-            handleDelete={handleDelete}
-            handleAddition={handleAddition}
-            handleDrag={handleDrag}
-            handleTagClick={handleTagClick}
-            inputFieldPosition="bottom"
-            autocomplete
-          />
-        </div>
-      )}
-    </>
+    <div className="app">
+      <ReactTags
+        tags={tags}
+        suggestions={suggestions}
+        delimiters={delimiters}
+        handleDelete={handleDelete}
+        handleAddition={handleAddition}
+        handleDrag={handleDrag}
+        handleTagClick={handleTagClick}
+        inputFieldPosition="bottom"
+        autocomplete
+        clearAll
+        onClearAll={onClearAll}
+      />
+    </div>
   );
 }
