@@ -27,10 +27,10 @@ import Articles from "../../components/Articles";
 import { db, postToJSON } from "../../lib/firebase";
 
 const LIMIT = 10;
-let initialized = false;
-let mounted = false;
 
 export default function Search() {
+  let initialized = false;
+  let mounted = false;
   const router = useRouter();
   const [tags, setTags] = useState([]);
   const [articles, setArticles] = useState(null);

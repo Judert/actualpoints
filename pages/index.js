@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Copyright from "../src/Copyright";
 import Content from "../components/Content";
 import Carousel, { consts } from "react-elastic-carousel";
@@ -68,18 +68,7 @@ export async function getStaticProps() {
 
 export default function Index(props) {
   return (
-    <Container
-      component="main"
-      maxWidth="xl"
-      sx={{
-        my: 4,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "left",
-        flexDirection: "column",
-        rowGap: 6,
-      }}
-    >
+    <>
       <Slides {...props} />
       <Container maxWidth="lg">
         <Grid container spacing={4}>
@@ -92,7 +81,7 @@ export default function Index(props) {
           </Grid>
         </Grid>
       </Container>
-    </Container>
+    </>
   );
 }
 
@@ -118,10 +107,48 @@ function Slides(props) {
     );
   }
 
+  const carouselRef = React.useRef(null);
+  const onNextStart = (currentItem, nextItem) => {
+    if (currentItem.index === nextItem.index) {
+      // we hit the last item, go to first item
+      carouselRef.current.goTo(0);
+    }
+  };
+  const onPrevStart = (currentItem, nextItem) => {
+    if (currentItem.index === nextItem.index) {
+      // we hit the first item, go to last item
+      carouselRef.current.goTo(slides.length);
+    }
+  };
+
   return (
-    <Carousel itemsToShow={1} renderArrow={materialArrow} pagination={false}>
-      {slides}
-    </Carousel>
+    <>
+      {/* <Box sx={{ display: { xs: "flex", md: "none" } }}> */}
+      <Carousel
+        itemsToShow={1}
+        renderArrow={materialArrow}
+        showArrows={false}
+        pagination={false}
+        enableAutoPlay={true}
+        onPrevStart={onPrevStart}
+        onNextStart={onNextStart}
+        ref={carouselRef}
+      >
+        {slides}
+      </Carousel>
+      {/* </Box> */}
+      {/* <Box sx={{ display: { xs: "none", md: "flex" }, my: 6 }}>
+        <Carousel
+          itemsToShow={1}
+          renderArrow={materialArrow}
+          showArrows={true}
+          pagination={false}
+          enableAutoPlay={true}
+        >
+          {slides}
+        </Carousel>
+      </Box> */}
+    </>
   );
 }
 
