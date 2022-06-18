@@ -13,6 +13,7 @@ import { SnackbarProvider } from "notistack";
 import { Box, Container } from "@mui/material";
 import Copyright from "../src/Copyright";
 import "../styles/tags.css";
+import "../styles/index.css";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();

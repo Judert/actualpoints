@@ -12,7 +12,7 @@ export default function Content(props) {
         alignItems: "left",
         flexDirection: "column",
         rowGap: 2,
-        // minHeight: window.outerHeight,
+        height: "100%",
       }}
     >
       {props.children}

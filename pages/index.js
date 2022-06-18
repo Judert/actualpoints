@@ -68,7 +68,7 @@ export async function getStaticProps() {
 
 export default function Index(props) {
   return (
-    <>
+    <Box component="main">
       <Slides {...props} />
       <Container maxWidth="lg">
         <Grid container spacing={4}>
@@ -81,7 +81,7 @@ export default function Index(props) {
           </Grid>
         </Grid>
       </Container>
-    </>
+    </Box>
   );
 }
 

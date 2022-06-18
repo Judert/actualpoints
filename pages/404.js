@@ -5,16 +5,16 @@ export default function Custom404() {
     <Box
       component="main"
       sx={{
-        height: window.outerHeight,
+        height: "100%",
         width: "100%",
         display: "flex",
         justifyContent: "center",
-        // alignItems: "center",
+        alignItems: "center",
         backgroundColor: "primary.main",
         color: "primary.contrastText",
       }}
     >
-      <Typography mt={20}>404 - Page not found</Typography>
+      <Typography>404 - Page not found</Typography>
     </Box>
   );
 }
