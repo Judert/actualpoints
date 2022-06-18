@@ -13,6 +13,7 @@ import {
   Typography,
   Checkbox,
   CircularProgress,
+  Stack,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -59,24 +60,29 @@ function ArticleEdit() {
   // Firebase Get
   const router = useRouter();
   const { slug } = router.query;
-  const [valueArticle, loadingArticle, errorArticle] = useDocumentData(
-    doc(db, "Article", slug)
-  );
+  const [article, loading, error] = useDocumentData(doc(db, "Article", slug));
 
   return (
     <Content>
-      {errorArticle && (
-        <Typography>Error: {JSON.stringify(errorArticle)}</Typography>
+      {(error || loading) && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+        >
+          {error && <Error error={error} />}
+          {loading && <CircularProgress />}
+        </Box>
       )}
-      {loadingArticle && <Typography>Collection: Loading...</Typography>}
-      {valueArticle && (
-        <Edit router={router} slug={slug} valueArticle={valueArticle} />
-      )}
+      {article && <Edit router={router} slug={slug} article={article} />}
     </Content>
   );
 }
 
-function Edit({ router, slug, valueArticle }) {
+function Edit({ router, slug, article }) {
   const { enqueueSnackbar } = useSnackbar();
   // React hook form
   const validationSchema = Yup.object().shape({
@@ -192,7 +198,7 @@ function Edit({ router, slug, valueArticle }) {
   // // Word count shit, we need this to have realtime word count
   // const watchCount = watch(
   //   "content.count",
-  //   ReactDOMServer.renderToString(<Markdown>{valueArticle.content}</Markdown>)
+  //   ReactDOMServer.renderToString(<Markdown>{article.content}</Markdown>)
   //     .replace(/<[^>]+>/g, "")
   //     .split(" ").length
   // );
@@ -209,7 +215,7 @@ function Edit({ router, slug, valueArticle }) {
         multiline
         variant="standard"
         label={"Title"}
-        defaultValue={valueArticle.title}
+        defaultValue={article.title}
         {...register("title")}
         error={errors.title ? true : false}
         helperText={errors.title?.message}
@@ -219,7 +225,7 @@ function Edit({ router, slug, valueArticle }) {
         multiline
         variant="standard"
         label={"Subtitle"}
-        defaultValue={valueArticle.subtitle}
+        defaultValue={article.subtitle}
         {...register("subtitle")}
         error={errors.subtitle ? true : false}
         helperText={errors.subtitle?.message}
@@ -228,8 +234,8 @@ function Edit({ router, slug, valueArticle }) {
         fullWidth
         multiline
         variant="standard"
-        label={"Front Image"}
-        defaultValue={valueArticle.image}
+        label={"Image URL"}
+        defaultValue={article.image}
         {...register("image")}
         error={errors.image ? true : false}
         helperText={errors.image?.message}
@@ -238,22 +244,33 @@ function Edit({ router, slug, valueArticle }) {
         fullWidth
         multiline
         variant="standard"
-        label={"Front Image Alt Text"}
-        defaultValue={valueArticle.alt}
+        label={"Image Alt Text"}
+        defaultValue={article.alt}
         {...register("alt")}
         error={errors.alt ? true : false}
         helperText={errors.alt?.message}
       />
-      {error && <Error error={error} />}
-      {loading && <CircularProgress />}
+      {(error || loading) && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+        >
+          {error && <Error error={error} />}
+          {loading && <CircularProgress />}
+        </Box>
+      )}
       {categories && (
         <Box sx={{ minWidth: 120 }}>
-          <FormControl>
+          <FormControl fullWidth>
             <InputLabel variant="standard" htmlFor="uncontrolled-native">
               Category
             </InputLabel>
             <NativeSelect
-              defaultValue={valueArticle.category}
+              defaultValue={article.category}
               inputProps={{
                 name: "category",
                 id: "uncontrolled-native",
@@ -272,7 +289,7 @@ function Edit({ router, slug, valueArticle }) {
       <Controller
         control={control}
         name="tags"
-        defaultValue={valueArticle.tags}
+        defaultValue={article.tags}
         render={({ field: { onChange, onBlur, value, ref } }) => (
           <Tags tags={value} setTags={onChange} />
         )}
@@ -289,7 +306,7 @@ function Edit({ router, slug, valueArticle }) {
       <Controller
         control={control}
         name="published"
-        defaultValue={valueArticle.published}
+        defaultValue={article.published}
         render={({ field: { onChange, onBlur, value, ref } }) => (
           <Typography>
             Published
@@ -297,16 +314,16 @@ function Edit({ router, slug, valueArticle }) {
           </Typography>
         )}
       />
-      <Divider />
       <ImageUploader markdown={true} />
+      <Divider />
       <Controller
         control={control}
         name="content"
         defaultValue={{
-          text: valueArticle.content,
+          text: article.content,
           // count: watchCount,
           // html: ReactDOMServer.renderToString(
-          //   <Markdown>{valueArticle.content}</Markdown>
+          //   <Markdown>{article.content}</Markdown>
           // ),
         }}
         render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -340,17 +357,21 @@ function Edit({ router, slug, valueArticle }) {
         </Typography>
       )} */}
       <Divider />
-      <ButtonGroup sx={{ my: 4 }}>
+      <Stack direction="row" spacing={1}>
         <Button variant="contained" onClick={handleSubmit(handleDone)}>
           Save and complete
         </Button>
         <Button variant="outlined" onClick={() => handleCancel()}>
           Cancel
         </Button>
-        <Button startIcon={<SaveIcon />} onClick={handleSubmit(handleSave)}>
+        <Button
+          variant="outlined"
+          startIcon={<SaveIcon />}
+          onClick={handleSubmit(handleSave)}
+        >
           Save
         </Button>
-      </ButtonGroup>
+      </Stack>
     </>
   );
 }

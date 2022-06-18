@@ -3,7 +3,7 @@ import Content from "../../../components/Content";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { Button, ButtonGroup, TextField } from "@mui/material";
+import { Button, ButtonGroup, Stack, TextField } from "@mui/material";
 import ImageUploader from "../../../components/ImageUploader";
 import { UserContext } from "../../../lib/context";
 import { useContext } from "react";
@@ -106,14 +106,14 @@ function ProfileEdit() {
         helperText={errors.photoURL?.message}
       />
       <ImageUploader markdown={false} />
-      <ButtonGroup sx={{ my: 2 }}>
+      <Stack direction="row" spacing={1}>
         <Button variant="contained" onClick={handleSubmit(handleDone)}>
           Save and complete
         </Button>
         <Button variant="outlined" onClick={() => handleCancel()}>
           Cancel
         </Button>
-      </ButtonGroup>
+      </Stack>
     </Content>
   );
 }

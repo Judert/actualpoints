@@ -1,4 +1,4 @@
-import { CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { collection } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { db } from "../lib/firebase";
@@ -12,8 +12,19 @@ export default function Tags({ tags, setTags }) {
 
   return (
     <>
-      {error && <Error error={error} />}
-      {loading && <CircularProgress />}
+      {(error || loading) && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+        >
+          {error && <Error error={error} />}
+          {loading && <CircularProgress />}
+        </Box>
+      )}
       {snapshot && (
         <Edit
           snapshot={snapshot}

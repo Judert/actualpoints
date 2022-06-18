@@ -156,16 +156,39 @@ function Articles() {
 
   return (
     <Content>
-      {error && <Error error={error} />}
-      {loading && <CircularProgress />}
+      {(error || loading) && (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+        >
+          {error && <Error error={error} />}
+          {loading && <CircularProgress />}
+        </Box>
+      )}
       {rows && (
         <>
           <TableContainer>
-            <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+            <Table
+              sx={
+                {
+                  // minWidth: 500
+                }
+              }
+              aria-label="custom pagination table"
+            >
               <TableHead>
                 <TableRow>
                   <TableCell>Title</TableCell>
-                  <TableCell align="right">Date</TableCell>
+                  <TableCell
+                    // sx={{ display: { xs: "none", sm: "flex" } }}
+                    align="right"
+                  >
+                    Date
+                  </TableCell>
                   <TableCell align="right">Published</TableCell>
                   <TableCell align="right">Actions</TableCell>
                 </TableRow>
@@ -182,7 +205,11 @@ function Articles() {
                     <TableCell component="th" scope="row">
                       {row.data().title}
                     </TableCell>
-                    <TableCell style={{ width: 160 }} align="right">
+                    <TableCell
+                      // sx={{ display: { xs: "none", sm: "flex" } }}
+                      // style={{ width: 160 }}
+                      align="right"
+                    >
                       {row.data().date?.toDate().toLocaleDateString()}
                     </TableCell>
                     <TableCell align="right">
@@ -198,7 +225,6 @@ function Articles() {
                     </TableCell>
                   </TableRow>
                 ))}
-
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 53 * emptyRows }}>
                     <TableCell colSpan={6} />
@@ -235,7 +261,7 @@ function Articles() {
           <Box
             component="form"
             onSubmit={handleAdd}
-            sx={{ display: "flex", flexDirection: "column" }}
+            sx={{ display: "flex", flexDirection: "column", rowGap: 2 }}
           >
             <TextField
               value={title}
@@ -245,7 +271,12 @@ function Articles() {
               variant="standard"
             />
             {/* <Typography>{slug}</Typography> */}
-            <Button variant="contained" type="submit" disabled={!isValid}>
+            <Button
+              sx={{ alignSelf: "center" }}
+              variant="contained"
+              type="submit"
+              disabled={!isValid}
+            >
               Create New Article
             </Button>
           </Box>

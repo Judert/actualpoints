@@ -46,7 +46,8 @@ export default function Admin() {
 function EditProfile() {
   return (
     <Button
-      variant="outlined"
+      // variant="outlined"
+      sx={{ alignSelf: "center" }}
       component={Link}
       noLinkStyle
       href="/admin/profile"
@@ -59,7 +60,8 @@ function EditProfile() {
 function ManageArticles() {
   return (
     <Button
-      variant="outlined"
+      // variant="outlined"
+      sx={{ alignSelf: "center" }}
       component={Link}
       noLinkStyle
       href="/admin/article"
@@ -81,6 +83,7 @@ function SignInButton() {
   };
   return (
     <Button
+      sx={{ alignSelf: "center" }}
       startIcon={<GoogleIcon />}
       variant="contained"
       onClick={signInWithGoogle}
@@ -97,7 +100,11 @@ function SignOutButton() {
     });
   };
   return (
-    <Button variant="outlined" onClick={signOutButton}>
+    <Button
+      // variant="outlined"
+      sx={{ alignSelf: "center" }}
+      onClick={signOutButton}
+    >
       Sign Out
     </Button>
   );
