@@ -9,7 +9,6 @@ export default function Content(props) {
         mt: 3,
         mb: 4,
         display: "flex",
-        // justifyContent: "center",
         alignItems: "left",
         flexDirection: "column",
         rowGap: 2,

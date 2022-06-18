@@ -31,7 +31,12 @@ import {
   serverTimestamp,
   getDocs,
 } from "firebase/firestore";
-import { Checkbox, TextField, Typography } from "@mui/material";
+import {
+  Checkbox,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Authorize from "../../../components/Authorize";
@@ -41,6 +46,7 @@ import Content from "../../../components/Content";
 import { useRouter } from "next/router";
 import kebabCase from "lodash.kebabcase";
 import { useSnackbar } from "notistack";
+import Error from "../../../components/Error";
 
 export default function AdminArticle() {
   return (
@@ -150,8 +156,8 @@ function Articles() {
 
   return (
     <Content>
-      {error && <Typography>Error: {JSON.stringify(error.stack)}</Typography>}
-      {loading && <Typography>Collection: Loading...</Typography>}
+      {error && <Error error={error} />}
+      {loading && <CircularProgress />}
       {rows && (
         <>
           <TableContainer>

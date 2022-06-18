@@ -1,18 +1,19 @@
-import { Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import { collection } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { db } from "../lib/firebase";
 import { WithContext as ReactTags } from "react-tag-input";
 import React, { useEffect } from "react";
 import kebabCase from "lodash.kebabcase";
+import Error from "./Error";
 
 export default function Tags({ tags, setTags }) {
   const [snapshot, loading, error] = useCollection(collection(db, "Tag"));
 
   return (
     <>
-      {error && <Typography>Error: {JSON.stringify(error)}</Typography>}
-      {loading && <Typography>Collection: Loading...</Typography>}
+      {error && <Error error={error} />}
+      {loading && <CircularProgress />}
       {snapshot && (
         <Edit
           snapshot={snapshot}

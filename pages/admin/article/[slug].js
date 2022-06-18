@@ -38,6 +38,7 @@ import Editor, { Plugins } from "react-markdown-editor-lite";
 import Markdown from "../../../components/Markdown";
 import ImageUploader from "../../../components/ImageUploader";
 import { useSnackbar } from "notistack";
+import Error from "../../../components/Error";
 
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false,
@@ -243,8 +244,8 @@ function Edit({ router, slug, valueArticle }) {
         error={errors.alt ? true : false}
         helperText={errors.alt?.message}
       />
-      {error && <Typography>Error: {JSON.stringify(error)}</Typography>}
-      {loading && <Typography>Collection: Loading...</Typography>}
+      {error && <Error error={error} />}
+      {loading && <CircularProgress />}
       {categories && (
         <Box sx={{ minWidth: 120 }}>
           <FormControl>
