@@ -1,7 +1,8 @@
 import React, { useRef, useState } from "react";
 import Copyright from "../src/Copyright";
 import Content from "../components/Content";
-import Carousel, { consts } from "react-elastic-carousel";
+// import Carousel, { consts } from "react-elastic-carousel";
+import Carousel from "react-material-ui-carousel";
 import {
   Box,
   Button,
@@ -27,6 +28,7 @@ import { db, postToJSON, otherToJSON } from "../lib/firebase";
 import Articles from "../components/Articles";
 import MUILink from "../src/Link";
 import Link from "next/link";
+import SquareIcon from "@mui/icons-material/Square";
 
 const LIMIT = 10;
 
@@ -68,7 +70,10 @@ export async function getStaticProps() {
 
 export default function Index(props) {
   return (
-    <Box component="main">
+    <Box
+      component="main"
+      sx={{ display: "flex", flexDirection: "column", rowGap: 3, mb: 4 }}
+    >
       <Slides {...props} />
       <Container maxWidth="lg">
         <Grid container spacing={4}>
@@ -98,33 +103,33 @@ function Slides(props) {
     />
   ));
 
-  function materialArrow({ type, onClick, isEdge }) {
-    const pointer = type === consts.PREV ? "❮" : "❯";
-    return (
-      <Button size="large" onClick={onClick} disabled={isEdge}>
-        {pointer}
-      </Button>
-    );
-  }
+  // function materialArrow({ type, onClick, isEdge }) {
+  //   const pointer = type === consts.PREV ? "❮" : "❯";
+  //   return (
+  //     <Button size="large" onClick={onClick} disabled={isEdge}>
+  //       {pointer}
+  //     </Button>
+  //   );
+  // }
 
-  const carouselRef = React.useRef(null);
-  const onNextStart = (currentItem, nextItem) => {
-    if (currentItem.index === nextItem.index) {
-      // we hit the last item, go to first item
-      carouselRef.current.goTo(0);
-    }
-  };
-  const onPrevStart = (currentItem, nextItem) => {
-    if (currentItem.index === nextItem.index) {
-      // we hit the first item, go to last item
-      carouselRef.current.goTo(slides.length);
-    }
-  };
+  // const carouselRef = React.useRef(null);
+  // const onNextStart = (currentItem, nextItem) => {
+  //   if (currentItem.index === nextItem.index) {
+  //     // we hit the last item, go to first item
+  //     carouselRef.current.goTo(0);
+  //   }
+  // };
+  // const onPrevStart = (currentItem, nextItem) => {
+  //   if (currentItem.index === nextItem.index) {
+  //     // we hit the first item, go to last item
+  //     carouselRef.current.goTo(slides.length);
+  //   }
+  // };
 
   return (
     <>
       {/* <Box sx={{ display: { xs: "flex", md: "none" } }}> */}
-      <Carousel
+      {/* <Carousel
         itemsToShow={1}
         renderArrow={materialArrow}
         showArrows={false}
@@ -133,9 +138,24 @@ function Slides(props) {
         onPrevStart={onPrevStart}
         onNextStart={onNextStart}
         ref={carouselRef}
+      > */}
+      <Carousel
+        autoPlay="true"
+        infiniteLoop="true"
+        navButtonsProps={{
+          style: {
+            borderRadius: 0,
+          },
+        }}
+        IndicatorIcon={
+          <SquareIcon fontSize="small" className="indicatorIcon" />
+        }
+        animation="slide"
       >
         {slides}
       </Carousel>
+
+      {/* </Carousel> */}
       {/* </Box> */}
       {/* <Box sx={{ display: { xs: "none", md: "flex" }, my: 6 }}>
         <Carousel
@@ -154,16 +174,12 @@ function Slides(props) {
 
 function Slide({ title1, title2, desc, img, alt, link }) {
   return (
-    <Paper
-      elevation={6}
-      sx={{ display: "flex" }}
-      style={{ position: "relative" }}
-    >
+    <Paper elevation={6} sx={{ display: "flex", position: "relative" }}>
       <Image
         src={img}
         alt={alt}
-        width={1920}
-        height={1080}
+        width={3840}
+        height={2160}
         // layout="responsive"
       />
       <Box
@@ -179,26 +195,77 @@ function Slide({ title1, title2, desc, img, alt, link }) {
         }}
       />
       <Box
-        sx={{ p: 6 }}
-        style={{
+        sx={{
           position: "absolute",
           color: "white",
-          top: "17.5%",
-          left: "7.5%",
+          left: "25%",
+          top: "45%",
+          transform: "translate(-25%, -45%)",
         }}
       >
-        <Typography variant="h1" noWrap>
-          {title1}
-        </Typography>
-        <Typography variant="h1" noWrap>
-          {title2}
-        </Typography>
-        <Typography variant="h5" py={2} pb={4}>
-          {desc}
-        </Typography>
-        <Button variant="contained" component={MUILink} noLinkStyle href={link}>
-          Learn More
-        </Button>
+        <Box sx={{ display: { xs: "none", md: "block" } }}>
+          <Typography variant="h1" noWrap>
+            {title1}
+          </Typography>
+          <Typography variant="h1" noWrap>
+            {title2}
+          </Typography>
+          <Typography variant="h5" py={2} pb={4}>
+            {desc}
+          </Typography>
+          <Button
+            variant="contained"
+            component={MUILink}
+            noLinkStyle
+            href={link}
+          >
+            Learn More
+          </Button>
+        </Box>
+        <Box
+          sx={{
+            display: { xs: "none", sm: "block", md: "none" },
+          }}
+        >
+          <Typography variant="h3" noWrap>
+            {title1}
+          </Typography>
+          <Typography variant="h3" noWrap>
+            {title2}
+          </Typography>
+          <Typography py={2} pb={2}>
+            {desc}
+          </Typography>
+          <Button
+            variant="contained"
+            component={MUILink}
+            noLinkStyle
+            href={link}
+          >
+            Learn More
+          </Button>
+        </Box>
+        <Box
+          sx={{
+            display: { xs: "block", sm: "none" },
+          }}
+        >
+          <Typography variant="h4" noWrap>
+            {title1}
+          </Typography>
+          <Typography variant="h4" noWrap gutterBottom>
+            {title2}
+          </Typography>
+          <Button
+            size="small"
+            variant="contained"
+            component={MUILink}
+            noLinkStyle
+            href={link}
+          >
+            Learn More
+          </Button>
+        </Box>
       </Box>
     </Paper>
   );

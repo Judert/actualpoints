@@ -6,7 +6,8 @@ export default function Content(props) {
       component="main"
       maxWidth="md"
       sx={{
-        my: 4,
+        mt: 3,
+        mb: 4,
         display: "flex",
         // justifyContent: "center",
         alignItems: "left",

@@ -51,6 +51,7 @@ export default function Search() {
   const fetchArticles = useCallback(async () => {
     if (tags[0]) {
       initialized = true;
+      setLoading(true);
       let snapshot = await getDocs(
         query(
           collection(db, "Article"),
@@ -63,6 +64,7 @@ export default function Search() {
       if (!snapshot.empty) {
         setArticles(snapshot.docs.map(postToJSON));
       }
+      setLoading(false);
     } else {
       setArticles(null);
       setLoading(false);
@@ -115,7 +117,16 @@ export default function Search() {
   return (
     <Content>
       <Tags tags={tags} setTags={setTags} />
-      {articles && <Articles articles={articles} />}
+      {articles ? (
+        <Articles articles={articles} />
+      ) : (
+        !loading &&
+        tags[0] && (
+          <Typography variant="h5" color="text.secondary">
+            No articles yet
+          </Typography>
+        )
+      )}
       <Container
         sx={{
           display: "flex",
