@@ -180,6 +180,7 @@ function Slide({ title1, title2, desc, img, alt, link }) {
         alt={alt}
         width={3840}
         height={2160}
+        priority={true}
         // layout="responsive"
       />
       <Box

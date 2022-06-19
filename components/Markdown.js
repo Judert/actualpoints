@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { dark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import ReactMarkdown from "react-markdown";
 // import "react-markdown-editor-lite/lib/index.css";
 import remarkGfm from "remark-gfm";
@@ -59,24 +59,37 @@ const components = {
     }
 
     return (
-      <div>
+      <>
         <Image
           src={node.properties.src}
           width={width}
           height={height}
           alt={alt}
           priority={isPriority}
-          layout="responsive"
+          // layout="responsive"
         />
-        {hasCaption ? <div aria-label={caption}>{caption}</div> : null}
-      </div>
+        {hasCaption ? (
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              pb: 1,
+            }}
+            component={"span"}
+            aria-label={caption}
+            variant="subtitle2"
+          >
+            {caption}
+          </Typography>
+        ) : null}
+      </>
     );
   },
   code: ({ node, inline, className, children, ...props }) => {
     const match = /language-(\w+)/.exec(className || "");
     return !inline && match ? (
       <SyntaxHighlighter
-        style={dark}
+        style={atomDark}
         language={match[1]}
         PreTag="div"
         {...props}

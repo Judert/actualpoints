@@ -5,10 +5,10 @@ import MuiLink from "@mui/material/Link";
 export default function Copyright() {
   return (
     <Typography variant="body2" color="primary.contrastText" align="center">
-      {"Copyright © "}
-      <MuiLink color="inherit" href="https://mui.com/">
+      {"Copyright © veselcode"}
+      {/* <MuiLink color="inherit" href="https://mui.com/">
         Your Website
-      </MuiLink>{" "}
+      </MuiLink> */}{" "}
       {new Date().getFullYear()}.
     </Typography>
   );

@@ -20,6 +20,7 @@ export default function CategoryAll(props) {
                   width={300}
                   height={300}
                   layout="responsive"
+                  priority={true}
                 />
                 <Typography
                   variant="h5"

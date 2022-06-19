@@ -14,6 +14,7 @@ import {
   Checkbox,
   CircularProgress,
   Stack,
+  Modal,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -40,6 +41,7 @@ import Markdown from "../../../components/Markdown";
 import ImageUploader from "../../../components/ImageUploader";
 import { useSnackbar } from "notistack";
 import Error from "../../../components/Error";
+import HelpIcon from "@mui/icons-material/Help";
 
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false,
@@ -61,6 +63,10 @@ function ArticleEdit() {
   const router = useRouter();
   const { slug } = router.query;
   const [article, loading, error] = useDocumentData(doc(db, "Article", slug));
+
+  if (!loading && !error && article === undefined) {
+    router.push("/404");
+  }
 
   return (
     <Content>
@@ -303,17 +309,21 @@ function Edit({ router, slug, article }) {
             {"Tag " + (i + 1) + ": " + error.id.message}{" "}
           </Typography>
         ))}
-      <Controller
-        control={control}
-        name="published"
-        defaultValue={article.published}
-        render={({ field: { onChange, onBlur, value, ref } }) => (
-          <Typography>
-            Published
-            <Checkbox value={value} onChange={onChange} />
-          </Typography>
-        )}
-      />
+
+      <Stack direction="row" spacing={1}>
+        <Help />
+        <Controller
+          control={control}
+          name="published"
+          defaultValue={article.published}
+          render={({ field: { onChange, onBlur, value, ref } }) => (
+            <Typography>
+              Published
+              <Checkbox value={value} onChange={onChange} />
+            </Typography>
+          )}
+        />
+      </Stack>
       <ImageUploader markdown={true} />
       <Divider />
       <Controller
@@ -373,5 +383,59 @@ function Edit({ router, slug, article }) {
         </Button>
       </Stack>
     </>
+  );
+}
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  // border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
+function Help() {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  return (
+    <div>
+      <Button variant="outlined" startIcon={<HelpIcon />} onClick={handleOpen}>
+        Help
+      </Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography variant="h4" gutterBottom>
+            Help
+          </Typography>
+          <Typography variant="h6">General</Typography>
+          <ul>
+            <li>Try have around 2000 words for your article to perform best</li>
+            <li>Have as many lists and tables as possible</li>
+          </ul>
+          <Typography variant="h6">Inserting Images</Typography>
+          <ul>
+            <li>Please upload high resolution images (3840x2160 or more)</li>
+            <li>16:9 Images only</li>
+            <li>
+              !&#91;AltText &#123;caption: Photo by Someone&#125;&#93;&#40;image
+              url&#41;
+            </li>
+            <li>You need AltText for accessibility for all readers</li>
+            <li>Have a caption if credit is required</li>
+          </ul>
+        </Box>
+      </Modal>
+    </div>
   );
 }

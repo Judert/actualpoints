@@ -1,9 +1,18 @@
 import { createSvgIcon } from "@mui/material";
 
 export const LogoIcon = createSvgIcon(
-  <g>
-    <path fill="none" d="M0 0h24v24H0z" />
-    <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zM7 12a5 5 0 0 0 10 0h-2a3 3 0 0 1-6 0H7z" />
-  </g>,
+  <svg version="1.1" viewBox="0 0 24 9.7934" xmlns="http://www.w3.org/2000/svg">
+    <g transform="scale(.13333 .13058)">
+      <path
+        transform="rotate(-90)"
+        d="m-75 0a75 50 0 0 1 75 50 75 50 0 0 1-75 50v-50z"
+        strokeWidth=".41805"
+      />
+      <path
+        d="m105 0a75 37.5 0 0 1 75 37.5 75 37.5 0 0 1-75 37.5v-37.5z"
+        strokeWidth=".36204"
+      />
+    </g>
+  </svg>,
   "Logo"
 );

@@ -91,7 +91,7 @@ export default function ImageUploader({ markdown }) {
 
       {downloadURL && (
         <Typography>
-          {markdown ? `![alt](${downloadURL})` : downloadURL}
+          {markdown ? `![alt{}{}{caption}](${downloadURL})` : downloadURL}
         </Typography>
       )}
     </Box>

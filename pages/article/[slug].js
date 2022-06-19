@@ -121,7 +121,7 @@ export default function ArticleMain(props) {
             <Typography variant="h5" color="text.secondary">
               Article contributed by
             </Typography>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} pl={1}>
               <Grid item xs="auto">
                 <Avatar sx={{ width: 150, height: 150 }}>
                   <Image
