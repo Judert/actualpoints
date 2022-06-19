@@ -7,6 +7,9 @@ const theme = createTheme({
     primary: {
       main: "#000000",
     },
+    info: {
+      main: "#000000",
+    },
   },
   typography: {
     fontFamily: ["Inconsolata", "monospace"].join(","),

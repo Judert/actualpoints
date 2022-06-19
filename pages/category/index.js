@@ -1,5 +1,5 @@
 import Content from "../../components/Content";
-import { Grid, Paper, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,15 +12,28 @@ export default function CategoryAll(props) {
       <Grid container spacing={2}>
         {props.categories.map((category) => (
           <Link href={`/category/${category.id}`} passHref key={category.id}>
-            <Grid xs={12} sm={6} md={4} item style={{ position: "relative" }}>
-              <Paper elevation={6}>
+            <Grid xs={12} sm={6} md={4} item>
+              <Paper elevation={6} style={{ position: "relative" }}>
                 <Image
                   alt={category.name}
                   src={category.img}
-                  width={300}
-                  height={300}
+                  width={1000}
+                  height={1000}
                   layout="responsive"
                   priority={true}
+                  objectFit="cover"
+                />
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    backgroundColor: "primary.main",
+                    opacity: 0.7,
+                    height: "100%",
+                    width: "100%",
+                    // zIndex: "100",
+                  }}
                 />
                 <Typography
                   variant="h5"

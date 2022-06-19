@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { useTheme } from "@mui/material/styles";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
@@ -154,6 +162,21 @@ function Articles() {
     setPage(0);
   };
 
+  // Confirm delete dialog
+  const [rowId, setRowId] = useState(null);
+  const [open, setOpen] = useState(false);
+  const theme = useTheme();
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleCloseDelete = () => {
+    setOpen(false);
+    handleRemove(rowId);
+  };
+
   return (
     <Content>
       {(error || loading) && (
@@ -172,23 +195,11 @@ function Articles() {
       {rows && (
         <>
           <TableContainer>
-            <Table
-              sx={
-                {
-                  // minWidth: 500
-                }
-              }
-              aria-label="custom pagination table"
-            >
+            <Table aria-label="custom pagination table">
               <TableHead>
                 <TableRow>
                   <TableCell>Title</TableCell>
-                  <TableCell
-                    // sx={{ display: { xs: "none", sm: "flex" } }}
-                    align="right"
-                  >
-                    Date
-                  </TableCell>
+                  <TableCell align="right">Date</TableCell>
                   <TableCell align="right">Published</TableCell>
                   <TableCell align="right">Actions</TableCell>
                 </TableRow>
@@ -219,7 +230,12 @@ function Articles() {
                       <IconButton onClick={() => handleEdit(row.id)}>
                         <EditIcon />
                       </IconButton>
-                      <IconButton onClick={() => handleRemove(row.id)}>
+                      <IconButton
+                        onClick={() => {
+                          setRowId(row.id);
+                          handleClickOpen();
+                        }}
+                      >
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
@@ -282,6 +298,38 @@ function Articles() {
           </Box>
         </>
       )}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">
+          {"Confirm Delete"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to permanently delete this article?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            autoFocus
+            onClick={() => {
+              handleClose();
+            }}
+          >
+            No
+          </Button>
+          <Button
+            autoFocus
+            onClick={() => {
+              handleCloseDelete();
+            }}
+          >
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Content>
   );
 }

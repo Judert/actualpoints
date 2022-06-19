@@ -10,10 +10,14 @@ import Navbar from "../components/Navbar";
 import { UserContext } from "../lib/context";
 import { useUserData } from "../lib/hooks";
 import { SnackbarProvider } from "notistack";
-import { Box, Container } from "@mui/material";
+import { Box, Button, Container } from "@mui/material";
+import { CookiesProvider } from "react-cookie";
+import { useCookies } from "react-cookie";
 import Copyright from "../src/Copyright";
+import { useSnackbar } from "notistack";
 import "../styles/tags.css";
 import "../styles/index.css";
+import { useEffect } from "react";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -23,7 +27,7 @@ export default function MyApp(props) {
   const userData = useUserData();
 
   return (
-    <SnackbarProvider maxSnack={3}>
+    <CookiesProvider>
       <UserContext.Provider value={userData}>
         <CacheProvider value={emotionCache}>
           <Head>
@@ -33,15 +37,16 @@ export default function MyApp(props) {
             />
           </Head>
           <ThemeProvider theme={theme}>
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline />
-            <Navbar />
-            <Component {...pageProps} />
-            <Footer />
+            <SnackbarProvider maxSnack={3}>
+              <CssBaseline />
+              <Navbar />
+              <Component {...pageProps} />
+              <Footer />
+            </SnackbarProvider>
           </ThemeProvider>
         </CacheProvider>
       </UserContext.Provider>
-    </SnackbarProvider>
+    </CookiesProvider>
   );
 }
 
@@ -52,6 +57,34 @@ MyApp.propTypes = {
 };
 
 function Footer() {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const [cookies, setCookie] = useCookies(["consent"]);
+
+  useEffect(() => {
+    if (!cookies.consent) {
+      enqueueSnackbar("Please accept the cookies to use this site", {
+        variant: "info",
+        preventDuplicate: true,
+        persist: true,
+        action,
+      });
+    }
+  }, []);
+
+  const action = (key) => (
+    <React.Fragment>
+      <Button
+        size="small"
+        onClick={() => {
+          setCookie("consent", true, { path: "/" });
+          closeSnackbar(key);
+        }}
+      >
+        Accept
+      </Button>
+    </React.Fragment>
+  );
+
   return (
     <Box sx={{ display: "flex", backgroundColor: "primary.main" }}>
       <Container
