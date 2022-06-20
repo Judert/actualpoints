@@ -165,7 +165,6 @@ function Articles() {
   // Confirm delete dialog
   const [rowId, setRowId] = useState(null);
   const [open, setOpen] = useState(false);
-  const theme = useTheme();
   const handleClickOpen = () => {
     setOpen(true);
   };

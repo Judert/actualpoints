@@ -14,6 +14,7 @@ import { CookiesProvider } from "react-cookie";
 import Footer from "../src/Footer";
 import "../styles/tags.css";
 import "../styles/index.css";
+import Adblock from "../src/Adblock";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -37,6 +38,7 @@ export default function MyApp(props) {
             <SnackbarProvider maxSnack={3}>
               <CssBaseline />
               <Navbar />
+              <Adblock />
               <Component {...pageProps} />
               <Footer />
             </SnackbarProvider>

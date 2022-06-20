@@ -98,7 +98,7 @@ export default function Navbar(props) {
               >
                 Actual Points
               </Link>
-              <LogoIcon color="primary.contrastText" />
+              <LogoIcon color="primary.contrastText" fontSize="large" />
             </Box>
             <Box sx={{ display: { xs: "none", md: "block" } }}>
               <Button
