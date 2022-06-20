@@ -1,7 +1,4 @@
 import React, { useRef, useState } from "react";
-import Copyright from "../src/Copyright";
-import Content from "../components/Content";
-// import Carousel, { consts } from "react-elastic-carousel";
 import Carousel from "react-material-ui-carousel";
 import {
   Box,

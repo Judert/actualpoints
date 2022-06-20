@@ -5,8 +5,6 @@ export default function Custom404() {
     <Box
       component="main"
       sx={{
-        height: "100%",
-        width: "100%",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

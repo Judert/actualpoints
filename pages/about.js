@@ -5,21 +5,20 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ProTip from "../src/ProTip";
 import Link from "../src/Link";
-import Copyright from "../src/Copyright";
 
 export default function About() {
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          About
-        </Typography>
-        <Button variant="contained" component={Link} noLinkStyle href="/">
-          Go to the main page
-        </Button>
-        <ProTip />
-        <Copyright />
-      </Box>
-    </Container>
+    <Box
+      component="main"
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "primary.main",
+        color: "primary.contrastText",
+      }}
+    >
+      <Typography>About</Typography>
+    </Box>
   );
 }
