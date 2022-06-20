@@ -11,6 +11,7 @@ import { UserContext } from "../lib/context";
 import { useUserData } from "../lib/hooks";
 import { SnackbarProvider } from "notistack";
 import { Box, Button, Container } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { CookiesProvider } from "react-cookie";
 import { useCookies } from "react-cookie";
 import Copyright from "../src/Copyright";
@@ -75,6 +76,7 @@ function Footer() {
     <React.Fragment>
       <Button
         size="small"
+        color="inherit"
         onClick={() => {
           setCookie("consent", true, { path: "/" });
           closeSnackbar(key);

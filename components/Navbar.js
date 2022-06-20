@@ -128,39 +128,37 @@ export default function Navbar(props) {
             </Box>
           </Box>
 
-          {photoURL ? (
-            <IconButton
-              component={Link}
-              noLinkStyle
-              href="/admin"
-              sx={{ py: 0 }}
-            >
-              <Avatar sx={{ width: 28, height: 28 }}>
-                <Image src={photoURL} alt="Profile" layout="fill" />
-              </Avatar>
-            </IconButton>
-          ) : (
-            router.pathname !== "/admin" && (
-              <Button
-                color="inherit"
+          <Box
+            sx={{
+              [theme.breakpoints.down(342)]: {
+                display: "none",
+              },
+            }}
+          >
+            {photoURL ? (
+              <IconButton
                 component={Link}
                 noLinkStyle
                 href="/admin"
+                sx={{ py: 0 }}
               >
-                Sign In
-              </Button>
-            )
-          )}
-
-          {/* <IconButton onClick={props.colorMode.toggleColorMode} color="inherit">
-            {theme.palette.mode === "dark" ? (
-              <Brightness7Icon />
+                <Avatar sx={{ width: 28, height: 28 }}>
+                  <Image src={photoURL} alt="Profile" layout="fill" />
+                </Avatar>
+              </IconButton>
             ) : (
-              <Brightness4Icon />
+              router.pathname !== "/admin" && (
+                <Button
+                  color="inherit"
+                  component={Link}
+                  noLinkStyle
+                  href="/admin"
+                >
+                  Sign In
+                </Button>
+              )
             )}
-          </IconButton> */}
-          {/* <Brightness7Icon sx={{ mx: 1 }} /> */}
-
+          </Box>
           <IconButton
             // passHref
             href="/search"
@@ -170,6 +168,14 @@ export default function Navbar(props) {
           >
             <SearchIcon />
           </IconButton>
+          {/* <IconButton onClick={props.colorMode.toggleColorMode} color="inherit">
+            {theme.palette.mode === "dark" ? (
+              <Brightness7Icon />
+            ) : (
+              <Brightness4Icon />
+            )}
+          </IconButton> */}
+          {/* <Brightness7Icon sx={{ mx: 1 }} /> */}
         </Toolbar>
       </AppBar>
     </Box>

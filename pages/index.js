@@ -310,7 +310,13 @@ function ArticlesLatest(props) {
   return (
     <>
       <Typography variant="h4">Latest Articles</Typography>
-      <Articles articles={articles} />
+      {articles[0] ? (
+        <Articles articles={articles} />
+      ) : (
+        <Typography variant="h5" color="text.secondary">
+          No articles yet
+        </Typography>
+      )}
       <Container
         sx={{
           display: "flex",
@@ -318,7 +324,7 @@ function ArticlesLatest(props) {
           alignItems: "center",
         }}
       >
-        {!end && !loading && (
+        {articles[0] && !end && !loading && (
           <Button variant="contained" onClick={loadMore}>
             Load More
           </Button>
@@ -358,23 +364,29 @@ function AllTags(props) {
       <Typography variant="h5" color={"text.secondary"} gutterBottom>
         Popular Tags
       </Typography>
-      <Box>
-        {props.tags.map((tag) => (
-          <Link
-            // underline="none"
-            href={"/search?tags=" + tag.id}
-            passHref
-            key={tag.id}
-          >
-            <Chip
-              size="small"
-              sx={{ m: 0.5 }}
-              variant="outlined"
-              label={tag.id + " (" + tag.count + ")"}
-            />
-          </Link>
-        ))}
-      </Box>
+      {!props.tags[0] ? (
+        <Typography variant="subtitle1" color={"text.secondary"}>
+          No tags yet
+        </Typography>
+      ) : (
+        <Box>
+          {props.tags.map((tag) => (
+            <Link
+              // underline="none"
+              href={"/search?tags=" + tag.id}
+              passHref
+              key={tag.id}
+            >
+              <Chip
+                size="small"
+                sx={{ m: 0.5 }}
+                variant="outlined"
+                label={tag.id + " (" + tag.count + ")"}
+              />
+            </Link>
+          ))}
+        </Box>
+      )}
     </Box>
   );
 }
