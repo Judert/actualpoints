@@ -3,7 +3,16 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 
-export { getStaticProps } from "../index";
+export async function getStaticProps() {
+  const categories = (await getDocs(collection(db, "Category"))).docs.map(
+    otherToJSON
+  );
+
+  return {
+    props: { categories },
+    revalidate: 60 * 60 * 6,
+  };
+}
 
 export default function CategoryAll(props) {
   return (
