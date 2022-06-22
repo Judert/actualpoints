@@ -26,6 +26,7 @@ import Markdown from "../../components/Markdown";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import Articles from "../../components/Articles";
 import Article from "../../components/Article";
+import SEO from "../../components/SEO";
 
 const LIMIT = 10;
 
@@ -86,6 +87,13 @@ export default function ArticleMain(props) {
         // minHeight: window.outerHeight,
       }}
     >
+      <SEO
+        title={article.title}
+        description={article.subtitle}
+        image={article.image}
+        type={"article"}
+        url={`https://www.actualpoints.com/article/${props.path}`}
+      />
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12} md={8}>
           <Paper

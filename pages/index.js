@@ -26,6 +26,7 @@ import Articles from "../components/Articles";
 import MUILink from "../src/Link";
 import Link from "next/link";
 import SquareIcon from "@mui/icons-material/Square";
+import SEO from "../components/SEO";
 
 const LIMIT = 10;
 
@@ -71,6 +72,14 @@ export default function Index(props) {
       component="main"
       sx={{ display: "flex", flexDirection: "column", rowGap: 3, mb: 4 }}
     >
+      <SEO
+        title={"Actual Points"}
+        description={
+          "We condense high quality information for your reading pleasure"
+        }
+        type={"website"}
+        url={`https://www.actualpoints.com`}
+      />
       <Slides {...props} />
       <Container maxWidth="lg">
         <Grid container spacing={4}>

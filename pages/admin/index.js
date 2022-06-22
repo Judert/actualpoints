@@ -13,12 +13,19 @@ import { doc, writeBatch, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import Content from "../../components/Content";
 import Link from "../../src/Link";
+import SEO from "../../components/SEO";
 
 export default function Admin() {
   const { user, username, email } = useContext(UserContext);
 
   return (
     <Content>
+      <SEO
+        title={"Login"}
+        description={"Login to manage your articles and profile"}
+        type={"website"}
+        url={`https://www.actualpoints.com/admin`}
+      />
       {user ? (
         email ? (
           !username ? (

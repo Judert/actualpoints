@@ -2,6 +2,7 @@ import Content from "../../components/Content";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
+import SEO from "../../components/SEO";
 
 export async function getStaticProps() {
   const categories = (await getDocs(collection(db, "Category"))).docs.map(
@@ -17,6 +18,12 @@ export async function getStaticProps() {
 export default function CategoryAll(props) {
   return (
     <Content>
+      <SEO
+        title={"Categories"}
+        description={"Explore articles by category"}
+        type={"website"}
+        url={`https://www.actualpoints.com/category`}
+      />
       <Typography variant="h3">Categories</Typography>
       <Grid container spacing={2}>
         {props.categories.map((category) => (

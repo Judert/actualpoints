@@ -15,6 +15,7 @@ import {
 import { Typography, Container, Button, CircularProgress } from "@mui/material";
 import Content from "../../components/Content";
 import Articles from "../../components/Articles";
+import SEO from "../../components/SEO";
 
 const LIMIT = 10;
 
@@ -97,6 +98,12 @@ export default function Category(props) {
 
   return (
     <Content>
+      <SEO
+        title={props.category.name}
+        description={"Explore " + props.category.name + " related articles"}
+        type={"website"}
+        url={`https://www.actualpoints.com/category/${props.slug}`}
+      />
       <Typography variant="h3">{props.category.name}</Typography>
       {articles[0] ? (
         <Articles articles={articles} />
