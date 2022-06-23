@@ -9,7 +9,6 @@ import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import {
   Divider,
-  Paper,
   Table,
   TableBody,
   TableCell,

@@ -1,10 +1,6 @@
 import * as React from "react";
-import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import ProTip from "../src/ProTip";
-import Link from "../src/Link";
 import SEO from "../components/SEO";
 
 export default function About() {

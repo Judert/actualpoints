@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
-export default function Custom404() {
+export default function Custom500() {
   return (
     <Box
       component="main"
@@ -12,7 +12,7 @@ export default function Custom404() {
         color: "primary.contrastText",
       }}
     >
-      <Typography>404 - Page not found</Typography>
+      <Typography>500 - An error occurred</Typography>
     </Box>
   );
 }

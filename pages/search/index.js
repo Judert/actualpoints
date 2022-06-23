@@ -1,16 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Container,
-  FormControl,
-  InputLabel,
-  NativeSelect,
-  Typography,
-} from "@mui/material";
+import { Button, CircularProgress, Container, Typography } from "@mui/material";
 import Content from "../../components/Content";
-import { WithContext as ReactTags } from "react-tag-input";
 import Tags from "../../components/Tags";
 import { useRouter } from "next/router";
 import {

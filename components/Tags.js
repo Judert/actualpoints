@@ -1,9 +1,9 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { collection } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { db } from "../lib/firebase";
 import { WithContext as ReactTags } from "react-tag-input";
-import React, { useEffect } from "react";
+import React from "react";
 import kebabCase from "lodash.kebabcase";
 import Error from "./Error";
 

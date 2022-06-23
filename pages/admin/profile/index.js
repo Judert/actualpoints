@@ -1,9 +1,9 @@
 import Authorize from "../../../components/Authorize";
 import Content from "../../../components/Content";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { Button, ButtonGroup, Stack, TextField } from "@mui/material";
+import { Button, Stack, TextField } from "@mui/material";
 import ImageUploader from "../../../components/ImageUploader";
 import { UserContext } from "../../../lib/context";
 import { useContext } from "react";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
 import {
   Dialog,
@@ -7,30 +7,33 @@ import {
   DialogContentText,
   DialogActions,
   useTheme,
-  useMediaQuery,
+  Box,
+  Table,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TablePagination,
+  TableRow,
+  IconButton,
+  Button,
+  Checkbox,
+  CircularProgress,
+  TextField,
 } from "@mui/material";
-import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableHead from "@mui/material/TableHead";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableFooter from "@mui/material/TableFooter";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import IconButton from "@mui/material/IconButton";
-import Button from "@mui/material/Button";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { otherToJSON, db } from "../../../lib/firebase";
 import {
   collection,
   query,
   where,
-  Timestamp,
   setDoc,
   getDoc,
   deleteDoc,
@@ -39,16 +42,7 @@ import {
   serverTimestamp,
   getDocs,
 } from "firebase/firestore";
-import {
-  Checkbox,
-  CircularProgress,
-  TextField,
-  Typography,
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import Authorize from "../../../components/Authorize";
-import { useContext } from "react";
 import { UserContext } from "../../../lib/context";
 import Content from "../../../components/Content";
 import { useRouter } from "next/router";

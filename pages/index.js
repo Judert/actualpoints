@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import {
   Box,
@@ -62,7 +62,7 @@ export async function getStaticProps() {
 
   return {
     props: { articles, tags, categories, slides },
-    revalidate: 60 * 60 * 6,
+    revalidate: 60 * 60 * 12,
   };
 }
 

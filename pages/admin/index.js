@@ -1,12 +1,8 @@
 import { useEffect, useState, useCallback, useContext } from "react";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
 import GoogleIcon from "@mui/icons-material/Google";
-import Image from "next/image";
 import { auth, db, googleAuthProvider } from "../../lib/firebase";
 import { signInWithPopup, signOut } from "firebase/auth";
-import { TextField, Typography } from "@mui/material";
+import { TextField, Typography, Button } from "@mui/material";
 import { UserContext } from "../../lib/context";
 import debounce from "lodash.debounce";
 import { doc, writeBatch, getDoc } from "firebase/firestore";
