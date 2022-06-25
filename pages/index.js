@@ -73,7 +73,7 @@ export default function Index(props) {
       sx={{ display: "flex", flexDirection: "column", rowGap: 3, mb: 4 }}
     >
       <SEO
-        title={"Actual Points"}
+        title={"Home"}
         description={
           "We condense high quality information for your reading pleasure"
         }

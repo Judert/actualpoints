@@ -22,6 +22,9 @@ const clientSideEmotionCache = createEmotionCache();
 export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const userData = useUserData();
+  if (process.env.NODE_ENV !== "production") {
+    self.FIREBASE_APPCHECK_DEBUG_TOKEN = process.env.APP_CHECK;
+  }
 
   return (
     <CookiesProvider>
