@@ -9,6 +9,7 @@ import {
   Menu,
   Avatar,
   useTheme,
+  Container,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
@@ -37,145 +38,167 @@ export default function Navbar(props) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-        <Toolbar>
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClick}
-              sx={{ mr: 2, display: { xs: "flex", md: "none" } }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-              <MenuItem
-                onClick={handleClose}
-                component={Link}
-                noLinkStyle
-                href="/category"
-              >
-                Categories
-              </MenuItem>
-              <MenuItem
-                onClick={handleClose}
-                component={Link}
-                noLinkStyle
-                href="/about"
-              >
-                About
-              </MenuItem>
-              <MenuItem
-                onClick={handleClose}
-                component={Link}
-                noLinkStyle
-                href="/apply"
-              >
-                Apply
-              </MenuItem>
-            </Menu>
+        <Container maxWidth="xl" disableGutters>
+          <Toolbar>
             <Box
               sx={{
+                flexGrow: 1,
                 display: "flex",
                 alignItems: "center",
-                columnGap: 1,
-                pr: 2,
               }}
             >
-              <Link
-                href="/"
-                // passHref
-                variant="h6"
-                noWrap
-                color="inherit"
-                underline="none"
-              >
-                Actual Points
-              </Link>
-              <LogoIcon color="primary.contrastText" fontSize="large" />
-            </Box>
-            <Box sx={{ display: { xs: "none", md: "block" } }}>
-              <Button
-                color="inherit"
-                component={Link}
-                noLinkStyle
-                href="/category"
-              >
-                Categories
-              </Button>
-              <Button
-                color="inherit"
-                component={Link}
-                noLinkStyle
-                href="/about"
-              >
-                About
-              </Button>
-              <Button
-                color="inherit"
-                component={Link}
-                noLinkStyle
-                href="/apply"
-              >
-                Apply
-              </Button>
-            </Box>
-          </Box>
-
-          <Box
-            sx={{
-              [theme.breakpoints.down(342)]: {
-                display: "none",
-              },
-            }}
-          >
-            {photoURL ? (
               <IconButton
-                component={Link}
-                noLinkStyle
-                href="/admin"
-                sx={{ py: 0 }}
+                edge="start"
+                color="inherit"
+                onClick={handleClick}
+                sx={{ mr: 2, display: { xs: "flex", md: "none" } }}
               >
-                <Avatar sx={{ width: 28, height: 28 }}>
-                  <Image src={photoURL} alt="Profile" layout="fill" />
-                </Avatar>
+                <MenuIcon />
               </IconButton>
-            ) : (
-              router.pathname !== "/admin" && (
-                <Button
-                  color="inherit"
+              <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  noLinkStyle
+                  href="/category"
+                >
+                  Categories
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  noLinkStyle
+                  href="/about"
+                >
+                  About
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  noLinkStyle
+                  href="/apply"
+                >
+                  Apply
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
                   component={Link}
                   noLinkStyle
                   href="/admin"
                 >
                   Sign In
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  noLinkStyle
+                  href="/search"
+                >
+                  Search
+                </MenuItem>
+              </Menu>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  columnGap: 1,
+                  pr: 2,
+                }}
+              >
+                <Link
+                  href="/"
+                  // passHref
+                  variant="h6"
+                  noWrap
+                  color="inherit"
+                  underline="none"
+                >
+                  Actual Points
+                </Link>
+                <LogoIcon color="primary.contrastText" fontSize="large" />
+              </Box>
+              <Box sx={{ display: { xs: "none", md: "block" } }}>
+                <Button
+                  color="inherit"
+                  component={Link}
+                  noLinkStyle
+                  href="/category"
+                >
+                  Categories
                 </Button>
-              )
-            )}
-          </Box>
-          <IconButton
-            // passHref
-            href="/search"
-            color="inherit"
-            component={Link}
-            noLinkStyle
-          >
-            <SearchIcon />
-          </IconButton>
-          {/* <IconButton onClick={props.colorMode.toggleColorMode} color="inherit">
+                <Button
+                  color="inherit"
+                  component={Link}
+                  noLinkStyle
+                  href="/about"
+                >
+                  About
+                </Button>
+                <Button
+                  color="inherit"
+                  component={Link}
+                  noLinkStyle
+                  href="/apply"
+                >
+                  Apply
+                </Button>
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                [theme.breakpoints.down(342)]: {
+                  display: "none",
+                },
+              }}
+            >
+              {photoURL ? (
+                <IconButton
+                  component={Link}
+                  noLinkStyle
+                  href="/admin"
+                  sx={{ py: 0 }}
+                >
+                  <Avatar sx={{ width: 28, height: 28 }}>
+                    <Image src={photoURL} alt="Profile" layout="fill" />
+                  </Avatar>
+                </IconButton>
+              ) : (
+                router.pathname !== "/admin" && (
+                  <Button
+                    color="inherit"
+                    component={Link}
+                    noLinkStyle
+                    href="/admin"
+                  >
+                    Sign In
+                  </Button>
+                )
+              )}
+            </Box>
+            <IconButton
+              sx={{
+                [theme.breakpoints.down(370)]: {
+                  display: "none",
+                },
+              }}
+              href="/search"
+              color="inherit"
+              component={Link}
+              noLinkStyle
+            >
+              <SearchIcon />
+            </IconButton>
+            {/* <IconButton onClick={props.colorMode.toggleColorMode} color="inherit">
             {theme.palette.mode === "dark" ? (
               <Brightness7Icon />
             ) : (
               <Brightness4Icon />
             )}
           </IconButton> */}
-          {/* <Brightness7Icon sx={{ mx: 1 }} /> */}
-        </Toolbar>
+            {/* <Brightness7Icon sx={{ mx: 1 }} /> */}
+          </Toolbar>
+        </Container>
       </AppBar>
     </Box>
   );

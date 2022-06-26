@@ -68,8 +68,10 @@ export async function getStaticProps() {
 
 export default function Index(props) {
   return (
-    <Box
+    <Container
+      maxWidth="xl"
       component="main"
+      disableGutters
       sx={{ display: "flex", flexDirection: "column", rowGap: 3, mb: 4 }}
     >
       <SEO
@@ -92,7 +94,7 @@ export default function Index(props) {
           </Grid>
         </Grid>
       </Container>
-    </Box>
+    </Container>
   );
 }
 
@@ -109,72 +111,20 @@ function Slides(props) {
     />
   ));
 
-  // function materialArrow({ type, onClick, isEdge }) {
-  //   const pointer = type === consts.PREV ? "❮" : "❯";
-  //   return (
-  //     <Button size="large" onClick={onClick} disabled={isEdge}>
-  //       {pointer}
-  //     </Button>
-  //   );
-  // }
-
-  // const carouselRef = React.useRef(null);
-  // const onNextStart = (currentItem, nextItem) => {
-  //   if (currentItem.index === nextItem.index) {
-  //     // we hit the last item, go to first item
-  //     carouselRef.current.goTo(0);
-  //   }
-  // };
-  // const onPrevStart = (currentItem, nextItem) => {
-  //   if (currentItem.index === nextItem.index) {
-  //     // we hit the first item, go to last item
-  //     carouselRef.current.goTo(slides.length);
-  //   }
-  // };
-
   return (
-    <>
-      {/* <Box sx={{ display: { xs: "flex", md: "none" } }}> */}
-      {/* <Carousel
-        itemsToShow={1}
-        renderArrow={materialArrow}
-        showArrows={false}
-        pagination={false}
-        enableAutoPlay={true}
-        onPrevStart={onPrevStart}
-        onNextStart={onNextStart}
-        ref={carouselRef}
-      > */}
-      <Carousel
-        autoPlay="true"
-        infiniteLoop="true"
-        navButtonsProps={{
-          style: {
-            borderRadius: 0,
-          },
-        }}
-        IndicatorIcon={
-          <SquareIcon fontSize="small" className="indicatorIcon" />
-        }
-        animation="slide"
-      >
-        {slides}
-      </Carousel>
-
-      {/* </Carousel> */}
-      {/* </Box> */}
-      {/* <Box sx={{ display: { xs: "none", md: "flex" }, my: 6 }}>
-        <Carousel
-          itemsToShow={1}
-          renderArrow={materialArrow}
-          showArrows={true}
-          pagination={false}
-          enableAutoPlay={true}
-        >
-          {slides}
-        </Carousel>
-      </Box> */}
-    </>
+    <Carousel
+      autoPlay="true"
+      infiniteLoop="true"
+      navButtonsProps={{
+        style: {
+          borderRadius: 0,
+        },
+      }}
+      IndicatorIcon={<SquareIcon fontSize="small" className="indicatorIcon" />}
+      animation="slide"
+    >
+      {slides}
+    </Carousel>
   );
 }
 
@@ -184,8 +134,8 @@ function Slide({ title1, title2, desc, img, alt, link }) {
       <Image
         src={img}
         alt={alt}
-        width={3840}
-        height={2160}
+        width={1600}
+        height={(1600 * 9) / 16}
         priority={true}
         // layout="responsive"
       />

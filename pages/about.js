@@ -26,7 +26,7 @@ export default function About() {
       />
       <Typography // TODO: add a description
       >
-        About
+        We condense high quality information for your reading pleasure
       </Typography>
     </Box>
   );

@@ -4,7 +4,9 @@ import Link from "../src/Link";
 import { useSnackbar } from "notistack";
 import { useCookies } from "react-cookie";
 import { useEffect } from "react";
-import { Box, Button, Container, Stack } from "@mui/material";
+import { Box, Button, Container, IconButton, Stack } from "@mui/material";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import InstagramIcon from "@mui/icons-material/Instagram";
 
 export default function Footer() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -54,21 +56,32 @@ export default function Footer() {
           <Button color="inherit" component={Link} noLinkStyle href="/">
             Home
           </Button>
-          <Button color="inherit" component={Link} noLinkStyle href="/category">
-            Categories
-          </Button>
           <Button color="inherit" component={Link} noLinkStyle href="/about">
             About
           </Button>
           <Button color="inherit" component={Link} noLinkStyle href="/apply">
             Apply
           </Button>
-          <Button color="inherit" component={Link} noLinkStyle href="/search">
-            Search
-          </Button>
-          <Button color="inherit" component={Link} noLinkStyle href="/admin">
-            Sign In
-          </Button>
+        </Stack>
+        <Stack spacing={1} direction={"row"}>
+          <IconButton
+            // passHref
+            href="https://twitter.com/actualpoints"
+            color="inherit"
+            component={Link}
+            noLinkStyle
+          >
+            <TwitterIcon />
+          </IconButton>
+          <IconButton
+            // passHref
+            href="https://www.instagram.com/actualpoints/"
+            color="inherit"
+            component={Link}
+            noLinkStyle
+          >
+            <InstagramIcon />
+          </IconButton>
         </Stack>
         <Typography variant="body2" color="inherit" align="center">
           {"Copyright © veselcode"} {new Date().getFullYear()}.
