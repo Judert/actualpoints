@@ -137,6 +137,7 @@ function Slide({ title1, title2, desc, img, alt, link }) {
         width={1536}
         height={864}
         priority={true}
+        objectFit="cover"
       />
       <Box
         sx={{
