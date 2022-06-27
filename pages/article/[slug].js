@@ -18,12 +18,12 @@ import {
   orderBy,
   limit,
 } from "firebase/firestore";
-import Image from "next/image";
 import Link from "next/link";
 import Markdown from "../../components/Markdown";
 import Articles from "../../components/Articles";
 import Article from "../../components/Article";
 import SEO from "../../components/SEO";
+import ImageShimmer from "../../components/ImageShimmer";
 
 const LIMIT = 10;
 
@@ -62,7 +62,7 @@ export async function getStaticProps({ params }) {
 
   return {
     props: { post, path, articles },
-    revalidate: 60 * 60 * 12,
+    revalidate: 43200,
   };
 }
 
@@ -104,11 +104,11 @@ export default function ArticleMain(props) {
             <Typography variant="subtitle1" color="text.secondary">
               Last Updated: {new Date(article.date).toGMTString()}
             </Typography>
-            <Image
+            <ImageShimmer
               alt={article.alt}
               src={article.image}
-              width={16000}
-              height={9000}
+              width={712}
+              height={400.5}
             />
             <Box sx={{ rowGap: 0 }}>
               <Markdown>{article.content}</Markdown>
@@ -129,7 +129,7 @@ export default function ArticleMain(props) {
             <Grid container spacing={3} pl={1}>
               <Grid item xs="auto">
                 <Avatar sx={{ width: 150, height: 150 }}>
-                  <Image
+                  <ImageShimmer
                     src={article.photoURL}
                     alt={article.username}
                     layout="fill"

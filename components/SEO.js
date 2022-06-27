@@ -81,7 +81,7 @@ const socialTags = ({
 };
 
 const SEO = (props) => {
-  const { title, description, image } = props;
+  const { title, description, image, noindex = false } = props;
   return (
     <Head>
       <title>{title} | Actual Points</title>
@@ -92,6 +92,7 @@ const SEO = (props) => {
       {socialTags(props).map(({ name, content }) => {
         return <meta key={name} name={name} content={content} />;
       })}
+      {noindex && <meta name="robots" content="noindex" />}
     </Head>
   );
 };

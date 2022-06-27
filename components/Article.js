@@ -7,9 +7,9 @@ import {
   Typography,
 } from "@mui/material";
 import { createTheme, useTheme } from "@mui/material/styles";
-import Image from "next/image";
 import Link from "next/link";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import ImageShimmer from "./ImageShimmer";
 
 export default function Article({ article, small }) {
   const theme = useTheme();
@@ -57,7 +57,7 @@ export default function Article({ article, small }) {
               }}
             >
               <Avatar sx={{ width: 32, height: 32 }}>
-                <Image
+                <ImageShimmer
                   src={article.photoURL}
                   alt={article.username}
                   layout="fill"
@@ -139,12 +139,11 @@ export default function Article({ article, small }) {
                 display: { xs: "flex", sm: "none" },
               }}
             >
-              <Image
+              <ImageShimmer
                 alt={article.alt}
                 src={article.image}
                 width={320}
                 height={180}
-                // layout="responsive"
                 objectFit="cover"
               />
             </Box>
@@ -156,12 +155,11 @@ export default function Article({ article, small }) {
               display: { xs: "none", sm: "flex" },
             }}
           >
-            <Image
+            <ImageShimmer
               alt={article.alt}
               src={article.image}
               width={250}
               height={250}
-              // layout="fixed"
               objectFit="cover"
             />
           </Box>

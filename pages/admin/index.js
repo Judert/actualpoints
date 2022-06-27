@@ -21,6 +21,7 @@ export default function Admin() {
         description={"Login to manage your articles and profile"}
         type={"website"}
         url={`https://www.actualpoints.com/admin`}
+        noindex={true}
       />
       {user ? (
         email ? (

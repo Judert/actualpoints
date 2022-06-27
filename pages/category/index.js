@@ -1,10 +1,10 @@
 import Content from "../../components/Content";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import Image from "next/image";
 import Link from "next/link";
 import SEO from "../../components/SEO";
 import { collection, getDocs } from "firebase/firestore";
 import { db, otherToJSON } from "../../lib/firebase";
+import ImageShimmer from "../../components/ImageShimmer";
 
 export async function getStaticProps() {
   const categories = (await getDocs(collection(db, "Category"))).docs.map(
@@ -13,7 +13,7 @@ export async function getStaticProps() {
 
   return {
     props: { categories },
-    revalidate: 60 * 60 * 12,
+    revalidate: 43200,
   };
 }
 
@@ -32,7 +32,7 @@ export default function CategoryAll(props) {
           <Link href={`/category/${category.id}`} passHref key={category.id}>
             <Grid xs={12} sm={6} md={4} item>
               <Paper elevation={6} style={{ position: "relative" }}>
-                <Image
+                <ImageShimmer
                   alt={category.name}
                   src={category.img}
                   width={1000}

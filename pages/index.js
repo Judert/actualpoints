@@ -10,7 +10,6 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import Image from "next/image";
 import {
   collection,
   limit,
@@ -27,6 +26,7 @@ import MUILink from "../src/Link";
 import Link from "next/link";
 import SquareIcon from "@mui/icons-material/Square";
 import SEO from "../components/SEO";
+import ImageShimmer from "../components/ImageShimmer";
 
 const LIMIT = 10;
 
@@ -62,7 +62,7 @@ export async function getStaticProps() {
 
   return {
     props: { articles, tags, categories, slides },
-    revalidate: 60 * 60 * 12,
+    revalidate: 43200,
   };
 }
 
@@ -131,13 +131,12 @@ function Slides(props) {
 function Slide({ title1, title2, desc, img, alt, link }) {
   return (
     <Paper elevation={6} sx={{ display: "flex", position: "relative" }}>
-      <Image
+      <ImageShimmer
         src={img}
         alt={alt}
-        width={1600}
-        height={(1600 * 9) / 16}
+        width={1536}
+        height={864}
         priority={true}
-        // layout="responsive"
       />
       <Box
         sx={{
@@ -161,13 +160,13 @@ function Slide({ title1, title2, desc, img, alt, link }) {
         }}
       >
         <Box sx={{ display: { xs: "none", md: "block" } }}>
-          <Typography variant="h1" noWrap>
+          <Typography component="p" variant="h1" noWrap>
             {title1}
           </Typography>
-          <Typography variant="h1" noWrap>
+          <Typography component="p" variant="h1" noWrap>
             {title2}
           </Typography>
-          <Typography variant="h5" py={2} pb={4}>
+          <Typography component="p" variant="h5" py={2} pb={4}>
             {desc}
           </Typography>
           <Button
@@ -176,7 +175,7 @@ function Slide({ title1, title2, desc, img, alt, link }) {
             noLinkStyle
             href={link}
           >
-            Learn More
+            About
           </Button>
         </Box>
         <Box
@@ -184,13 +183,13 @@ function Slide({ title1, title2, desc, img, alt, link }) {
             display: { xs: "none", sm: "block", md: "none" },
           }}
         >
-          <Typography variant="h3" noWrap>
+          <Typography component="p" variant="h3" noWrap>
             {title1}
           </Typography>
-          <Typography variant="h3" noWrap>
+          <Typography component="p" variant="h3" noWrap>
             {title2}
           </Typography>
-          <Typography py={2} pb={2}>
+          <Typography component="p" py={2} pb={2}>
             {desc}
           </Typography>
           <Button
@@ -199,7 +198,7 @@ function Slide({ title1, title2, desc, img, alt, link }) {
             noLinkStyle
             href={link}
           >
-            Learn More
+            About
           </Button>
         </Box>
         <Box
@@ -207,10 +206,10 @@ function Slide({ title1, title2, desc, img, alt, link }) {
             display: { xs: "block", sm: "none" },
           }}
         >
-          <Typography variant="h4" noWrap>
+          <Typography component="p" variant="h4" noWrap>
             {title1}
           </Typography>
-          <Typography variant="h4" noWrap gutterBottom>
+          <Typography component="p" variant="h4" noWrap gutterBottom>
             {title2}
           </Typography>
           <Button
@@ -220,7 +219,7 @@ function Slide({ title1, title2, desc, img, alt, link }) {
             noLinkStyle
             href={link}
           >
-            Learn More
+            About
           </Button>
         </Box>
       </Box>
@@ -265,11 +264,13 @@ function ArticlesLatest(props) {
 
   return (
     <>
-      <Typography variant="h4">Latest Articles</Typography>
+      <Typography component="h1" variant="h4">
+        Latest Articles
+      </Typography>
       {articles[0] ? (
         <Articles articles={articles} />
       ) : (
-        <Typography variant="h5" color="text.secondary">
+        <Typography component="p" variant="h5" color="text.secondary">
           No articles yet
         </Typography>
       )}
@@ -295,7 +296,12 @@ function ArticlesLatest(props) {
 function Categories(props) {
   return (
     <Box pb={2}>
-      <Typography variant="h5" color={"text.secondary"} gutterBottom>
+      <Typography
+        component="h2"
+        variant="h5"
+        color={"text.secondary"}
+        gutterBottom
+      >
         Categories
       </Typography>
       <Box>
@@ -317,11 +323,16 @@ function Categories(props) {
 function AllTags(props) {
   return (
     <Box>
-      <Typography variant="h5" color={"text.secondary"} gutterBottom>
+      <Typography
+        component="h2"
+        variant="h5"
+        color={"text.secondary"}
+        gutterBottom
+      >
         Popular Tags
       </Typography>
       {!props.tags[0] ? (
-        <Typography variant="subtitle1" color={"text.secondary"}>
+        <Typography component="p" variant="subtitle1" color={"text.secondary"}>
           No tags yet
         </Typography>
       ) : (

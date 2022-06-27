@@ -19,7 +19,7 @@ import Link from "../src/Link";
 import { UserContext } from "../lib/context";
 import { LogoIcon } from "../components/LogoIcon";
 import { useRouter } from "next/router";
-import Image from "next/image";
+import ImageShimmer from "./ImageShimmer";
 
 export default function Navbar(props) {
   const theme = useTheme();
@@ -160,7 +160,7 @@ export default function Navbar(props) {
                   sx={{ py: 0 }}
                 >
                   <Avatar sx={{ width: 28, height: 28 }}>
-                    <Image src={photoURL} alt="Profile" layout="fill" />
+                    <ImageShimmer src={photoURL} alt="Profile" layout="fill" />
                   </Avatar>
                 </IconButton>
               ) : (
@@ -186,6 +186,7 @@ export default function Navbar(props) {
               color="inherit"
               component={Link}
               noLinkStyle
+              aria-label="search"
             >
               <SearchIcon />
             </IconButton>

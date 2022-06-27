@@ -70,6 +70,7 @@ export default function Footer() {
             color="inherit"
             component={Link}
             noLinkStyle
+            aria-label="Twitter"
           >
             <TwitterIcon />
           </IconButton>
@@ -79,6 +80,7 @@ export default function Footer() {
             color="inherit"
             component={Link}
             noLinkStyle
+            aria-label="Instagram"
           >
             <InstagramIcon />
           </IconButton>

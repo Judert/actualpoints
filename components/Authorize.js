@@ -14,6 +14,7 @@ export default function Authorize(props) {
         description={"Login to manage your articles and profile"}
         type={"website"}
         url={`https://www.actualpoints.com/admin`}
+        noindex={true}
       />
       {email ? (
         username ? (

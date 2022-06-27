@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import ReactMarkdown from "react-markdown";
@@ -18,6 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "../src/Link";
+import ImageShimmer from "./ImageShimmer";
 // import "../../styles/markdown.module.css";
 
 const components = {
@@ -59,13 +59,12 @@ const components = {
 
     return (
       <>
-        <Image
+        <ImageShimmer
           src={node.properties.src}
           width={width}
           height={height}
           alt={alt}
           priority={isPriority}
-          // layout="responsive"
         />
         {hasCaption ? (
           <Typography

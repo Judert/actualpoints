@@ -56,7 +56,7 @@ export async function getStaticProps({ params }) {
 
   return {
     props: { slug, category, articles },
-    revalidate: 60 * 60 * 12,
+    revalidate: 43200,
   };
 }
 
