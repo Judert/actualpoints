@@ -97,11 +97,17 @@ export default function ArticleMain(props) {
             elevation={2}
             sx={{ p: 3, display: "flex", flexDirection: "column", rowGap: 2 }}
           >
-            <Typography variant="h3">{article.title}</Typography>
-            <Typography variant="h6" color="text.secondary">
+            <Typography component="h1" variant="h3">
+              {article.title}
+            </Typography>
+            <Typography component="h2" variant="h6" color="text.secondary">
               {article.subtitle}
             </Typography>
-            <Typography variant="subtitle1" color="text.secondary">
+            <Typography
+              component="h3"
+              variant="subtitle1"
+              color="text.secondary"
+            >
               Last Updated: {new Date(article.date).toGMTString()}
             </Typography>
             <ImageShimmer
@@ -123,7 +129,7 @@ export default function ArticleMain(props) {
               pb: 0,
             }}
           >
-            <Typography variant="h5" color="text.secondary">
+            <Typography component="h4" variant="h5" color="text.secondary">
               Article contributed by
             </Typography>
             <Grid container spacing={3} pl={1}>
@@ -138,7 +144,9 @@ export default function ArticleMain(props) {
               </Grid>
               <Grid item container xs={9}>
                 <Grid item xs={12}>
-                  <Typography variant="h6">{article.displayName}</Typography>
+                  <Typography component="h5" variant="h6">
+                    {article.displayName}
+                  </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Typography variant="h6" color="text.secondary">

@@ -99,18 +99,6 @@ export default function Index(props) {
 }
 
 function Slides(props) {
-  const slides = props.slides.map((slide) => (
-    <Slide
-      key={slide.id}
-      title1={slide.title1}
-      title2={slide.title2}
-      alt={slide.alt}
-      desc={slide.desc}
-      img={slide.img}
-      link={slide.link}
-    />
-  ));
-
   return (
     <Carousel
       autoPlay="true"
@@ -123,7 +111,17 @@ function Slides(props) {
       IndicatorIcon={<SquareIcon fontSize="small" className="indicatorIcon" />}
       animation="slide"
     >
-      {slides}
+      {props.slides.map((slide) => (
+        <Slide
+          key={slide.id}
+          title1={slide.title1}
+          title2={slide.title2}
+          alt={slide.alt}
+          desc={slide.desc}
+          img={slide.img}
+          link={slide.link}
+        />
+      ))}
     </Carousel>
   );
 }

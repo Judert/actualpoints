@@ -104,7 +104,9 @@ export default function Category(props) {
         type={"website"}
         url={`https://www.actualpoints.com/category/${props.slug}`}
       />
-      <Typography variant="h3">{props.category.name}</Typography>
+      <Typography component="h1" variant="h3">
+        {props.category.name}
+      </Typography>
       {articles[0] ? (
         <Articles articles={articles} />
       ) : (

@@ -7,9 +7,9 @@ import {
   Typography,
 } from "@mui/material";
 import { createTheme, useTheme } from "@mui/material/styles";
-import Link from "next/link";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import ImageShimmer from "./ImageShimmer";
+import Link from "../src/Link";
 
 export default function Article({ article, small }) {
   const theme = useTheme();
@@ -32,7 +32,12 @@ export default function Article({ article, small }) {
 
   return (
     <ThemeProvider theme={themeNested}>
-      <Link href={"/article/" + article.id} passHref key={article.id}>
+      <Link
+        underline="none"
+        href={"/article/" + article.id}
+        // passHref
+        key={article.id}
+      >
         <Paper
           elevation={1}
           sx={{
@@ -65,6 +70,7 @@ export default function Article({ article, small }) {
               </Avatar>
               <Stack direction="column">
                 <Typography
+                  component="span"
                   variant="subtitle1"
                   sx={{
                     overflow: "hidden",
@@ -82,11 +88,16 @@ export default function Article({ article, small }) {
                   spacing={1}
                   sx={{ alignItems: "center" }}
                 >
-                  <Typography variant="subtitle1" color="text.secondary">
+                  <Typography
+                    component="span"
+                    variant="subtitle1"
+                    color="text.secondary"
+                  >
                     {new Date(article.date).toLocaleDateString()}
                   </Typography>
                   <LocalOfferIcon color="disabled" sx={{ fontSize: 20 }} />
                   <Typography
+                    component="span"
                     variant="subtitle1"
                     color="text.secondary"
                     sx={{
@@ -104,6 +115,7 @@ export default function Article({ article, small }) {
               </Stack>
             </Stack>
             <Typography
+              component="h5"
               gutterBottom
               variant="h5"
               sx={{
@@ -129,6 +141,7 @@ export default function Article({ article, small }) {
               variant="body1"
               color="text.secondary"
               gutterBottom
+              component="span"
             >
               {article.subtitle}
             </Typography>

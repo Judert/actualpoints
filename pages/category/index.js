@@ -26,7 +26,9 @@ export default function CategoryAll(props) {
         type={"website"}
         url={`https://www.actualpoints.com/category`}
       />
-      <Typography variant="h3">Categories</Typography>
+      <Typography component="h1" variant="h3">
+        Categories
+      </Typography>
       <Grid container spacing={2}>
         {props.categories.map((category) => (
           <Link href={`/category/${category.id}`} passHref key={category.id}>
@@ -54,6 +56,7 @@ export default function CategoryAll(props) {
                   }}
                 />
                 <Typography
+                  component="h2"
                   variant="h5"
                   style={{
                     position: "absolute",

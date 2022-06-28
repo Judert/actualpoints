@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://actualpoints.com
+
+# Sitemaps
+Sitemap: https://actualpoints.com/sitemap.xml
