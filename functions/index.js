@@ -135,6 +135,7 @@ exports.articleSlideCreate = functions.firestore
         link: "/article/" + context.params.articleId,
         active: false,
         order: 9,
+        buttonText: "",
       })
       .catch((error) => {
         functions.logger.error(error);

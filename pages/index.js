@@ -126,7 +126,7 @@ function Slides(props) {
   );
 }
 
-function Slide({ title1, title2, desc, img, alt, link }) {
+function Slide({ title1, title2, desc, img, alt, link, buttonText }) {
   return (
     <Paper elevation={6} sx={{ display: "flex", position: "relative" }}>
       <ImageShimmer
@@ -174,7 +174,7 @@ function Slide({ title1, title2, desc, img, alt, link }) {
             noLinkStyle
             href={link}
           >
-            About
+            {buttonText}
           </Button>
         </Box>
         <Box
@@ -197,7 +197,7 @@ function Slide({ title1, title2, desc, img, alt, link }) {
             noLinkStyle
             href={link}
           >
-            About
+            {buttonText}
           </Button>
         </Box>
         <Box
@@ -218,7 +218,7 @@ function Slide({ title1, title2, desc, img, alt, link }) {
             noLinkStyle
             href={link}
           >
-            About
+            {buttonText}
           </Button>
         </Box>
       </Box>
