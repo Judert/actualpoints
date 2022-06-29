@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>https://actualpoints.com</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/about</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/admin</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/admin/article</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/admin/profile</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/apply</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/category</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/search</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/category/arts</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/category/business</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/category/entertainment</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/category/sport</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/category/tech</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/article/cras-vestibulum-sit-amet-elit-sit-amet-aliquet-nunc-in-XnItzA1ouJPQSpMjvJPFkdk7TRy1</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/article/react-js-use-context-api-XnItzA1ouJPQSpMjvJPFkdk7TRy1</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/article/sauce-JYhAP7LiaaWxRluJrILCsgyqvyb2</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/article/sauceysauce-JYhAP7LiaaWxRluJrILCsgyqvyb2</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://actualpoints.com/article/short-JYhAP7LiaaWxRluJrILCsgyqvyb2</loc><lastmod>2022-06-28T11:16:57.492Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://actualpoints.com</loc><lastmod>2022-06-29T09:34:19.634Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://actualpoints.com/about</loc><lastmod>2022-06-29T09:34:19.634Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://actualpoints.com/admin</loc><lastmod>2022-06-29T09:34:19.634Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://actualpoints.com/admin/article</loc><lastmod>2022-06-29T09:34:19.634Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://actualpoints.com/admin/profile</loc><lastmod>2022-06-29T09:34:19.634Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://actualpoints.com/apply</loc><lastmod>2022-06-29T09:34:19.634Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://actualpoints.com/category</loc><lastmod>2022-06-29T09:34:19.634Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://actualpoints.com/search</loc><lastmod>2022-06-29T09:34:19.634Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://actualpoints.com/category/arts</loc><lastmod>2022-06-29T09:34:19.634Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://actualpoints.com/category/business</loc><lastmod>2022-06-29T09:34:19.634Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://actualpoints.com/category/entertainment</loc><lastmod>2022-06-29T09:34:19.634Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://actualpoints.com/category/sport</loc><lastmod>2022-06-29T09:34:19.634Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://actualpoints.com/category/tech</loc><lastmod>2022-06-29T09:34:19.634Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 </urlset>

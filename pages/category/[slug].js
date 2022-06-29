@@ -16,6 +16,7 @@ import { Typography, Container, Button, CircularProgress } from "@mui/material";
 import Content from "../../components/Content";
 import Articles from "../../components/Articles";
 import SEO from "../../components/SEO";
+import desc from "../../data/descriptions.json";
 
 const LIMIT = 10;
 
