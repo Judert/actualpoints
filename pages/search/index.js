@@ -16,6 +16,7 @@ import {
 import Articles from "../../components/Articles";
 import { db, postToJSON } from "../../lib/firebase";
 import SEO from "../../components/SEO";
+import desc from "../../data/descriptions.json";
 
 const LIMIT = 10;
 
@@ -109,9 +110,9 @@ export default function Search() {
     <Content>
       <SEO
         title={"Search"}
-        description={"Explore articles by tags"}
+        description={desc.search}
         type={"website"}
-        url={`https://www.actualpoints.com/search`}
+        url={`${desc.url}/search`}
       />
       <Tags tags={tags} setTags={setTags} />
       {articles ? (

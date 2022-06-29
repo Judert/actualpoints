@@ -5,6 +5,7 @@ import SEO from "../../components/SEO";
 import { collection, getDocs } from "firebase/firestore";
 import { db, otherToJSON } from "../../lib/firebase";
 import ImageShimmer from "../../components/ImageShimmer";
+import desc from "../../data/descriptions.json";
 
 export async function getStaticProps() {
   const categories = (await getDocs(collection(db, "Category"))).docs.map(
@@ -22,9 +23,9 @@ export default function CategoryAll(props) {
     <Content>
       <SEO
         title={"Categories"}
-        description={"Explore articles by category"}
+        description={desc.categories}
         type={"website"}
-        url={`https://www.actualpoints.com/category`}
+        url={`${desc.url}/category`}
       />
       <Typography component="h1" variant="h3">
         Categories

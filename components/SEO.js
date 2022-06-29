@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
+import desc from "../data/descriptions.json";
 
 const settings = {
   // graphql: {
@@ -9,8 +10,7 @@ const settings = {
   meta: {
     rootUrl: "www.actualpoints.com",
     title: "Actual Points",
-    description:
-      "We condense high quality information for your reading pleasure",
+    description: desc.about,
     social: {
       graphic:
         "https://firebasestorage.googleapis.com/v0/b/blog-veselcode.appspot.com/o/SEO%2Fwhitelogo.png?alt=media&token=c70fe98d-beef-49ea-8a13-f015b9b214a5",

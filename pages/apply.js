@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import SEO from "../components/SEO";
+import desc from "../data/descriptions.json";
 
 export default function Apply() {
   return (
@@ -15,13 +16,11 @@ export default function Apply() {
     >
       <SEO
         title={"Apply"}
-        description={
-          "Apply for a position at Actual Points. We are looking for talented people to join our team."
-        }
+        description={desc.apply}
         type={"website"}
-        url={`https://www.actualpoints.com/apply`}
+        url={`${desc.url}/apply`}
       />
-      <Typography>info@veselcode.com</Typography>
+      <Typography>{desc.email}</Typography>
     </Box>
   );
 }

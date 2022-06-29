@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { UserContext } from "../lib/context";
 import Content from "./Content";
 import SEO from "./SEO";
+import desc from "../data/descriptions.json";
 
 export default function Authorize(props) {
   const { username, email } = useContext(UserContext);
@@ -11,9 +12,9 @@ export default function Authorize(props) {
     <Content>
       <SEO
         title={"Login"}
-        description={"Login to manage your articles and profile"}
+        description={desc.login}
         type={"website"}
-        url={`https://www.actualpoints.com/admin`}
+        url={`${desc.url}/admin`}
         noindex={true}
       />
       {email ? (

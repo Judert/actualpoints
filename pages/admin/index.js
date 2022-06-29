@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import Content from "../../components/Content";
 import Link from "../../src/Link";
 import SEO from "../../components/SEO";
+import desc from "../../data/descriptions.json";
 
 export default function Admin() {
   const { user, username, email } = useContext(UserContext);
@@ -18,9 +19,9 @@ export default function Admin() {
     <Content>
       <SEO
         title={"Login"}
-        description={"Login to manage your articles and profile"}
+        description={desc.login}
         type={"website"}
-        url={`https://www.actualpoints.com/admin`}
+        url={`${desc.url}/admin`}
         noindex={true}
       />
       {user ? (

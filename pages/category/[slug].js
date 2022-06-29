@@ -102,7 +102,7 @@ export default function Category(props) {
         title={props.category.name}
         description={"Explore " + props.category.name + " related articles"}
         type={"website"}
-        url={`https://www.actualpoints.com/category/${props.slug}`}
+        url={`${desc.url}/category/${props.slug}`}
       />
       <Typography component="h1" variant="h3">
         {props.category.name}

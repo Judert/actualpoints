@@ -27,6 +27,7 @@ import Link from "next/link";
 import SquareIcon from "@mui/icons-material/Square";
 import SEO from "../components/SEO";
 import ImageShimmer from "../components/ImageShimmer";
+import desc from "../data/descriptions.json";
 
 const LIMIT = 10;
 
@@ -76,11 +77,9 @@ export default function Index(props) {
     >
       <SEO
         title={"Home"}
-        description={
-          "We condense high quality information for your reading pleasure"
-        }
+        description={desc.about}
         type={"website"}
-        url={`https://www.actualpoints.com`}
+        url={`${desc.url}`}
       />
       <Slides {...props} />
       <Container maxWidth="lg">
@@ -120,6 +119,7 @@ function Slides(props) {
           desc={slide.desc}
           img={slide.img}
           link={slide.link}
+          buttonText={slide.buttonText}
         />
       ))}
     </Carousel>

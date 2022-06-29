@@ -89,7 +89,7 @@ export default function ArticleMain(props) {
         description={article.subtitle}
         image={article.image}
         type={"article"}
-        url={`https://www.actualpoints.com/article/${props.path}`}
+        url={`${desc.url}/article/${props.path}`}
       />
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12} md={8}>

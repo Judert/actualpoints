@@ -2,6 +2,7 @@ import * as React from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import SEO from "../components/SEO";
+import desc from "../data/descriptions.json";
 
 export default function About() {
   return (
@@ -17,17 +18,11 @@ export default function About() {
     >
       <SEO
         title={"About"}
-        // TODO: Add a description
-        description={
-          "We condense high quality information for your reading pleasure"
-        }
+        description={desc.about}
         type={"website"}
-        url={`https://www.actualpoints.com/about`}
+        url={`${desc.url}/about`}
       />
-      <Typography // TODO: add a description
-      >
-        We condense high quality information for your reading pleasure
-      </Typography>
+      <Typography>{desc.about}</Typography>
     </Box>
   );
 }
