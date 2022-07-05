@@ -11,10 +11,10 @@ export default function Apply() {
       }}
     >
       <SEO
-        title={"Apply"}
-        description={desc.apply}
+        title={"Contact Us"}
+        description={desc.contact}
         type={"website"}
-        url={`${desc.url}/apply`}
+        url={`${desc.url}/contact`}
       />
       <Container
         component="main"

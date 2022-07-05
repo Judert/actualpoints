@@ -1,17 +1,13 @@
 import * as React from "react";
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
 import SEO from "../components/SEO";
 import desc from "../data/descriptions.json";
+import { Container, Box } from "@mui/material";
 
 export default function About() {
   return (
     <Box
-      component="main"
       sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
         backgroundColor: "primary.main",
         color: "primary.contrastText",
       }}
@@ -22,7 +18,18 @@ export default function About() {
         type={"website"}
         url={`${desc.url}/about`}
       />
-      <Typography>{desc.about}</Typography>
+      <Container
+        component="main"
+        maxWidth="xs"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        }}
+      >
+        <Typography>{desc.about}</Typography>
+      </Container>
     </Box>
   );
 }

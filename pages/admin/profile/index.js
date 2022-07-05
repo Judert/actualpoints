@@ -106,14 +106,18 @@ function ProfileEdit() {
         helperText={errors.photoURL?.message}
       />
       <ImageUploader markdown={false} />
-      <Stack direction="row" spacing={1}>
-        <Button variant="contained" onClick={handleSubmit(handleDone)}>
-          Save and complete
-        </Button>
-        <Button variant="outlined" onClick={() => handleCancel()}>
+      {/* <Stack direction="row" spacing={1}> */}
+      <Button
+        sx={{ alignSelf: "flex-start" }}
+        variant="contained"
+        onClick={handleSubmit(handleDone)}
+      >
+        Save and complete
+      </Button>
+      {/* <Button variant="outlined" onClick={() => handleCancel()}>
           Cancel
-        </Button>
-      </Stack>
+        </Button> */}
+      {/* </Stack> */}
     </Content>
   );
 }

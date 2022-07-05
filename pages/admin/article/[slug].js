@@ -38,6 +38,7 @@ import ImageUploader from "../../../components/ImageUploader";
 import { useSnackbar } from "notistack";
 import Error from "../../../components/Error";
 import HelpIcon from "@mui/icons-material/Help";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false,
@@ -212,6 +213,14 @@ function Edit({ router, slug, article }) {
 
   return (
     <>
+      {/* <Button
+        startIcon={<ArrowBackIcon />}
+        sx={{ alignSelf: "flex-start" }}
+        variant="outlined"
+        onClick={() => handleCancel()}
+      >
+        Back
+      </Button> */}
       <TextField
         fullWidth
         multiline
@@ -367,9 +376,7 @@ function Edit({ router, slug, article }) {
         <Button variant="contained" onClick={handleSubmit(handleDone)}>
           Save and complete
         </Button>
-        <Button variant="outlined" onClick={() => handleCancel()}>
-          Cancel
-        </Button>
+
         <Button
           variant="outlined"
           startIcon={<SaveIcon />}

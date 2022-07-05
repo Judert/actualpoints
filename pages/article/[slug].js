@@ -186,20 +186,32 @@ export default function ArticleMain(props) {
             <Typography variant="h4" color="text.secondary">
               Latest Articles
             </Typography>
-            <Articles articles={articles} small={true} />
+            {articles[0] ? (
+              <Articles articles={articles} small={true} />
+            ) : (
+              <Typography variant="h6" color="text.secondary">
+                No other articles yet
+              </Typography>
+            )}
           </Grid>
-          {articles.map((article) => (
-            <Grid
-              key={article.id}
-              item
-              sx={{ display: { xs: "flex", md: "none" } }}
-              xs={12}
-              sm={6}
-              md={12}
-            >
-              <Article article={article} small={true} />
-            </Grid>
-          ))}
+          {articles[0] ? (
+            articles.map((article) => (
+              <Grid
+                key={article.id}
+                item
+                sx={{ display: { xs: "flex", md: "none" } }}
+                xs={12}
+                sm={6}
+                md={12}
+              >
+                <Article article={article} small={true} />
+              </Grid>
+            ))
+          ) : (
+            <Typography variant="h6" color="text.secondary">
+              No other articles yet
+            </Typography>
+          )}
         </Grid>
       </Grid>
     </Container>

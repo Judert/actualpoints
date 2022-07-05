@@ -59,8 +59,8 @@ export default function Footer() {
           <Button color="inherit" component={Link} noLinkStyle href="/about">
             About
           </Button>
-          <Button color="inherit" component={Link} noLinkStyle href="/apply">
-            Apply
+          <Button color="inherit" component={Link} noLinkStyle href="/contact">
+            Contact Us
           </Button>
         </Stack>
         <Stack spacing={1} direction={"row"}>

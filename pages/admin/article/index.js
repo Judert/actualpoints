@@ -74,7 +74,7 @@ function Articles() {
   );
   const handleAdd = async (e) => {
     e.preventDefault();
-    const id = slug + "-" + user.uid;
+    const id = slug + "-" + username;
     const ref = doc(db, "Article", id);
     const snapshot = await getDoc(ref).catch((error) => {
       enqueueSnackbar("FAILED_ARTICLE_GET: " + error, { variant: "error" });
