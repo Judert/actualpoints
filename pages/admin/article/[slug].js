@@ -394,7 +394,9 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: "75%",
+  height: "75%",
+  overflow: "scroll",
   bgcolor: "background.paper",
   // border: "2px solid #000",
   boxShadow: 24,
@@ -428,13 +430,24 @@ function Help() {
           </ul>
           <Typography variant="h6">Inserting Images</Typography>
           <ul>
-            <li>Please upload high resolution images (3840x2160 or more)</li>
-            <li>16:9 Images only</li>
+            <li>Please upload high resolution images if its a single image</li>
             <li>
-              !&#91;AltText &#123;caption: Photo by Someone&#125;&#93;&#40;image
+              If you include a left or right image only: the images will be
+              squares (good for Pinterest low resolution square images)
+            </li>
+            <li>
+              If you include both a left and right image: the images will be
+              portrait (good for Pinterest low resolution portrait images)
+            </li>
+            <li>
+              !&#91;alttext &#123;imageLeft:
+              firebaseImageUrl&#125;&#123;imageLeftAlt:
+              alttext&#125;&#123;imageRight:
+              firebaseImageUrl&#125;&#123;imageRightAlt:
+              alttext&#125;&#123;caption: Photo by Someone&#125;&#93;&#40;image
               url&#41;
             </li>
-            <li>You need AltText for accessibility for all readers</li>
+            <li>You need alttext for accessibility for all readers</li>
             <li>Have a caption if credit is required</li>
           </ul>
         </Box>

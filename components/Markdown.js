@@ -8,6 +8,7 @@ import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import {
   Divider,
+  Grid,
   Table,
   TableBody,
   TableCell,
@@ -48,7 +49,19 @@ const components = {
     const height = metaHeight ? metaHeight[1] : "432";
     const isPriority = metastring?.toLowerCase().match("{priority}");
     const hasCaption = metastring?.toLowerCase().includes("{caption:");
+    const hasImageLeft = metastring?.toLowerCase().includes("{imageleft:");
+    const hasImageRight = metastring?.toLowerCase().includes("{imageright:");
+    const hasImageLeftAlt = metastring
+      ?.toLowerCase()
+      .includes("{imageleftalt:");
+    const hasImageRightAlt = metastring
+      ?.toLowerCase()
+      .includes("{imagerightalt:");
     const caption = metastring?.match(/{caption: (.*?)}/)?.pop();
+    const imageLeft = metastring?.match(/{imageLeft: (.*?)}/)?.pop();
+    const imageRight = metastring?.match(/{imageRight: (.*?)}/)?.pop();
+    const imageLeftAlt = metastring?.match(/{imageLeftAlt: (.*?)}/)?.pop();
+    const imageRightAlt = metastring?.match(/{imageRightAlt: (.*?)}/)?.pop();
 
     if (
       !node.properties.src.startsWith("https://firebasestorage.googleapis.com")
@@ -57,15 +70,105 @@ const components = {
       return <></>;
     }
 
+    if (
+      hasImageLeft &&
+      (!hasImageLeftAlt ||
+        !imageLeft.startsWith("https://firebasestorage.googleapis.com"))
+    ) {
+      return <></>;
+    }
+    if (
+      hasImageRight &&
+      (!hasImageRightAlt ||
+        !imageRight.startsWith("https://firebasestorage.googleapis.com"))
+    ) {
+      return <></>;
+    }
+
     return (
       <>
-        <ImageShimmer
-          src={node.properties.src}
-          width={width}
-          height={height}
-          alt={alt}
-          priority={isPriority}
-        />
+        {hasImageLeft && hasImageRight ? (
+          <Grid component="span" container spacing={1}>
+            <Grid component="span" item xs={4}>
+              <ImageShimmer
+                src={imageLeft}
+                width={600}
+                height={900}
+                alt={imageLeftAlt}
+                objectFit="cover"
+              />
+            </Grid>
+            <Grid component="span" item xs={4}>
+              <ImageShimmer
+                src={node.properties.src}
+                width={600}
+                height={900}
+                alt={alt}
+                objectFit="cover"
+              />
+            </Grid>
+            <Grid component="span" item xs={4}>
+              <ImageShimmer
+                src={imageRight}
+                width={600}
+                height={900}
+                alt={imageRightAlt}
+                objectFit="cover"
+              />
+            </Grid>
+          </Grid>
+        ) : hasImageLeft && !hasImageRight ? (
+          <Grid component="span" container spacing={1}>
+            <Grid component="span" item xs={6}>
+              <ImageShimmer
+                src={imageLeft}
+                width={1000}
+                height={1000}
+                alt={imageLeftAlt}
+                objectFit="cover"
+              />
+            </Grid>
+            <Grid component="span" item xs={6}>
+              <ImageShimmer
+                src={node.properties.src}
+                width={1000}
+                height={1000}
+                alt={alt}
+                objectFit="cover"
+              />
+            </Grid>
+          </Grid>
+        ) : !hasImageLeft && hasImageRight ? (
+          <Grid component="span" container spacing={1}>
+            <Grid component="span" item xs={6}>
+              <ImageShimmer
+                src={node.properties.src}
+                width={1000}
+                height={1000}
+                alt={alt}
+                objectFit="cover"
+              />
+            </Grid>
+            <Grid component="span" item xs={6}>
+              <ImageShimmer
+                src={imageRight}
+                width={1000}
+                height={1000}
+                alt={imageRightAlt}
+                objectFit="cover"
+              />
+            </Grid>
+          </Grid>
+        ) : (
+          <ImageShimmer
+            src={node.properties.src}
+            width={width}
+            height={height}
+            alt={alt}
+            objectFit="cover"
+          />
+        )}
+
         {hasCaption ? (
           <Typography
             sx={{

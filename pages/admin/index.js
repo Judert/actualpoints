@@ -18,7 +18,7 @@ export default function Admin() {
   return (
     <Content>
       <SEO
-        title={"Login"}
+        title={user && email ? (!username ? "Sign Up" : "Admin") : "Login"}
         description={desc.login}
         type={"website"}
         url={`${desc.url}/admin`}

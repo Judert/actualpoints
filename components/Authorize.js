@@ -11,7 +11,7 @@ export default function Authorize(props) {
   return (
     <Content>
       <SEO
-        title={"Login"}
+        title={"Admin"}
         description={desc.login}
         type={"website"}
         url={`${desc.url}/admin`}
