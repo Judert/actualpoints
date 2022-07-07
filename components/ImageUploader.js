@@ -74,7 +74,7 @@ export default function ImageUploader({ markdown }) {
       {!uploading && (
         <>
           <Button
-            variant="contained"
+            variant="outlined"
             component="label"
             startIcon={<CameraAltIcon />}
           >

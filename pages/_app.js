@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
 import { ThemeProvider } from "@mui/material/styles";
@@ -7,8 +7,8 @@ import { CacheProvider } from "@emotion/react";
 import theme from "../src/theme";
 import createEmotionCache from "../src/createEmotionCache";
 import Navbar from "../components/Navbar";
-import { UserContext } from "../lib/context";
-import { useUserData } from "../lib/hooks";
+import { UserContext, HeightContext } from "../lib/context";
+import { useUserData, useHeight } from "../lib/hooks";
 import { SnackbarProvider } from "notistack";
 import { CookiesProvider } from "react-cookie";
 import Footer from "../src/Footer";
@@ -22,29 +22,32 @@ const clientSideEmotionCache = createEmotionCache();
 export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const userData = useUserData();
+  const height = useHeight();
 
   return (
     <CookiesProvider>
-      <UserContext.Provider value={userData}>
-        <CacheProvider value={emotionCache}>
-          <Head>
-            <meta
-              name="viewport"
-              content="initial-scale=1, width=device-width"
-            />
-            <link rel="shortcut icon" href="/favicon.ico" />
-          </Head>
-          <ThemeProvider theme={theme}>
-            <SnackbarProvider maxSnack={3}>
-              <CssBaseline />
-              <Navbar />
-              <Adblock />
-              <Component {...pageProps} />
-              <Footer />
-            </SnackbarProvider>
-          </ThemeProvider>
-        </CacheProvider>
-      </UserContext.Provider>
+      <HeightContext.Provider value={height}>
+        <UserContext.Provider value={userData}>
+          <CacheProvider value={emotionCache}>
+            <Head>
+              <meta
+                name="viewport"
+                content="initial-scale=1, width=device-width"
+              />
+              <link rel="shortcut icon" href="/favicon.ico" />
+            </Head>
+            <ThemeProvider theme={theme}>
+              <SnackbarProvider maxSnack={3}>
+                <CssBaseline />
+                <Navbar />
+                <Adblock />
+                <Component {...pageProps} />
+                <Footer />
+              </SnackbarProvider>
+            </ThemeProvider>
+          </CacheProvider>
+        </UserContext.Provider>
+      </HeightContext.Provider>
     </CookiesProvider>
   );
 }

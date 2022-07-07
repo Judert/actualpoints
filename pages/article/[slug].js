@@ -24,6 +24,7 @@ import Articles from "../../components/Articles";
 import Article from "../../components/Article";
 import SEO from "../../components/SEO";
 import ImageShimmer from "../../components/ImageShimmer";
+import { useHeight } from "../../lib/hooks";
 
 const LIMIT = 10;
 
@@ -69,6 +70,7 @@ export async function getStaticProps({ params }) {
 export default function ArticleMain(props) {
   const article = props.post;
   const articles = props.articles.filter((x) => x.id !== article.id);
+  const height = useHeight();
 
   return (
     <Container
@@ -77,11 +79,10 @@ export default function ArticleMain(props) {
       sx={{
         my: 4,
         display: "flex",
-        // justifyContent: "center",
         alignItems: "left",
         flexDirection: "column",
         rowGap: 2,
-        // minHeight: window.outerHeight,
+        minHeight: height,
       }}
     >
       <SEO

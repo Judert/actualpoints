@@ -1,18 +1,17 @@
-import { Box, Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import desc from "../data/descriptions.json";
+import ContentInfo from "../components/ContentInfo";
+import Head from "next/head";
 
 export default function Custom404() {
   return (
-    <Box
-      component="main"
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "primary.main",
-        color: "primary.contrastText",
-      }}
-    >
-      <Typography>404 - Page not found</Typography>
-    </Box>
+    <>
+      <Head>
+        <title>400 - Page not found</title>
+      </Head>
+      <ContentInfo>
+        <Typography>{desc.error404}</Typography>
+      </ContentInfo>
+    </>
   );
 }

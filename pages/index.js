@@ -28,6 +28,7 @@ import SquareIcon from "@mui/icons-material/Square";
 import SEO from "../components/SEO";
 import ImageShimmer from "../components/ImageShimmer";
 import desc from "../data/descriptions.json";
+import { useHeight } from "../lib/hooks";
 
 const LIMIT = 10;
 
@@ -68,12 +69,19 @@ export async function getStaticProps() {
 }
 
 export default function Index(props) {
+  const height = useHeight();
   return (
     <Container
       maxWidth="xl"
       component="main"
       disableGutters
-      sx={{ display: "flex", flexDirection: "column", rowGap: 3, mb: 4 }}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        rowGap: 3,
+        mb: 4,
+        minHeight: height,
+      }}
     >
       <SEO
         title={"Home"}
