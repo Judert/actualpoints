@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import SEO from "../components/SEO";
 import desc from "../data/descriptions.json";
 import ContentInfo from "../components/ContentInfo";
@@ -13,7 +13,17 @@ export default function Apply() {
         url={`${desc.url}/contact`}
       />
       <ContentInfo>
-        <Typography>{desc.email}</Typography>
+        <Button
+          sx={{ textTransform: "none" }}
+          color="inherit"
+          onClick={() =>
+            window.open(
+              "mailto:" + desc.email + "?subject=Enquiry&body=Hi there,%0A%0A"
+            )
+          }
+        >
+          {desc.email}
+        </Button>
       </ContentInfo>
     </>
   );
