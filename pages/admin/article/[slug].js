@@ -13,6 +13,9 @@ import {
   NativeSelect,
   Button,
   TextField,
+  Switch,
+  FormGroup,
+  FormControlLabel,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -122,7 +125,7 @@ function Edit({ router, slug, article }) {
       ),
     published: Yup.boolean(),
     content: Yup.object().shape({
-      text: Yup.string(),
+      text: Yup.string().required("Content required"),
       // count: Yup.number()
       //   .integer()
       //   .min(2000, "Too short, need at least 2000 words"),
@@ -210,6 +213,12 @@ function Edit({ router, slug, article }) {
   const [categories, loading, error] = useCollection(
     collection(db, "Category")
   );
+
+  const [checked, setChecked] = React.useState(true);
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  };
 
   return (
     <>
@@ -314,22 +323,21 @@ function Edit({ router, slug, article }) {
             {"Tag " + (i + 1) + ": " + error.id.message}{" "}
           </Typography>
         ))}
-
       <Stack direction="row" spacing={1}>
-        <Help />
-        <Controller
-          control={control}
-          name="published"
-          defaultValue={article.published}
-          render={({ field: { onChange, onBlur, value, ref } }) => (
-            <Typography>
-              Published
-              <Checkbox value={value} onChange={onChange} />
-            </Typography>
-          )}
-        />
+        <ImageUploader markdown={checked} />
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={checked}
+                onChange={handleChange}
+                inputProps={{ "aria-label": "Markdown/URL Switch" }}
+              />
+            }
+            label={checked ? "Markdown" : "URL"}
+          />
+        </FormGroup>
       </Stack>
-      <ImageUploader markdown={true} />
       <Divider />
       <Controller
         control={control}
@@ -371,6 +379,11 @@ function Edit({ router, slug, article }) {
           {errors.content.count.message}
         </Typography>
       )} */}
+      {errors.content?.text && (
+        <Typography color="error.main">
+          {errors.content.text.message}
+        </Typography>
+      )}
       <Divider />
       <Stack direction="row" spacing={1}>
         <Button variant="contained" onClick={handleSubmit(handleDone)}>
@@ -384,6 +397,26 @@ function Edit({ router, slug, article }) {
         >
           Save
         </Button>
+        <Help />
+        <Controller
+          control={control}
+          name="published"
+          defaultValue={article.published}
+          render={({ field: { onChange, onBlur, value, ref } }) => (
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={value}
+                    onChange={onChange}
+                    inputProps={{ "aria-label": "Publish Switch" }}
+                  />
+                }
+                label={value ? "Published" : "Private"}
+              />
+            </FormGroup>
+          )}
+        />
       </Stack>
     </>
   );
@@ -409,7 +442,7 @@ function Help() {
   const handleClose = () => setOpen(false);
 
   return (
-    <div>
+    <>
       <Button variant="outlined" startIcon={<HelpIcon />} onClick={handleOpen}>
         Help
       </Button>
@@ -452,6 +485,6 @@ function Help() {
           </ul>
         </Box>
       </Modal>
-    </div>
+    </>
   );
 }

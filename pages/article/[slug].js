@@ -91,6 +91,7 @@ export default function ArticleMain(props) {
         image={article.image}
         type={"article"}
         url={`${desc.url}/article/${props.path}`}
+        date={new Date(article.date).toISOString()}
       />
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12} md={8}>

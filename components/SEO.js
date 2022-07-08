@@ -81,7 +81,7 @@ const socialTags = ({
 };
 
 const SEO = (props) => {
-  const { title, description, image, noindex = false } = props;
+  const { title, description, image, type, noindex = false } = props;
   return (
     <Head>
       <title>{title} | Actual Points</title>
@@ -89,6 +89,9 @@ const SEO = (props) => {
       <meta itemProp="name" content={title} />
       <meta itemProp="description" content={description} />
       <meta itemProp="image" content={image} />
+      {type === "article" && (
+        <meta property="article:published_time" content={props.date} />
+      )}
       {socialTags(props).map(({ name, content }) => {
         return <meta key={name} name={name} content={content} />;
       })}

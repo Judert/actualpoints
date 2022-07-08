@@ -32,7 +32,7 @@ export default function ImageUploader({ markdown }) {
   const uploadFile = async (e) => {
     // Get the file
     let file = Array.from(e.target.files)[0];
-    const extension = file.type.split("/")[1];
+    // const extension = file.type.split("/")[1];
 
     try {
       file = await resizeFile(file);
@@ -43,7 +43,7 @@ export default function ImageUploader({ markdown }) {
     // Makes reference to the storage bucket location
     const storageRef = ref(
       storage,
-      `uploads/${auth.currentUser.uid}/${Date.now()}.${extension}`
+      `uploads/${auth.currentUser.uid}/${Date.now()}.png`
     );
     setUploading(true);
 
