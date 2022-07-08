@@ -48,7 +48,7 @@ function Category({ category }) {
             alt={category.name}
             src={category.img}
             width={1000}
-            height={400}
+            height={500}
             layout="responsive"
             priority={true}
             objectFit="cover"
@@ -67,13 +67,13 @@ function Category({ category }) {
           />
           <Typography
             component="h2"
-            variant="h5"
+            variant="h6"
             style={{
               position: "absolute",
               color: "white",
-              left: "12.5%",
+              left: "15%",
               top: "50%",
-              transform: "translate(-12.5%, -50%)",
+              transform: "translate(-15%, -50%)",
             }}
           >
             {category.name}

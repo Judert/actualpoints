@@ -4,6 +4,23 @@ import { useState } from "react";
 import { auth, storage } from "../lib/firebase";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { useSnackbar } from "notistack";
+import Resizer from "react-image-file-resizer";
+
+const resizeFile = (file) =>
+  new Promise((resolve) => {
+    Resizer.imageFileResizer(
+      file,
+      750,
+      750,
+      "PNG",
+      100,
+      0,
+      (uri) => {
+        resolve(uri);
+      },
+      "file"
+    );
+  });
 
 export default function ImageUploader({ markdown }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -14,8 +31,14 @@ export default function ImageUploader({ markdown }) {
   // Creates a Firebase Upload Task
   const uploadFile = async (e) => {
     // Get the file
-    const file = Array.from(e.target.files)[0];
+    let file = Array.from(e.target.files)[0];
     const extension = file.type.split("/")[1];
+
+    try {
+      file = await resizeFile(file);
+    } catch (error) {
+      enqueueSnackbar("Upload Failed: " + error, { variant: "error" });
+    }
 
     // Makes reference to the storage bucket location
     const storageRef = ref(

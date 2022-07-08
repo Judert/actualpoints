@@ -90,7 +90,7 @@ export default function Index(props) {
         url={`${desc.url}`}
       />
       <Slides {...props} />
-      <Container maxWidth="lg">
+      <Container sx={{ minHeight: height }} maxWidth="lg">
         <Grid container spacing={4}>
           <Grid item xs={12} sm={12} md={3}>
             <Categories {...props} />
