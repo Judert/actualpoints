@@ -7,7 +7,7 @@ exports.articleUserUpdate = functions.firestore
   .document("User/{userId}")
   .onUpdate((change, context) => {
     const data = change.after.data();
-    const previousData = change.before.data();
+    // const previousData = change.before.data();
 
     // We are not editing the User here so there can't be an infinite loop
     // if (
@@ -123,6 +123,12 @@ exports.articleSlideCreate = functions.firestore
   .document("Article/{articleId}")
   .onUpdate((change, context) => {
     const data = change.after.data();
+    const previousData = change.before.data();
+
+    // So that slides are only created on first publish
+    if (!data.published && !previousData.published) {
+      return null;
+    }
 
     db.collection("Slide")
       .doc(context.params.articleId)
