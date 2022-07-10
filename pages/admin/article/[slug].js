@@ -3,7 +3,6 @@ import SaveIcon from "@mui/icons-material/Save";
 import {
   Divider,
   Typography,
-  Checkbox,
   CircularProgress,
   Stack,
   Modal,
@@ -214,12 +213,6 @@ function Edit({ router, slug, article }) {
     collection(db, "Category")
   );
 
-  const [checked, setChecked] = React.useState(true);
-
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
-  };
-
   return (
     <>
       {/* <Button
@@ -323,21 +316,7 @@ function Edit({ router, slug, article }) {
             {"Tag " + (i + 1) + ": " + error.id.message}{" "}
           </Typography>
         ))}
-      <Stack direction="row" spacing={1}>
-        <ImageUploader markdown={checked} />
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={checked}
-                onChange={handleChange}
-                inputProps={{ "aria-label": "Markdown/URL Switch" }}
-              />
-            }
-            label={checked ? "Markdown" : "URL"}
-          />
-        </FormGroup>
-      </Stack>
+      <ImageUploader markdown={true} />
       <Divider />
       <Controller
         control={control}
@@ -354,6 +333,7 @@ function Edit({ router, slug, article }) {
             htmlClass={null}
             style={{ height: "500px" }}
             value={value.text}
+            syncScrollMode="leftFollowRight"
             // eslint-disable-next-line react/no-children-prop
             renderHTML={(value) => <Markdown>{value}</Markdown>}
             onChange={({ html, text }, event) => {
@@ -385,11 +365,10 @@ function Edit({ router, slug, article }) {
         </Typography>
       )}
       <Divider />
-      <Stack direction="row" spacing={1}>
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
         <Button variant="contained" onClick={handleSubmit(handleDone)}>
           Save and complete
         </Button>
-
         <Button
           variant="outlined"
           startIcon={<SaveIcon />}
@@ -473,11 +452,7 @@ function Help() {
               portrait (good for Pinterest low resolution portrait images)
             </li>
             <li>
-              !&#91;alttext &#123;imageLeft:
-              firebaseImageUrl&#125;&#123;imageLeftAlt:
-              alttext&#125;&#123;imageRight:
-              firebaseImageUrl&#125;&#123;imageRightAlt:
-              alttext&#125;&#123;caption: Photo by Someone&#125;&#93;&#40;image
+              !&#91;alttext&#123;caption: Photo by Someone&#125;&#93;&#40;image
               url&#41;
             </li>
             <li>You need alttext for accessibility for all readers</li>

@@ -7,6 +7,7 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import {
+  Box,
   Divider,
   Grid,
   Table,
@@ -19,7 +20,31 @@ import {
 } from "@mui/material";
 import Link from "../src/Link";
 import ImageShimmer from "./ImageShimmer";
+import React from "react";
 // import "../../styles/markdown.module.css";
+
+const aspectData = {
+  widths: {
+    0: 750,
+    1: 750,
+    2: 500,
+  },
+  heights: {
+    0: 422,
+    1: 750,
+    2: 750,
+  },
+  xs: {
+    0: 12,
+    1: 6,
+    2: 6,
+  },
+  sm: {
+    0: 12,
+    1: 4,
+    2: 3,
+  },
+};
 
 const components = {
   h1: ({ children }) => {
@@ -42,132 +67,54 @@ const components = {
   },
   img: ({ node, children }) => {
     const metastring = node.properties.alt;
-    const alt = metastring?.replace(/ *\{[^)]*\} */g, "");
-    const metaWidth = metastring.match(/{([^}]+)x/);
-    const metaHeight = metastring.match(/x([^}]+)}/);
-    const width = metaWidth ? metaWidth[1] : "768";
-    const height = metaHeight ? metaHeight[1] : "432";
-    const isPriority = metastring?.toLowerCase().match("{priority}");
-    const hasCaption = metastring?.toLowerCase().includes("{caption:");
-    const hasImageLeft = metastring?.toLowerCase().includes("{imageleft:");
-    const hasImageRight = metastring?.toLowerCase().includes("{imageright:");
-    const hasImageLeftAlt = metastring
-      ?.toLowerCase()
-      .includes("{imageleftalt:");
-    const hasImageRightAlt = metastring
-      ?.toLowerCase()
-      .includes("{imagerightalt:");
+    const alts = metastring?.replace(/ *\{[^)]*\} */g, "").split(",");
+    const hasCaption = metastring?.toLowerCase().includes("{caption: ");
+    const hasAspect = metastring?.toLowerCase().includes("{aspect: ");
     const caption = metastring?.match(/{caption: (.*?)}/)?.pop();
-    const imageLeft = metastring?.match(/{imageLeft: (.*?)}/)?.pop();
-    const imageRight = metastring?.match(/{imageRight: (.*?)}/)?.pop();
-    const imageLeftAlt = metastring?.match(/{imageLeftAlt: (.*?)}/)?.pop();
-    const imageRightAlt = metastring?.match(/{imageRightAlt: (.*?)}/)?.pop();
+    const aspect = metastring
+      ?.match(/{aspect: (.*?)}/)
+      ?.pop()
+      .split(",");
+    const images = node.properties.src
+      .split(",")
+      .filter((image) =>
+        image.startsWith("https://firebasestorage.googleapis.com")
+      );
 
-    if (
-      !node.properties.src.startsWith("https://firebasestorage.googleapis.com")
-    ) {
-      //// br and strong cause no errors nested in a p tag
+    if (!hasAspect) {
       return <></>;
     }
 
-    if (
-      hasImageLeft &&
-      (!hasImageLeftAlt ||
-        !imageLeft.startsWith("https://firebasestorage.googleapis.com"))
-    ) {
-      return <></>;
-    }
-    if (
-      hasImageRight &&
-      (!hasImageRightAlt ||
-        !imageRight.startsWith("https://firebasestorage.googleapis.com"))
-    ) {
+    if (!(images.length === alts.length && images.length === aspect.length)) {
       return <></>;
     }
 
     return (
       <>
-        {hasImageLeft && hasImageRight ? (
-          <Grid component="span" container spacing={1}>
-            <Grid component="span" item xs={4}>
-              <ImageShimmer
-                src={imageLeft}
-                width={600}
-                height={900}
-                alt={imageLeftAlt}
-                objectFit="cover"
-              />
-            </Grid>
-            <Grid component="span" item xs={4}>
-              <ImageShimmer
-                src={node.properties.src}
-                width={600}
-                height={900}
-                alt={alt}
-                objectFit="cover"
-              />
-            </Grid>
-            <Grid component="span" item xs={4}>
-              <ImageShimmer
-                src={imageRight}
-                width={600}
-                height={900}
-                alt={imageRightAlt}
-                objectFit="cover"
-              />
-            </Grid>
-          </Grid>
-        ) : hasImageLeft && !hasImageRight ? (
-          <Grid component="span" container spacing={1}>
-            <Grid component="span" item xs={6}>
-              <ImageShimmer
-                src={imageLeft}
-                width={1000}
-                height={1000}
-                alt={imageLeftAlt}
-                objectFit="cover"
-              />
-            </Grid>
-            <Grid component="span" item xs={6}>
-              <ImageShimmer
-                src={node.properties.src}
-                width={1000}
-                height={1000}
-                alt={alt}
-                objectFit="cover"
-              />
-            </Grid>
-          </Grid>
-        ) : !hasImageLeft && hasImageRight ? (
-          <Grid component="span" container spacing={1}>
-            <Grid component="span" item xs={6}>
-              <ImageShimmer
-                src={node.properties.src}
-                width={1000}
-                height={1000}
-                alt={alt}
-                objectFit="cover"
-              />
-            </Grid>
-            <Grid component="span" item xs={6}>
-              <ImageShimmer
-                src={imageRight}
-                width={1000}
-                height={1000}
-                alt={imageRightAlt}
-                objectFit="cover"
-              />
-            </Grid>
-          </Grid>
-        ) : (
-          <ImageShimmer
-            src={node.properties.src}
-            width={width}
-            height={height}
-            alt={alt}
-            objectFit="cover"
-          />
-        )}
+        <Grid component="span" container spacing={1}>
+          {
+            // map images to grid
+            images.map((image, index) => {
+              return (
+                <Grid
+                  item
+                  component="span"
+                  key={index}
+                  xs={aspectData.xs[aspect[index]]}
+                  sm={aspectData.sm[aspect[index]]}
+                >
+                  <ImageShimmer
+                    src={image}
+                    width={aspectData.widths[aspect[index]]}
+                    height={aspectData.heights[aspect[index]]}
+                    alt={alts[index]}
+                    objectFit="cover"
+                  />
+                </Grid>
+              );
+            })
+          }
+        </Grid>
 
         {hasCaption ? (
           <Typography

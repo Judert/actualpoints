@@ -1,4 +1,13 @@
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  FormControlLabel,
+  FormGroup,
+  Stack,
+  Switch,
+  Typography,
+} from "@mui/material";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useState } from "react";
 import { auth, storage } from "../lib/firebase";
@@ -27,6 +36,11 @@ export default function ImageUploader({ markdown }) {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [downloadURL, setDownloadURL] = useState(null);
+  const [checked, setChecked] = useState(markdown);
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  };
 
   // Creates a Firebase Upload Task
   const uploadFile = async (e) => {
@@ -95,7 +109,7 @@ export default function ImageUploader({ markdown }) {
       />
 
       {!uploading && (
-        <>
+        <Stack direction="row" spacing={1}>
           <Button
             variant="outlined"
             component="label"
@@ -109,14 +123,24 @@ export default function ImageUploader({ markdown }) {
               accept="image/x-png,image/gif,image/jpeg"
             />
           </Button>
-        </>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={checked}
+                  onChange={handleChange}
+                  inputProps={{ "aria-label": "Markdown/URL Switch" }}
+                />
+              }
+              label={checked ? "Markdown" : "URL"}
+            />
+          </FormGroup>
+        </Stack>
       )}
 
       {downloadURL && (
-        <Typography>
-          {markdown
-            ? `![alt{imageLeft}{imageLeftAlt}{imageRight}{imageRightAlt}{caption}](${downloadURL})`
-            : downloadURL}
+        <Typography sx={{ overflow: "scroll" }}>
+          {checked ? `![alt{caption}](${downloadURL})` : downloadURL}
         </Typography>
       )}
     </Box>

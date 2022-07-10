@@ -7,6 +7,6 @@
     "search": "Explore articles by tags",
     "url": "https://actualpoints.com",
     "contact": "Contact us at Actual Points",
-    "error500": "500 - An error occurred",
+    "error500": "500 - Server Error",
     "error404": "404 - Page not found"
 }
