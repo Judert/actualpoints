@@ -126,10 +126,15 @@ exports.articleSlideCreate = functions.firestore
     const previousData = change.before.data();
 
     // So that slides are only created on first publish
-    if (!data.published && !previousData.published) {
+    if (!data.published) {
       return null;
     }
 
+    if (previousData.published) {
+      return null;
+    }
+
+    // we want this to happen only when the article is published and wasnt published before
     db.collection("Slide")
       .doc(context.params.articleId)
       .set({
