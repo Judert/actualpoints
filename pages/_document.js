@@ -21,6 +21,12 @@ export default class MyDocument extends Document {
             name="p:domain_verify"
             content="8f86e083fcc386b32c20771a3692c197"
           />
+          {/* Adsense */}
+          <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5229445093898575"
+            crossOrigin="anonymous"
+          ></script>
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
           {this.props.emotionStyleTags}
         </Head>

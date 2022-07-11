@@ -81,7 +81,13 @@ const socialTags = ({
 };
 
 const SEO = (props) => {
-  const { title, description, image, type, noindex = false } = props;
+  const {
+    title,
+    description,
+    image = settings.meta.social.graphic,
+    type,
+    noindex = false,
+  } = props;
   return (
     <Head>
       <title>{title} | Actual Points</title>
