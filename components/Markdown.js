@@ -36,25 +36,37 @@ const aspectData = {
   },
   xs: {
     0: 12,
-    1: 6,
+    1: 12,
     2: 6,
   },
   sm: {
     0: 12,
-    1: 4,
+    1: 6,
     2: 3,
   },
 };
 
 const components = {
   h1: ({ children }) => {
-    return <Typography variant="h4">{children}</Typography>;
+    return (
+      <Typography component="h4" variant="h3" pt={3}>
+        {children}
+      </Typography>
+    );
   },
   h2: ({ children }) => {
-    return <Typography variant="h5">{children}</Typography>;
+    return (
+      <Typography component="h5" variant="h4" pt={2}>
+        {children}
+      </Typography>
+    );
   },
   h3: ({ children }) => {
-    return <Typography variant="h6">{children}</Typography>;
+    return (
+      <Typography component="h6" variant="h5" pt={2}>
+        {children}
+      </Typography>
+    );
   },
   h4: ({ children }) => {
     return <></>;
@@ -68,20 +80,28 @@ const components = {
   img: ({ node, children }) => {
     const metastring = node.properties.alt;
     const alts = metastring?.replace(/ *\{[^)]*\} */g, "").split(",");
-    const hasCaption = metastring?.toLowerCase().includes("{caption: ");
-    const hasAspect = metastring?.toLowerCase().includes("{aspect: ");
-    const caption = metastring?.match(/{caption: (.*?)}/)?.pop();
+    const caption = metastring
+      ?.match(/{caption: (.*?)}/)
+      ?.pop()
+      .split(",");
     const aspect = metastring
       ?.match(/{aspect: (.*?)}/)
       ?.pop()
-      .split(",");
+      .split(",")
+      .filter((x) => x >= 0 && x <= 2 && x !== "");
     const images = node.properties.src
       .split(",")
       .filter((image) =>
         image.startsWith("https://firebasestorage.googleapis.com")
       );
 
-    if (!hasAspect) {
+    if (caption) {
+      if (caption.length !== 2) {
+        return <></>;
+      }
+    }
+
+    if (!aspect) {
       return <></>;
     }
 
@@ -91,7 +111,7 @@ const components = {
 
     return (
       <>
-        <Grid component="span" container spacing={1}>
+        <Grid component="span" container spacing={0.5}>
           {
             // map images to grid
             images.map((image, index) => {
@@ -109,6 +129,7 @@ const components = {
                     height={aspectData.heights[aspect[index]]}
                     alt={alts[index]}
                     objectFit="cover"
+                    layout="responsive"
                   />
                 </Grid>
               );
@@ -116,19 +137,20 @@ const components = {
           }
         </Grid>
 
-        {hasCaption ? (
-          <Typography
+        {caption ? (
+          <Link
             sx={{
               display: "flex",
               justifyContent: "center",
-              pb: 1,
+              pt: 1,
             }}
-            component={"span"}
-            aria-label={caption}
+            // component={"span"}
+            aria-label={caption[0]}
             variant="subtitle2"
+            href={caption[1]}
           >
-            {caption}
-          </Typography>
+            {caption[0]}
+          </Link>
         ) : null}
       </>
     );
@@ -154,7 +176,7 @@ const components = {
     return <></>;
   },
   hr: () => {
-    return <Divider />;
+    return <Divider sx={{ m: 5 }} />;
   },
   a: ({ node, children, ...props }) => {
     return <Link href={props.href}>{children}</Link>;

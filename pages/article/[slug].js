@@ -25,6 +25,7 @@ import Article from "../../components/Article";
 import SEO from "../../components/SEO";
 import ImageShimmer from "../../components/ImageShimmer";
 import { useHeight } from "../../lib/hooks";
+import desc from "../../data/descriptions.json";
 
 const LIMIT = 10;
 
@@ -97,19 +98,26 @@ export default function ArticleMain(props) {
         <Grid item xs={12} sm={12} md={8}>
           <Paper
             elevation={2}
-            sx={{ p: 3, display: "flex", flexDirection: "column", rowGap: 2 }}
+            sx={{ p: 3, display: "flex", flexDirection: "column", rowGap: 3 }}
           >
-            <Typography component="h1" variant="h3">
+            <Typography
+              component="h1"
+              variant="h2"
+              sx={{ display: { xs: "none", sm: "flex" } }}
+            >
               {article.title}
             </Typography>
-            <Typography component="h2" variant="h6" color="text.secondary">
+            <Typography
+              component="h1"
+              variant="h3"
+              sx={{ display: { xs: "flex", sm: "none" } }}
+            >
+              {article.title}
+            </Typography>
+            <Typography component="h2" variant="h5" color="text.secondary">
               {article.subtitle}
             </Typography>
-            <Typography
-              component="h3"
-              variant="subtitle1"
-              color="text.secondary"
-            >
+            <Typography component="h3">
               Last Updated: {new Date(article.date).toGMTString()}
             </Typography>
             <ImageShimmer
@@ -167,13 +175,15 @@ export default function ArticleMain(props) {
                 </Link>
               ))}
             </Box>
-            <Typography
-              variant="h4"
-              color="text.secondary"
-              sx={{ display: { xs: "flex", md: "none" } }}
-            >
-              Latest Articles
-            </Typography>
+            {articles[0] && (
+              <Typography
+                variant="h4"
+                color="text.secondary"
+                sx={{ display: { xs: "flex", md: "none" } }}
+              >
+                Latest Articles
+              </Typography>
+            )}
           </Box>
         </Grid>
         <Grid item container spacing={2} xs={12} sm={12} md={4}>
@@ -185,35 +195,26 @@ export default function ArticleMain(props) {
             }}
             md={12}
           >
-            <Typography variant="h4" color="text.secondary">
-              Latest Articles
-            </Typography>
-            {articles[0] ? (
-              <Articles articles={articles} small={true} />
-            ) : (
-              <Typography variant="h6" color="text.secondary">
-                No other articles yet
+            {articles[0] && (
+              <Typography variant="h4" color="text.secondary">
+                Latest Articles
               </Typography>
             )}
+
+            <Articles articles={articles} small={true} />
           </Grid>
-          {articles[0] ? (
-            articles.map((article) => (
-              <Grid
-                key={article.id}
-                item
-                sx={{ display: { xs: "flex", md: "none" } }}
-                xs={12}
-                sm={6}
-                md={12}
-              >
-                <Article article={article} small={true} />
-              </Grid>
-            ))
-          ) : (
-            <Typography variant="h6" color="text.secondary">
-              No other articles yet
-            </Typography>
-          )}
+          {articles.map((article) => (
+            <Grid
+              key={article.id}
+              item
+              sx={{ display: { xs: "flex", md: "none" } }}
+              xs={12}
+              sm={6}
+              md={12}
+            >
+              <Article article={article} small={true} />
+            </Grid>
+          ))}
         </Grid>
       </Grid>
     </Container>

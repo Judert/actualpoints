@@ -16,6 +16,11 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Inconsolata:300,400,500,700&display=swap"
           />
+          {/* Pinterest */}
+          <meta
+            name="p:domain_verify"
+            content="8f86e083fcc386b32c20771a3692c197"
+          />
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
           {this.props.emotionStyleTags}
         </Head>

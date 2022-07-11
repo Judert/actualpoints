@@ -139,8 +139,8 @@ export default function ImageUploader({ markdown }) {
       )}
 
       {downloadURL && (
-        <Typography sx={{ overflow: "scroll" }}>
-          {checked ? `![alt{caption}](${downloadURL})` : downloadURL}
+        <Typography sx={{ overflowX: "scroll" }}>
+          {checked ? `![alt{aspect}{caption}](${downloadURL})` : downloadURL}
         </Typography>
       )}
     </Box>

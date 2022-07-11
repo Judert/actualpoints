@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { Box, Button, Container, IconButton, Stack } from "@mui/material";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
+import PinterestIcon from "@mui/icons-material/Pinterest";
 
 export default function Footer() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -64,6 +65,16 @@ export default function Footer() {
           </Button>
         </Stack>
         <Stack spacing={1} direction={"row"}>
+          <IconButton
+            // passHref
+            href="https://www.pinterest.com/actualpoints/"
+            color="inherit"
+            component={Link}
+            noLinkStyle
+            aria-label="Pinterest"
+          >
+            <PinterestIcon />
+          </IconButton>
           <IconButton
             // passHref
             href="https://twitter.com/actualpoints"

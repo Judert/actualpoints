@@ -88,7 +88,7 @@ function Edit({ snapshot, tags, setTags }) {
         handleDrag={handleDrag}
         handleTagClick={handleTagClick}
         inputFieldPosition="bottom"
-        autocomplete
+        autocomplete={false}
         clearAll
         onClearAll={onClearAll}
       />

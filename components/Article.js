@@ -155,8 +155,8 @@ export default function Article({ article, small }) {
               <ImageShimmer
                 alt={article.alt}
                 src={article.image}
-                width={320}
-                height={180}
+                width={712}
+                height={400.5}
                 objectFit="cover"
               />
             </Box>
@@ -171,8 +171,8 @@ export default function Article({ article, small }) {
             <ImageShimmer
               alt={article.alt}
               src={article.image}
-              width={250}
-              height={250}
+              width={750}
+              height={750}
               objectFit="cover"
             />
           </Box>

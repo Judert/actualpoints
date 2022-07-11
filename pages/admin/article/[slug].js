@@ -333,7 +333,7 @@ function Edit({ router, slug, article }) {
             htmlClass={null}
             style={{ height: "500px" }}
             value={value.text}
-            syncScrollMode="leftFollowRight"
+            syncScrollMode={[null, null]}
             // eslint-disable-next-line react/no-children-prop
             renderHTML={(value) => <Markdown>{value}</Markdown>}
             onChange={({ html, text }, event) => {
