@@ -49,21 +49,21 @@ const aspectData = {
 const components = {
   h1: ({ children }) => {
     return (
-      <Typography component="h4" variant="h3" pt={3}>
+      <Typography component="h4" variant="h3" pt={5}>
         {children}
       </Typography>
     );
   },
   h2: ({ children }) => {
     return (
-      <Typography component="h5" variant="h4" pt={2}>
+      <Typography component="h5" variant="h4" pt={5}>
         {children}
       </Typography>
     );
   },
   h3: ({ children }) => {
     return (
-      <Typography component="h6" variant="h5" pt={2}>
+      <Typography component="h6" variant="h5" pt={0}>
         {children}
       </Typography>
     );
