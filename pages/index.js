@@ -45,7 +45,13 @@ export async function getStaticProps() {
   ).docs.map(postToJSON);
 
   const tags = (
-    await getDocs(query(collection(db, "Tag"), orderBy("count", "desc")))
+    await getDocs(
+      query(
+        collection(db, "Tag"),
+        where("count", ">", 0),
+        orderBy("count", "desc")
+      )
+    )
   ).docs.map(otherToJSON);
 
   const categories = (await getDocs(collection(db, "Category"))).docs.map(

@@ -1,5 +1,5 @@
 import { Box, CircularProgress } from "@mui/material";
-import { collection } from "firebase/firestore";
+import { collection, orderBy, query, where } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { db } from "../lib/firebase";
 import { WithContext as ReactTags } from "react-tag-input";
@@ -8,7 +8,13 @@ import kebabCase from "lodash.kebabcase";
 import Error from "./Error";
 
 export default function Tags({ tags, setTags }) {
-  const [snapshot, loading, error] = useCollection(collection(db, "Tag"));
+  const [snapshot, loading, error] = useCollection(
+    query(
+      collection(db, "Tag"),
+      where("count", ">", 0),
+      orderBy("count", "desc")
+    )
+  );
 
   return (
     <>
