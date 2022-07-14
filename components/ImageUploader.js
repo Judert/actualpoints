@@ -123,7 +123,21 @@ export default function ImageUploader({ markdown }) {
               accept="image/x-png,image/gif,image/jpeg"
             />
           </Button>
-          <FormGroup>
+          {downloadURL && (
+            <Button
+              variant="contained"
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  checked
+                    ? `![alt{aspect}{caption}](${downloadURL})`
+                    : downloadURL
+                );
+              }}
+            >
+              Copy URL
+            </Button>
+          )}
+          {/* <FormGroup>
             <FormControlLabel
               control={
                 <Switch
@@ -134,14 +148,8 @@ export default function ImageUploader({ markdown }) {
               }
               label={checked ? "Markdown" : "URL"}
             />
-          </FormGroup>
+          </FormGroup> */}
         </Stack>
-      )}
-
-      {downloadURL && (
-        <Typography sx={{ overflowX: "scroll" }}>
-          {checked ? `![alt{aspect}{caption}](${downloadURL})` : downloadURL}
-        </Typography>
       )}
     </Box>
   );

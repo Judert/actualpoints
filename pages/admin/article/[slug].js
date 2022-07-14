@@ -26,6 +26,9 @@ import {
   serverTimestamp,
   getDocs,
   collection,
+  where,
+  orderBy,
+  query,
 } from "firebase/firestore";
 import { useDocumentData, useCollection } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
@@ -41,6 +44,7 @@ import { useSnackbar } from "notistack";
 import Error from "../../../components/Error";
 import HelpIcon from "@mui/icons-material/Help";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ImageMarkdown from "../../../components/ImageMarkdown";
 
 const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
   ssr: false,
@@ -176,7 +180,15 @@ function Edit({ router, slug, article }) {
     );
   };
   const update = async (data) => {
-    const tags = (await getDocs(collection(db, "Tag"))).docs.map((doc) => {
+    const tags = (
+      await getDocs(
+        query(
+          collection(db, "Tag"),
+          where("count", ">", 0),
+          orderBy("count", "desc")
+        )
+      )
+    ).docs.map((doc) => {
       return doc.id;
     });
     const batch = writeBatch(db);
@@ -316,7 +328,7 @@ function Edit({ router, slug, article }) {
             {"Tag " + (i + 1) + ": " + error.id.message}{" "}
           </Typography>
         ))}
-      <ImageUploader markdown={true} />
+      <ImageMarkdown />
       <Divider />
       <Controller
         control={control}
