@@ -10,8 +10,8 @@ service cloud.firestore {
         allow delete: if author();
     }
 		match /Tag/{tagId} {
-    	allow get: if resource.data.count > 0;
-      allow list: if resource.data.count > 0;
+    	allow get: if resource.data.count > 0 || request.auth.token.verified;
+      allow list: if resource.data.count > 0 || request.auth.token.verified;
       allow create: if validTagCreate(tagId);
     }
     match /User/{userId} {

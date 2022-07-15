@@ -26,9 +26,6 @@ import {
   serverTimestamp,
   getDocs,
   collection,
-  where,
-  orderBy,
-  query,
 } from "firebase/firestore";
 import { useDocumentData, useCollection } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
@@ -39,7 +36,6 @@ import dynamic from "next/dynamic";
 import "react-markdown-editor-lite/lib/index.css";
 import Editor, { Plugins } from "react-markdown-editor-lite";
 import Markdown from "../../../components/Markdown";
-import ImageUploader from "../../../components/ImageUploader";
 import { useSnackbar } from "notistack";
 import Error from "../../../components/Error";
 import HelpIcon from "@mui/icons-material/Help";
@@ -180,15 +176,7 @@ function Edit({ router, slug, article }) {
     );
   };
   const update = async (data) => {
-    const tags = (
-      await getDocs(
-        query(
-          collection(db, "Tag"),
-          where("count", ">", 0),
-          orderBy("count", "desc")
-        )
-      )
-    ).docs.map((doc) => {
+    const tags = (await getDocs(collection(db, "Tag"))).docs.map((doc) => {
       return doc.id;
     });
     const batch = writeBatch(db);
@@ -455,18 +443,6 @@ function Help() {
           <Typography variant="h6">Inserting Images</Typography>
           <ul>
             <li>Please upload high resolution images if its a single image</li>
-            <li>
-              If you include a left or right image only: the images will be
-              squares (good for Pinterest low resolution square images)
-            </li>
-            <li>
-              If you include both a left and right image: the images will be
-              portrait (good for Pinterest low resolution portrait images)
-            </li>
-            <li>
-              !&#91;alttext&#123;caption: Photo by Someone&#125;&#93;&#40;image
-              url&#41;
-            </li>
             <li>You need alttext for accessibility for all readers</li>
             <li>Have a caption if credit is required</li>
           </ul>

@@ -120,7 +120,7 @@ export default function ImageUploader({ markdown }) {
               type="file"
               hidden
               onChange={uploadFile}
-              accept="image/x-png,image/gif,image/jpeg"
+              accept="image/x-png,image/jpeg"
             />
           </Button>
           {downloadURL && (
