@@ -2,13 +2,13 @@ import Content from "../../components/Content";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import Link from "next/link";
 import SEO from "../../components/SEO";
-import { collection, getDocs } from "firebase/firestore";
-import { db, otherToJSON } from "../../lib/firebase";
+import { otherToJSON } from "../../lib/firebase";
 import ImageShimmer from "../../components/ImageShimmer";
 import desc from "../../data/descriptions.json";
+import { db } from "../../lib/firebase-admin";
 
 export async function getStaticProps() {
-  const categories = (await getDocs(collection(db, "Category"))).docs.map(
+  const categories = (await db.collection("Category").get()).docs.map(
     otherToJSON
   );
 

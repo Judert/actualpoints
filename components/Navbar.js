@@ -176,7 +176,7 @@ export default function Navbar(props) {
                 )
               )}
             </Box>
-            <IconButton
+            {/* <IconButton
               sx={{
                 [theme.breakpoints.down(370)]: {
                   display: "none",
@@ -189,7 +189,7 @@ export default function Navbar(props) {
               aria-label="search"
             >
               <SearchIcon />
-            </IconButton>
+            </IconButton> */}
             {/* <IconButton onClick={props.colorMode.toggleColorMode} color="inherit">
             {theme.palette.mode === "dark" ? (
               <Brightness7Icon />

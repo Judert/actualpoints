@@ -7,17 +7,7 @@ import {
   Box,
   Container,
 } from "@mui/material";
-import { db, postToJSON } from "../../lib/firebase";
-import {
-  query,
-  getDoc,
-  getDocs,
-  collection,
-  where,
-  doc,
-  orderBy,
-  limit,
-} from "firebase/firestore";
+import { postToJSON } from "../../lib/firebase";
 import Link from "next/link";
 import Markdown from "../../components/Markdown";
 import Articles from "../../components/Articles";
@@ -26,15 +16,16 @@ import SEO from "../../components/SEO";
 import ImageShimmer from "../../components/ImageShimmer";
 import { useHeight } from "../../lib/hooks";
 import desc from "../../data/descriptions.json";
+import { db } from "../../lib/firebase-admin";
 
 const LIMIT = 10;
 
 export async function getStaticPaths() {
-  const snapshot = await getDocs(
-    query(collection(db, "Article"), where("published", "==", true))
-  );
+  const articles = (
+    await db.collection("Article").where("published", "==", true).get()
+  ).docs.map(postToJSON);
 
-  const paths = snapshot.docs.map((doc) => {
+  const paths = articles.map((doc) => {
     return {
       params: { slug: doc.id },
     };
@@ -47,19 +38,17 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const ref = doc(db, "Article", params.slug);
+  const ref = db.collection("Article").doc(params.slug);
   const path = ref.path;
-  const post = postToJSON(await getDoc(ref));
+  const post = postToJSON(await ref.get());
 
   const articles = (
-    await getDocs(
-      query(
-        collection(db, "Article"),
-        where("published", "==", true),
-        orderBy("date", "desc"),
-        limit(LIMIT)
-      )
-    )
+    await db
+      .collection("Article")
+      .where("published", "==", true)
+      .orderBy("date", "desc")
+      .limit(LIMIT)
+      .get()
   ).docs.map(postToJSON);
 
   return {
@@ -170,7 +159,7 @@ export default function ArticleMain(props) {
             </Grid>
             <Box>
               {article.tags.map((tag) => (
-                <Link href={"/search?tags=" + tag.id} passHref key={tag.id}>
+                <Link href={"/search/" + tag.id} passHref key={tag.id}>
                   <Chip sx={{ m: 0.5 }} variant="outlined" label={tag.id} />
                 </Link>
               ))}

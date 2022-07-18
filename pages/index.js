@@ -10,17 +10,8 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import {
-  collection,
-  limit,
-  orderBy,
-  where,
-  query,
-  getDocs,
-  Timestamp,
-  startAfter,
-} from "firebase/firestore";
-import { db, postToJSON, otherToJSON } from "../lib/firebase";
+import { Timestamp } from "firebase/firestore";
+import { postToJSON, otherToJSON } from "../lib/firebase";
 import Articles from "../components/Articles";
 import MUILink from "../src/Link";
 import Link from "next/link";
@@ -29,44 +20,40 @@ import SEO from "../components/SEO";
 import ImageShimmer from "../components/ImageShimmer";
 import desc from "../data/descriptions.json";
 import { useHeight } from "../lib/hooks";
+import { db } from "../lib/firebase-admin";
 
 const LIMIT = 10;
 
 export async function getStaticProps() {
   const articles = (
-    await getDocs(
-      query(
-        collection(db, "Article"),
-        where("published", "==", true),
-        orderBy("date", "desc"),
-        limit(LIMIT)
-      )
-    )
+    await db
+      .collection("Article")
+      .where("published", "==", true)
+      .orderBy("date", "desc")
+      .limit(LIMIT)
+      .get()
   ).docs.map(postToJSON);
 
-  const tags = (
-    await getDocs(
-      query(
-        collection(db, "Tag"),
-        where("count", ">", 0),
-        orderBy("count", "desc")
-      )
-    )
+  const slides = (
+    await db
+      .collection("Slide")
+      .where("active", "==", true)
+      .orderBy("order", "asc")
+      .get()
   ).docs.map(otherToJSON);
 
-  const categories = (await getDocs(collection(db, "Category"))).docs.map(
+  const tags = (
+    await db
+      .collection("Tag")
+      .where("count", ">", 0)
+      .orderBy("count", "desc")
+      .limit(100)
+      .get()
+  ).docs.map(otherToJSON);
+
+  const categories = (await db.collection("Category").get()).docs.map(
     otherToJSON
   );
-
-  const slides = (
-    await getDocs(
-      query(
-        collection(db, "Slide"),
-        where("active", "==", true),
-        orderBy("order", "asc")
-      )
-    )
-  ).docs.map(otherToJSON);
 
   return {
     props: { articles, tags, categories, slides },
@@ -244,35 +231,38 @@ function ArticlesLatest(props) {
   const [articles, setArticles] = useState(props.articles);
   const [loading, setLoading] = useState(false);
   const [end, setEnd] = useState(false);
+  const [message, setMessage] = useState("");
 
   const loadMore = async () => {
+    setMessage("");
     setLoading(true);
     const last = articles[articles.length - 1];
     if (last) {
       const start =
         typeof last.date === "number"
-          ? Timestamp.fromMillis(last.date)
-          : last.date;
-      const temp = (
-        await getDocs(
-          query(
-            collection(db, "Article"),
-            where("published", "==", true),
-            orderBy("date", "desc"),
-            startAfter(start),
-            limit(LIMIT)
-          )
-        )
-      ).docs.map(postToJSON);
-      setArticles(articles.concat(temp));
-      setLoading(false);
-      if (temp.length < LIMIT) {
-        setEnd(true);
+          ? last.date
+          : Timestamp.toMillis(last.date);
+
+      const response = await fetch("/api/" + start + "/" + LIMIT, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const temp = await response.json();
+        setArticles(articles.concat(temp));
+        if (temp.length < LIMIT) {
+          setEnd(true);
+        }
+      } else if (response.status === 429) {
+        setMessage("Too many requests, please try again later.");
       }
     } else {
-      setLoading(false);
       setEnd(true);
     }
+    setLoading(false);
   };
 
   return (
@@ -292,6 +282,8 @@ function ArticlesLatest(props) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          flexDirection: "column",
+          rowGap: 2,
         }}
       >
         {articles[0] && !end && !loading && (
@@ -301,6 +293,7 @@ function ArticlesLatest(props) {
         )}
         {loading && <CircularProgress />}
         {/* {end && <Typography>End</Typography>} */}
+        {message && <Typography>{message}</Typography>}
       </Container>
     </>
   );
@@ -353,7 +346,7 @@ function AllTags(props) {
           {props.tags.map((tag) => (
             <Link
               // underline="none"
-              href={"/search?tags=" + tag.id}
+              href={"/search/" + tag.id}
               passHref
               key={tag.id}
             >

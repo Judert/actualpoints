@@ -2,37 +2,37 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /Article/{articleId} {
-    		allow get: if authorGet(articleId) || resource.data.published;
-        allow list: if author() || resource.data.published;
+    		allow get: if authorGet(articleId);
+        allow list: if author();
     		// allow list: if author() || (resource.data.published && request.query.limit <= 10); 
         allow create: if validArticleAuth() && validArticleCreateAuth() && validArticleCreate(articleId);
         allow update: if validArticleAuth() && validArticleUpdate();
         allow delete: if author();
     }
 		match /Tag/{tagId} {
-    	allow get: if resource.data.count > 0 || request.auth.token.verified;
-      allow list: if resource.data.count > 0 || request.auth.token.verified;
+    	allow get: if request.auth.token.verified;
+      allow list: if request.auth.token.verified;
       allow create: if validTagCreate(tagId);
     }
     match /User/{userId} {
-    	allow get;
-      allow list;
+    	allow get: if request.auth.token.verified || request.auth.uid == userId;
+      allow list: if request.auth.token.verified;
       allow create: if validUserCreate(userId);
       allow update: if validUserUpdate(userId);
     }
     match /Username/{username} {
-    	allow get;
-      allow list;
+    	allow get: if request.auth.token.verified;
+      allow list: if request.auth.token.verified;
       allow create: if validUsername(username);
     }
     match /Category/{category} {
-      allow get;
-      allow list;
+      allow get: if request.auth.token.verified;
+      allow list: if request.auth.token.verified;
     }
-    match /Slide/{slideId} {
-      allow get: if resource.data.active;
-      allow list: if resource.data.active;
-    }
+    // match /Slide/{slideId} {
+    //   allow get: if resource.data.active;
+    //   allow list: if resource.data.active;
+    // }
     
     function validUsername(username) {
       let owner = request.auth.uid == request.resource.data.uid;

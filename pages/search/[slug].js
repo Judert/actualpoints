@@ -11,14 +11,14 @@ import { db } from "../../lib/firebase-admin";
 const LIMIT = 10;
 
 export async function getStaticPaths() {
-  const categories = (await db.collection("Category").get()).docs.map(
-    otherToJSON
-  );
+  const tags = (
+    await db.collection("Tag").where("count", ">", 0).get()
+  ).docs.map(otherToJSON);
 
-  const paths = categories.map((category) => {
+  const paths = tags.map((tag) => {
     return {
       params: {
-        slug: category.id,
+        slug: tag.id,
       },
     };
   });
@@ -31,25 +31,24 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const { slug } = params;
-  const category = otherToJSON(await db.collection("Category").doc(slug).get());
 
   const articles = (
     await db
       .collection("Article")
-      .where("category", "==", slug)
       .where("published", "==", true)
+      .where("tags", "array-contains", { id: slug, text: slug })
       .orderBy("date", "desc")
       .limit(LIMIT)
       .get()
   ).docs.map(postToJSON);
 
   return {
-    props: { slug, category, articles },
+    props: { slug, articles },
     revalidate: 43200,
   };
 }
 
-export default function Category(props) {
+export default function Search(props) {
   const [articles, setArticles] = useState(props.articles);
   const [loading, setLoading] = useState(false);
   const [end, setEnd] = useState(false);
@@ -66,7 +65,7 @@ export default function Category(props) {
           : Timestamp.toMillis(last.date);
 
       const response = await fetch(
-        "/api/category/" + start + "/" + LIMIT + "/" + props.slug,
+        "/api/search/" + start + "/" + LIMIT + "/" + props.slug,
         {
           method: "GET",
           headers: {
@@ -93,13 +92,13 @@ export default function Category(props) {
   return (
     <Content>
       <SEO
-        title={props.category.name}
-        description={"Explore " + props.category.name + " related articles"}
+        title={`Search by "${props.slug}"`}
+        description={"Search for " + props.slug + " related articles"}
         type={"website"}
-        url={`${desc.url}/category/${props.slug}`}
+        url={`${desc.url}/search/${props.slug}`}
       />
       <Typography component="h1" variant="h3">
-        {props.category.name}
+        Search by {`"${props.slug}"`}
       </Typography>
       {articles[0] ? (
         <Articles articles={articles} />
