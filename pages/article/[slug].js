@@ -106,7 +106,11 @@ export default function ArticleMain(props) {
             <Typography component="h2" variant="h5" color="text.secondary">
               {article.subtitle}
             </Typography>
-            <Typography component="h3">
+            <Typography
+              component="h3"
+              variant="subtitle1"
+              color="text.secondary"
+            >
               Last Updated: {new Date(article.date).toGMTString()}
             </Typography>
             <ImageShimmer
