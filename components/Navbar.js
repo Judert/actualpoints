@@ -88,14 +88,6 @@ export default function Navbar(props) {
                 >
                   Sign In
                 </MenuItem>
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  noLinkStyle
-                  href="/search"
-                >
-                  Search
-                </MenuItem>
               </Menu>
               <Box
                 sx={{
