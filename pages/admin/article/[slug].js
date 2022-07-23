@@ -98,7 +98,7 @@ function Edit({ router, slug, article }) {
     subtitle: Yup.string()
       .required("Subtitle required")
       .min(4, "Too short")
-      .max(255, "Too long"),
+      .max(155, "Too long"),
     image: Yup.string()
       .url("Url not valid")
       .required("Image url required")

@@ -103,7 +103,7 @@ service cloud.firestore {
 
       let updateForbidden = request.resource.data.diff(resource.data).affectedKeys().hasAny(['username', 'displayName', 'desc', 'photoURL', 'uid', 'slug']);
       let validTitle =  request.resource.data.title.size() >= 4 && request.resource.data.title.size() <= 60 && request.resource.data.title is string;
-      let validSubtitle =  request.resource.data.subtitle.size() >= 4 && request.resource.data.subtitle.size() <= 255 && request.resource.data.subtitle is string;
+      let validSubtitle =  request.resource.data.subtitle.size() >= 4 && request.resource.data.subtitle.size() <= 155 && request.resource.data.subtitle is string;
       let validImage =  request.resource.data.image.size() > 0 && request.resource.data.image.size() <= 2000 && request.resource.data.image is string;
       let validAlt =  request.resource.data.alt.size() >= 4 && request.resource.data.alt.size() <= 100 && request.resource.data.alt is string;
       let validCategory = request.resource.data.category.size() > 0 && request.resource.data.category is string;
