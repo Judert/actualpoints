@@ -10,12 +10,33 @@ export default class MyDocument extends Document {
       <Html lang="en">
         <Head>
           {/* PWA primary color */}
-          <meta name="theme-color" content={theme.palette.primary.main} />
+          {/* <meta name="theme-color" content={theme.palette.primary.main} /> */}
           <link rel="shortcut icon" href="/static/favicon.ico" />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Inconsolata:300,400,500,700&display=swap"
           />
+          <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/apple-touch-icon.png"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/favicon-32x32.png"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/favicon-16x16.png"
+          />
+          <link rel="manifest" href="/site.webmanifest" />
+          <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
+          <meta name="msapplication-TileColor" content="#ffffff" />
+          <meta name="theme-color" content="#ffffff" />
           {/* Pinterest */}
           <meta
             name="p:domain_verify"
@@ -25,7 +46,8 @@ export default class MyDocument extends Document {
           <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5229445093898575"
-            crossOrigin="anonymous"
+            // eslint-disable-next-line react/no-unknown-property
+            crossorigin="anonymous"
           ></script>
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
           {this.props.emotionStyleTags}
