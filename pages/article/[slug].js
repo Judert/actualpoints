@@ -80,7 +80,7 @@ export default function ArticleMain(props) {
         description={article.subtitle}
         image={article.image}
         type={"article"}
-        url={`${desc.url}/article/${props.path}`}
+        url={`${desc.url}/article/${article.id}`}
         date={new Date(article.date).toISOString()}
       />
       <Grid container spacing={3}>
