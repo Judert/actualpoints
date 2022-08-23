@@ -103,6 +103,13 @@ const SEO = (props) => {
         return <meta key={name} name={name} content={content} />;
       })}
       {noindex && <meta name="robots" content="noindex" />}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+              pintrk('track', 'pagevisit');
+      `,
+        }}
+      />
     </Head>
   );
 };

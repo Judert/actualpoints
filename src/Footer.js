@@ -77,16 +77,6 @@ export default function Footer() {
           </IconButton>
           <IconButton
             // passHref
-            href="https://twitter.com/actualpoints"
-            color="inherit"
-            component={Link}
-            noLinkStyle
-            aria-label="Twitter"
-          >
-            <TwitterIcon />
-          </IconButton>
-          <IconButton
-            // passHref
             href="https://www.instagram.com/actualpoints/"
             color="inherit"
             component={Link}
@@ -94,6 +84,16 @@ export default function Footer() {
             aria-label="Instagram"
           >
             <InstagramIcon />
+          </IconButton>
+          <IconButton
+            // passHref
+            href="https://twitter.com/actualpoints"
+            color="inherit"
+            component={Link}
+            noLinkStyle
+            aria-label="Twitter"
+          >
+            <TwitterIcon />
           </IconButton>
         </Stack>
         <Typography variant="body2" color="inherit" align="center">
