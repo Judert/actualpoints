@@ -14,7 +14,7 @@ export default function Footer() {
   const [cookies, setCookie] = useCookies(["consent"]);
 
   useEffect(() => {
-    if (!cookies.consent) {
+    if (cookies["consent"] == null) {
       enqueueSnackbar("Please accept the cookies to use this site", {
         variant: "info",
         preventDuplicate: true,

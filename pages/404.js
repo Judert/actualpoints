@@ -7,7 +7,7 @@ export default function Custom404() {
   return (
     <>
       <Head>
-        <title>400 - Page not found</title>
+        <title>{desc.error404}</title>
       </Head>
       <ContentInfo>
         <Typography>{desc.error404}</Typography>
