@@ -30,7 +30,10 @@ export default function Footer() {
         size="small"
         color="inherit"
         onClick={() => {
-          setCookie("consent", true, { path: "/" });
+          setCookie("consent", true, {
+            path: "/",
+            expires: new Date(Date.now() + 31536000000),
+          });
           closeSnackbar(key);
         }}
       >
