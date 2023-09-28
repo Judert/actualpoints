@@ -1,6 +1,6 @@
 ### [actualpoints.com](https://www.actualpoints.com/)
 
-My private markdown blog where users can apply to write for the site and once approved can sign in, edit their profile and post articles. I launched the site in July and got approved for Adsense in August. I took an Agile approach hence only the essential features are present at this point in time. 
+Markdown blog where users can apply to write for the site and once approved can sign in, edit their profile and post articles. I launched the site in July and got approved for Adsense in August. I took an Agile approach hence only the essential features are present at this point in time. 
 
 I don't plan on publishing more articles as this was just a learning experience.
 
