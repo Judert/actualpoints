@@ -2,7 +2,7 @@
 
 My private markdown blog where users can apply to write for the site and once approved can sign in, edit their profile and post articles. I launched the site in July and got approved for Adsense in August. I took an Agile approach hence only the essential features are present at this point in time. 
 
-I haven't been publishing articles recently because I've been focused on developing a component library. This library will have its own blog where I plan to share my insights on design, UX, and frontend development. This will not only enhance my resume but also improve the site's SEO.
+I don't plan on publishing more articles as this was just a learning experience.
 
 **Please send me an email so I can add you as a writer for you to check out the CMS.**
 
